@@ -1,0 +1,1070 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Little Parcel Co. — Cozy Island Delivery</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2383bea5'/%3E%3Cpath d='M15 21h34v29H15z' fill='%23fff3d8'/%3E%3Cpath d='M29 21h6v29h-6z' fill='%23d9a575'/%3E%3C/svg%3E">
+<style>
+:root{--cream:#fff8e9;--ink:#4c5550;--mint:#91cbb4;--rose:#df9b9d;--peach:#f4bd96;--yellow:#f6d979;--sky:#a9d8e6;--panel:rgba(255,248,233,.9)}*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#a9d8e6;font-family:Fredoka,"Malgun Gothic",sans-serif;color:var(--ink)}canvas{display:block}.hidden{visibility:hidden!important;opacity:0!important;pointer-events:none!important;transform:translateY(12px)!important}.glass{background:var(--panel);border:2px solid rgba(255,255,255,.75);box-shadow:0 12px 35px rgba(63,78,69,.18),inset 0 1px white;backdrop-filter:blur(12px)}button,select,input{font:inherit}button{border:0;color:#4d554f;background:#fff8e9;border-radius:18px;padding:11px 17px;font-weight:600;cursor:pointer;box-shadow:0 5px 0 #d6cbb8;transition:.18s transform,.18s filter,.18s box-shadow}button:hover{filter:brightness(1.04);transform:translateY(-2px)}button:active{transform:translateY(3px);box-shadow:0 2px 0 #d6cbb8}.primary{color:white;background:#78b99e;box-shadow:0 6px 0 #568b76;font-size:18px}.danger{background:#e7a6a3;color:white}.screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;z-index:20;transition:.55s ease;background:radial-gradient(circle at 50% 35%,rgba(255,244,196,.15),rgba(71,109,116,.35))}#titleCard{width:min(560px,90vw);padding:38px;text-align:center;border-radius:40px;animation:float 4s ease-in-out infinite}#logo{font-size:clamp(42px,7vw,78px);line-height:.86;color:#fff9e8;text-shadow:0 5px 0 #7cad9a,0 9px 24px #527a72;margin:0}.parcel{display:block;color:#f6d979;font-size:.48em;letter-spacing:.12em;margin-top:16px}#titleCard p{font-size:17px}.settings{display:grid;grid-template-columns:1fr 1fr;gap:12px;text-align:left;margin:22px 0}.settings label{background:rgba(255,255,255,.5);padding:10px 12px;border-radius:16px}.settings input,.settings select{width:100%;accent-color:#78b99e;margin-top:5px;border:0;background:#fffaf0;padding:5px;border-radius:8px}.titleBtns{display:flex;justify-content:center;gap:12px;flex-wrap:wrap}#hud{position:fixed;inset:0;z-index:5;pointer-events:none;transition:.4s ease}.topbar{position:absolute;top:18px;left:50%;transform:translateX(-50%);display:flex;gap:9px;padding:8px 12px;border-radius:22px}.pill{padding:7px 13px;background:rgba(255,255,255,.75);border-radius:14px;font-weight:600;white-space:nowrap}.phone{pointer-events:auto;position:absolute;right:18px;top:18px;width:min(310px,30vw);max-height:calc(100vh - 36px);overflow:auto;border-radius:31px;padding:15px;border:7px solid #f8e8cf;box-shadow:0 16px 45px #3246404d;transition:.4s ease}.phoneHead{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px}.phoneHead h2{margin:0;font-size:19px}.order{background:#fffdf5;border-radius:19px;padding:12px;margin:8px 0;border-left:7px solid var(--peach);box-shadow:0 4px 12px #6a796315}.order.active{border-left-color:var(--mint);background:#effcf4}.order.cargo{border-left-color:var(--yellow)}.route{font-weight:600;font-size:14px}.item{font-size:13px;color:#7a7d73;margin:5px 0}.order button{font-size:12px;padding:7px 11px;box-shadow:0 3px 0 #d6cbb8}.tip{float:right;color:#ad8541}.help{position:absolute;left:18px;bottom:18px;padding:13px 17px;border-radius:18px;font-size:13px;line-height:1.65;transition:1s ease}.notice{position:absolute;left:50%;bottom:52px;transform:translateX(-50%);padding:12px 20px;border-radius:20px;font-weight:600;transition:.35s ease;text-align:center}.prompt{position:absolute;left:50%;top:20%;transform:translateX(-50%);background:#fff9df;padding:11px 20px;border-radius:19px;box-shadow:0 7px 20px #40584d3b;transition:.25s ease;font-weight:600}.map{position:absolute;inset:6%;border-radius:35px;padding:25px;transition:.4s ease;pointer-events:auto}.map h2{margin:0}.mapGrid{position:relative;width:100%;height:85%;margin-top:12px;border-radius:25px;background:#b7d99c;border:8px solid #f7e6c8;overflow:hidden}.mapSea{position:absolute;inset:0;background:#8bcbd5;clip-path:polygon(0 0,100% 0,100% 100%,0 100%,0 72%,7% 65%,3% 45%,10% 28%)}.mapIsland{position:absolute;inset:8%;background:#b8d99c;border-radius:46% 54% 42% 52%;box-shadow:0 0 0 12px #efdda7}.roadMap{position:absolute;left:12%;top:45%;width:76%;height:20%;border:16px solid #ead9bb;border-radius:50%;transform:rotate(-6deg)}.mapPin{position:absolute;transform:translate(-50%,-50%);font-size:22px;text-align:center;text-shadow:0 2px white}.mapClose{position:absolute;right:25px;top:20px}.modal{position:fixed;inset:0;z-index:30;display:flex;align-items:center;justify-content:center;background:#40544c88;transition:.35s ease}.modalCard{width:min(620px,90vw);max-height:85vh;overflow:auto;border-radius:32px;padding:27px}.modalCard h2{margin-top:0}.garageGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.shopItem{padding:14px;background:#ffffff91;border-radius:17px}.shopItem button{float:right}.letter{display:grid;grid-template-columns:90px 1fr;gap:18px}.portrait{width:88px;height:88px;border-radius:50%;background:#f3c29d;position:relative;box-shadow:inset 0 -8px #d79f7d}.portrait:before,.portrait:after{content:"";position:absolute;top:31px;width:9px;height:12px;border-radius:50%;background:#526159}.portrait:before{left:25px}.portrait:after{right:25px}.letterText{background:#fffdf5;padding:16px;border-radius:6px 20px 20px 20px;line-height:1.55}.pauseBtns{display:grid;gap:12px}.fullIcon{font-size:42px}.bubble{position:fixed;left:50%;top:28%;transform:translateX(-50%);z-index:15;background:#fffdf3;padding:12px 20px;border-radius:22px 22px 22px 4px;box-shadow:0 8px 22px #566b6140;animation:pop .4s both}.vignette{position:fixed;inset:0;z-index:4;pointer-events:none;box-shadow:inset 0 0 130px rgba(52,72,66,.28)}#loading{position:fixed;inset:0;z-index:50;background:#a9d8e6;display:flex;align-items:center;justify-content:center;transition:.7s}.loader{text-align:center;color:white;font-size:20px}.loader i{display:block;width:60px;height:40px;background:#fff4d9;border-radius:14px;margin:0 auto 15px;animation:bounce .8s infinite alternate}@keyframes bounce{to{transform:translateY(-12px) rotate(4deg)}}@keyframes float{50%{transform:translateY(-8px)}}@keyframes pop{from{opacity:0;transform:translate(-50%,15px) scale(.8)}}@media(max-width:760px){.phone{width:260px;top:auto;bottom:10px;max-height:40vh}.topbar{left:10px;transform:none;flex-wrap:wrap}.help{display:none}.settings{grid-template-columns:1fr}.garageGrid{grid-template-columns:1fr}}
+@media(max-width:1100px) and (min-width:761px){.topbar{left:18px;transform:none}.phone{top:95px;max-height:calc(100vh - 112px)}#nav{top:95px!important}.prompt{top:28%}}
+.mapGrid{background:#94c5ce}.map{background:#fff8e9}.mapGrid canvas{object-fit:contain}
+
+/* Driving HUD: one focus, optional work queue. */
+.phone{width:300px;max-height:calc(100vh - 100px);border-width:3px;border-radius:24px;padding:12px;background:rgba(255,250,240,.95)}
+.phoneHead h2{font-size:16px}.order{padding:11px;border-left-width:4px}.order b{font-size:14px}.order details{margin-top:8px}
+.orderQueue summary{cursor:pointer;padding:12px 6px;font-size:13px;font-weight:600;list-style:none;border-top:1px solid #ddd7c7}
+.orderQueue summary:after{content:' ＋';float:right}.orderQueue[open] summary:after{content:' −'}
+.orderQueue .order{background:#f5f1e7}.orderQueue{margin-top:12px}.route{font-size:12px}.item{line-height:1.55;font-size:12px}
+.focusLabel{font-size:11px;letter-spacing:.08em;color:#567c6a;margin:4px 0 8px}.emptyQueue{font-size:13px;line-height:1.7;padding:12px 4px}
+.topbar{font-size:13px;gap:3px}.pill{padding:6px 9px}.help{font-size:11px;opacity:.85}
+@media(max-width:1100px){.phone{top:78px;max-height:calc(100vh - 96px);width:270px}}
+@media(max-width:760px){.phone{top:auto;bottom:12px;max-height:34vh;width:250px}.topbar{font-size:11px}.pill{padding:5px 6px}#nav{top:70px!important;max-width:200px!important;font-size:12px}}
+
+button:focus-visible,summary:focus-visible{outline:3px solid #4b8270;outline-offset:4px}button:disabled{opacity:.5;cursor:default}
+#saveStatus{position:fixed;left:18px;bottom:112px;z-index:35;max-width:280px;border-radius:15px;padding:10px 14px;font-size:12px;background:#fff0d3;color:#6b4b2e;box-shadow:0 4px 18px #52695a33}
+#quickActions{position:absolute;bottom:18px;right:18px;display:flex;gap:8px;pointer-events:auto}#quickActions button{font-size:12px;padding:9px 12px}
+#touchDrive{display:none;position:absolute;left:15px;bottom:14px;pointer-events:auto;gap:7px;grid-template-columns:repeat(3,52px);touch-action:none}#touchDrive button{height:48px;font-size:18px;user-select:none;touch-action:none}
+#phoneToggle{font-size:12px;padding:6px 8px}.phone.compact #orders{display:none}.phone.compact{width:235px}
+.phone.compact .phoneHead{gap:6px;margin-bottom:0}.phone.compact .phoneHead h2{font-size:12px;white-space:nowrap}.phone.compact .phoneHead button{font-size:11px;padding:6px;white-space:nowrap;flex-shrink:0}
+.phoneHead{gap:8px}.phoneHead h2{font-size:14px}.notice{max-width:min(90vw,550px)}.titleNote{font-size:12px!important;line-height:1.6}
+@media(pointer:coarse){#touchDrive{display:grid}#quickActions{bottom:20px}.help{display:none}.phone{max-height:30vh}.notice{bottom:170px}.phone.compact{width:220px}}
+@media(max-width:760px){#titleCard{padding:20px;max-height:94vh;overflow:auto}.letter{grid-template-columns:1fr}.portrait{display:none}#quickActions{bottom:175px;right:12px}#saveStatus{bottom:175px}#touchDrive{display:grid;bottom:16px}.prompt{top:40%;font-size:12px;max-width:90vw}.phone{right:12px;top:132px;bottom:auto;max-height:calc(100vh - 325px);width:220px}.topbar{top:12px}.pill{font-size:11px}}
+@media(prefers-reduced-motion:reduce){#titleCard{animation:none}button,.hidden,.screen{transition:none}}
+@media(max-width:760px){.phone{top:160px}.phoneHead{gap:6px}.phoneHead h2{font-size:12px;white-space:nowrap}.phoneHead button{font-size:11px;padding:6px;white-space:nowrap;flex-shrink:0}}
+#fuelPill{min-width:108px}#fuelPill.low{background:#fff0ca;color:#986623}#fuelPill.critical{background:#ffe0dc;color:#a13e36}#fuelMeter{display:block;width:100%;height:4px;margin-top:4px;accent-color:#70a98c}.topbar{top:14px}.stationInfo{padding:16px;border-radius:18px;background:#fffdf5;line-height:1.7}.fuelChoices{display:flex;gap:12px;flex-wrap:wrap;margin:20px 0}#fuelNavBtn{background:#f2d36e}.gradeTag{display:block;font-size:11px;color:#8a643a}.mapLegend{font-size:12px;line-height:1.5;margin:8px 0}.topbar{max-width:calc(100vw - 36px);flex-wrap:wrap;justify-content:center}#fuelPrompt{font-size:12px}.logLine{font-size:12px;border-bottom:1px solid #e4dfd0;padding:6px 0}#deliveryLog{max-height:180px;overflow:auto}.warningNote{color:#945344;font-weight:600}@media(min-width:1101px){.topbar{max-width:430px}}@media(max-width:760px){.topbar{max-width:calc(100vw - 24px);justify-content:flex-start}#nav{top:100px!important}.phone{top:202px}#fuelPill{min-width:98px}.fuelChoices button{font-size:14px}.map{inset:3%;padding:14px}.mapGrid{height:78%}}
+@media(max-width:760px){.phone{max-height:calc(100vh - 430px)}.notice{bottom:230px}#quickActions{gap:5px}#quickActions button{font-size:11px;padding:9px 8px}#saveStatus{bottom:230px;pointer-events:none}}
+#touchInteract{grid-column:1 / -1;height:38px!important;font-size:12px!important}
+</style>
+</head>
+<body>
+<div id="saveStatus" hidden role="status"></div><div id="loading"><div class="loader"><i></i>섬으로 가는 배를 기다리는 중…</div></div>
+<div id="title" class="screen"><div id="titleCard" class="glass"><h1 id="logo">Little Parcel<span class="parcel">COZY ISLAND DELIVERY</span></h1><p>할머니의 낡은 배달 가게와, 다시 이어지는 작은 마음들.</p><div class="settings"><label>전체 음량 <input id="volume" type="range" min="0" max="1" step=".05" value=".55"></label><label>그래픽 품질 <select id="quality"><option value="high">높음</option><option value="medium">보통</option><option value="low">낮음</option></select></label><label>카메라 감도 <input id="camSense" type="range" min=".5" max="1.5" step=".1" value="1"></label><label>저장 데이터 <button id="resetSave">처음부터</button></label></div><p class="titleNote">키보드 또는 터치로 즐기는 작은 섬의 배달 이야기<br>주민과 충돌하면 게임 오버 · 진행은 자동 저장됩니다.</p><div class="titleBtns"><button id="start" class="primary">배달 시작하기</button></div></div></div>
+<div id="hud" class="hidden"><div class="topbar glass"><span class="pill">🪙 <b id="coins">0</b></span><span class="pill">📦 <b id="cargo">0 / 3</b></span><span class="pill">🕰 <b id="clock">07:00</b></span><span class="pill">📖 <b id="chapter">1장</b></span></div><aside class="phone glass"><div class="phoneHead"><h2>🌼 동네 배달</h2><button id="phoneToggle" aria-expanded="true">접기</button><button id="garageBtn">차고</button></div><div id="orders"></div></aside><div id="quickActions"><button id="mapBtn">지도 M</button><button id="cameraBtn">시점 C</button><button id="pauseBtn">메뉴 Esc</button></div><div id="touchDrive"><button data-drive="KeyA" aria-label="왼쪽 조향">◀</button><button data-drive="KeyW" aria-label="가속">▲</button><button data-drive="KeyD" aria-label="오른쪽 조향">▶</button><button data-drive="KeyS" aria-label="후진">▼</button><button data-drive="Space" aria-label="브레이크">■</button><button id="touchHorn" aria-label="경적">♪</button></div><div id="help" class="help glass">WASD / 방향키 · 운전<br>Space · 핸드브레이크　E · 상호작용<br>H · 경적　C · 카메라　M · 지도　Esc · 일시정지<br>⚠ 주민과 충돌하면 게임 오버</div><div id="notice" class="notice glass hidden"></div><div id="prompt" class="prompt hidden"></div><div id="map" class="map glass hidden"><h2>🗺️ 보들섬 지도</h2><button class="mapClose">닫기 M</button><div class="mapGrid"><div class="mapSea"></div><div class="mapIsland"></div><div class="roadMap"></div><span class="mapPin" style="left:25%;top:60%">🏤<small>우체국</small></span><span class="mapPin" style="left:45%;top:48%">☕<small>중심가</small></span><span class="mapPin" style="left:70%;top:30%">🏡<small>언덕마을</small></span><span class="mapPin" style="left:22%;top:24%">⚓<small>항구</small></span><span class="mapPin" style="left:83%;top:58%">🦆<small>공원</small></span></div></div></div><div class="vignette"></div>
+<div id="pause" class="modal hidden"><div class="modalCard glass"><h2>잠시 쉬어가요 ☕</h2><div class="pauseBtns"><button id="resume" class="primary">계속 배달하기</button><button id="saveBtn">지금 저장하기</button><button id="rescueBtn">차량을 안전한 길로 옮기기</button><button id="exportBtn">저장 파일 내려받기</button><button id="importBtn">저장 파일 불러오기</button><input id="saveFile" type="file" accept=".json,application/json" hidden><button id="titleBtn">타이틀로</button></div></div></div>
+<div id="gameOver" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="gameOverHeading"><div class="modalCard glass"><h2 id="gameOverHeading">GAME OVER · 운전 종료</h2><p id="gameOverMessage"></p><p class="warningNote">미션 내역·동전·적재 물품이 초기화되었습니다.</p><p><small>주민 충돌 또는 연료 고갈 시 첫 미션부터 다시 시작합니다. 우체국에서 가득 찬 연료로 출발하며 구매한 차량 업그레이드와 음량·그래픽·카메라 설정은 유지됩니다.</small></p><div class="pauseBtns"><button id="gameOverRestart" class="primary">처음부터 다시 출발하기</button><button id="gameOverTitle">타이틀로 돌아가기</button></div></div></div>
+<div id="fuelStation" class="modal hidden" role="dialog" aria-modal="true" aria-labelledby="fuelHeading"><div class="modalCard glass"><h2 id="fuelHeading">⛽ 솔바람 언덕 주유소</h2><p>강 건너 언덕 정상 · 1 L = 2 동전</p><div id="fuelQuote" class="stationInfo"></div><div class="fuelChoices"><button id="fuelFive">5 L 충전</button><button id="fuelTen">10 L 충전</button><button id="fuelFull" class="primary">가득 충전</button></div><p><small>정차한 차량에만 주유할 수 있어요. 오르막에서는 속도가 줄고 연료 소비가 늘어납니다. 정차·메뉴·지도에서는 연료를 소비하지 않아요.</small></p><button id="fuelClose">주유소 나가기</button></div></div>
+<div id="garage" class="modal hidden"><div class="modalCard glass"><h2>🔧 Little Parcel 차고</h2><p>동전을 모아 오래된 밴을 가꾸어 보세요.</p><div id="garageItems" class="garageGrid"></div><br><button id="garageClose" class="primary">차고 나가기</button></div></div>
+<div id="letter" class="modal hidden"><div class="modalCard glass"><div class="letter"><div id="portrait" class="portrait"></div><div><h2 id="letterFrom"></h2><div id="letterText" class="letterText"></div><br><button id="letterNext" class="primary">편지 접기</button></div></div></div></div>
+<!-- PARCEL_RUNTIME -->
+<script>
+function showFatal(message){const loader=document.querySelector('.loader');document.querySelector('#loading').classList.remove('hidden');loader.replaceChildren();const p=document.createElement('p');p.textContent=message;const retry=document.createElement('button');retry.textContent='다시 열기';retry.onclick=()=>location.reload();loader.append(p,retry);}
+addEventListener('error',()=>showFatal('게임을 실행하는 중 문제가 생겼어요. 저장된 진행은 유지됩니다. 다시 열어 주세요.'));
+addEventListener('unhandledrejection',()=>showFatal('게임을 불러오지 못했어요. 브라우저를 업데이트한 뒤 다시 열어 주세요.'));
+</script>
+<script type="module">
+const runtimeURL=URL.createObjectURL(new Blob([Uint8Array.from(atob(document.querySelector('#parcelRuntime').textContent.trim()),c=>c.charCodeAt(0))],{type:'text/javascript'}));
+const {THREE,EffectComposer,RenderPass,UnrealBloomPass}=await import(runtimeURL);
+URL.revokeObjectURL(runtimeURL);
+const $=s=>document.querySelector(s), $$=s=>[...document.querySelectorAll(s)];
+const C={cream:0xfff3d8,mint:0x83bea5,rose:0xd99091,peach:0xf2b58c,yellow:0xf2d36e,sky:0xa9d8e6,grass:0x9abe7c,road:0xdfcfb1,water:0x71bdca,wood:0x9c6e4a,ink:0x4d5b54};
+const story=[
+ {title:'낯선 이웃, 첫 배달',from:'할머니의 편지',text:'어서 오렴. 배달은 물건보다 마음을 건네는 일이란다. 우선 중심가의 이웃들과 인사해 보렴.',unlock:'중심가'},
+ {title:'언덕으로 가는 길',from:'석공 토비',text:'네가 자재를 날라준 덕에 돌다리를 고쳤어! 강 건너 솔바람 언덕에 여섯 이웃이 기다려. 오르막에서는 천천히 달리고 연료를 확인해 줘. 정상 주유소에서 동전으로 충전할 수 있어!',unlock:'돌다리 · 언덕 주택 6채 · 정상 주유소'},
+ {title:'다시 열린 바다',from:'선장 마레',text:'마을에 온기가 돌아오니 항구 시장도 다시 열 용기가 났네. 바닷바람 냄새를 맡으러 오게.',unlock:'항구 시장'},
+ {title:'밤길의 작은 별',from:'등대지기 루',text:'새 렌즈가 도착했구나. 오늘부터 등대가 모든 늦은 귀가를 포근히 비춰 줄 거야.',unlock:'등대 불빛'},
+ {title:'등불 아래, 우리 마을',from:'모두의 편지',text:'처음엔 낯선 이였지만 이제 넌 우리 마음을 이어 주는 이웃이야. 오늘 밤 등불 축제에서 만나!',unlock:'밤의 등불 축제'}
+];
+const people=[['밀라','다정한 제빵사'],['로지','수다쟁이 꽃집 주인'],['핀','조용한 서점지기'],['마레','딸에게 편지를 쓰는 선장'],['토비','성실한 석공'],['루','별을 좋아하는 등대지기'],['모모','공원의 오리 친구']];
+const spots=[
+ {id:'post',name:'Little Parcel 우체국',x:-31,z:22,c:C.mint,icon:'🏤'}, {id:'bakery',name:'밀라의 빵집',x:-13,z:3,c:C.peach,icon:'🥐'},
+ {id:'flower',name:'로지의 꽃집',x:0,z:-7,c:C.rose,icon:'🌷'}, {id:'cafe',name:'구름 카페',x:14,z:0,c:C.yellow,icon:'☕'},
+ {id:'book',name:'달빛 서점',x:27,z:-8,c:0x93b8cb,icon:'📚'}, {id:'harbor',name:'항구 시장',x:-37,z:-27,c:0x8ec3bb,icon:'⚓'},
+ {id:'lighthouse',name:'등대',x:-51,z:-39,c:0xf3e3c4,icon:'🗼'}, {id:'park',name:'오리 연못 공원',x:43,z:18,c:0xaacb82,icon:'🦆'},
+ {id:'home1',name:'복숭아 오두막',x:24,z:30,c:C.peach,icon:'🏡'}, {id:'home2',name:'세이지 오두막',x:38,z:35,c:C.mint,icon:'🏡'},
+ {id:'home3',name:'장미 오두막',x:52,z:28,c:C.rose,icon:'🏡'}, {id:'home4',name:'언덕 위 파란집',x:45,z:-25,c:0x9ec9d7,icon:'🏡'},
+ {id:'home5',name:'해바라기집',x:32,z:-35,c:C.yellow,icon:'🏡'}, {id:'home6',name:'바닷바람집',x:7,z:-35,c:0xd4a1ad,icon:'🏡'},
+ {id:'home7',name:'사과나무집',x:73,z:-46,c:0xcfaa83,icon:'🍎',unlock:2},
+ {id:'home8',name:'라벤더집',x:93,z:-46,c:0xb1a8cb,icon:'🏡',unlock:2},
+ {id:'home9',name:'해돋이 전망집',x:108,z:-65,c:C.peach,icon:'🌅',unlock:2},
+ {id:'home10',name:'별빛 다락집',x:91,z:-88,c:0x92b2c6,icon:'🏡',unlock:2},
+ {id:'home11',name:'솔방울 오두막',x:71,z:-93,c:0xa8bb80,icon:'🌲',unlock:2},
+ {id:'home12',name:'목장 옆 노란집',x:47,z:-92,c:C.yellow,icon:'🏡',unlock:2},
+ {id:'meadow',name:'솔바람 산책 공원',x:86,z:14,c:C.mint,icon:'🌳',zone:{x:79,z:33}},
+ {id:'fuel',name:'솔바람 언덕 주유소',x:73,z:-66,c:C.mint,icon:'⛽',unlock:2,zone:{x:73,z:-58}}
+];
+const goods=['따끈한 크루아상','들꽃 한 다발','구름 라떼','바다 모험책','딸에게 보내는 편지','레몬 파이','허브 화분','별빛 엽서','딸기잼','손뜨개 목도리','피크닉 바구니','등대 렌즈'];
+const storyOrders=[
+ {from:'bakery',to:'home1',item:'토비를 위한 아침 빵',person:4,note:'다리 수리를 준비하는 토비에게 아침을 전해 주세요.'},
+ {from:'book',to:'post',item:'오래된 돌다리 설계도',person:4,note:'서점에서 찾은 설계도를 우체국 작업실로 가져와 주세요.'},
+ {from:'post',to:'bridgework',item:'다리 수리용 석재와 공구',person:4,note:'개울 남쪽 작업장으로 마지막 자재를 옮겨 주세요.',event:'bridge'},
+ {from:'post',to:'home9',item:'먼 언덕 이웃에게 보내는 환영 편지',person:5,note:'돌다리 너머 해돋이 전망집까지 올라가요. 연료를 확인하고 정상 주유소를 기억해 두세요.'},
+ {from:'flower',to:'home7',item:'시장 입구를 장식할 화분',person:1,note:'언덕 사과나무집에서 시장 준비를 돕는 로지가 화분을 기다려요.'},
+ {from:'post',to:'marketwork',item:'항구 시장의 새 간판과 열쇠',person:3,note:'시장 남쪽 입구에서 마레 선장을 만나 주세요.',event:'market'},
+ {from:'harbor',to:'lighthouse',item:'등대 전선과 황동 소켓',person:5,note:'등대의 낡은 전기 설비를 고칠 부품이에요.'},
+ {from:'book',to:'lighthouse',item:'등대 수리 설명서',person:5,note:'핀이 찾아낸 오래된 등대의 사용 설명서예요.'},
+ {from:'harbor',to:'lighthouse',item:'바다 건너 도착한 새 등대 렌즈',person:5,note:'마지막 렌즈를 설치하면 등대가 다시 빛나요.',event:'lighthouse'},
+ {from:'flower',to:'park',item:'축제 꽃길을 위한 들꽃',person:6,note:'모모와 함께 연못 주변을 축제 장소로 꾸며요.'},
+ {from:'bakery',to:'park',item:'이웃들과 나눌 축제 파이',person:0,note:'밀라가 마을 모두를 위해 구웠어요.'},
+ {from:'post',to:'park',item:'손수 만든 등불과 초대장',person:6,note:'마지막 등불을 걸고 축제를 시작해요.',event:'festival'},
+ {from:'harbor',to:'home11',item:'마레의 딸이 보내온 답장',person:3,note:'먼 솔방울 오두막에서 기다리는 마레의 딸에게 답장을 전해 주세요.'},
+ {from:'home10',to:'post',item:'할머니의 오래된 배달 일지',person:2,note:'별빛 다락집에서 발견한 이 일지를 핀이 우체국에 돌려주고 싶대요.'},
+ {from:'park',to:'post',item:'모든 이웃의 감사 편지',person:0,note:'이제 Little Parcel Co.의 새 이야기는 너의 것이에요.',event:'ending'}
+];
+const mains=[['bakery','home1'],['flower','home2'],['cafe','park'],['book','home3'],['post','home4'],['bakery','home5'],['harbor','home2'],['flower','lighthouse'],['book','home6'],['cafe','harbor'],['post','lighthouse'],['harbor','home1'],['bakery','park'],['flower','home3'],['post','home5']];
+const FUEL_CAPACITY=60,FUEL_PRICE=2,FUEL_PER_METRE=.04;
+const WORLD={x:25,z:-22,rx:105,rz:103};
+const defaults={camSense:1,regularIndex:0,completed:[],orders:[],coins:0,fuel:FUEL_CAPACITY,day:1,regularDone:0,deliveryLog:[],capacity:3,engine:1,paint:'mint',rack:'wood',horn:'soft',chapter:1,mainDone:0,volume:.55,quality:'high'};
+
+let storageProblem='',storageRecovered=false;
+const CHECK_MODE=new URLSearchParams(location.search).get('check');
+const SAVE_KEY=CHECK_MODE==='play'?'littleParcelPreview':CHECK_MODE==='expansion'?'littleParcelExpansionPreview':CHECK_MODE?'littleParcelTest':'littleParcelSave';
+let save={...defaults};
+try{const raw=localStorage.getItem(SAVE_KEY);if(raw){try{const parsed=JSON.parse(raw);if(!parsed||typeof parsed!=='object'||Array.isArray(parsed))throw Error('invalid');save={...defaults,...parsed};}catch(e){const backup=localStorage.getItem(SAVE_KEY+'.backup');if(backup){save={...defaults,...JSON.parse(backup)};storageRecovered=true;}else storageProblem='저장 파일을 읽지 못했어요. 새 진행을 저장하기 전에 파일로 백업해 주세요.';}}}catch(e){storageProblem='이 브라우저에서는 자동 저장을 사용할 수 없어요. 메뉴에서 저장 파일을 내려받아 주세요.';}
+
+let scene,camera,renderer,composer,clock,car,carVisual,wheels=[],headlights=[],marker,beam,boatGroups=[],smokes=[],birds=[],butterflies=[],trees=[],residents=[],fireflies,stars,lighthouseBeam,festival=[],colliders=[];
+const loadNotice=storageProblem;
+let cameraHeading=2.53,cameraLift=0,cameraFade=new Map(),cameraFrame=0,frameCount=0,frameTime=0,autoQualityAdjusted=false,releaseTestDriving=false;
+let running=false,paused=false,mapOpen=false,gameOver=false,iso=false,keys={},speed=0,steer=0,yaw=2.53,gameTime=.29,weatherTimer=80,rain=0,orders=[],nextOrderId=1,nearSpot=null,stopTimer=0,audio=null,engineOsc=null,roadGrade=0,lowFuelWarned=false;
+let creekSamples=[],cameraObstacles=[],routePoints=[],routeTarget='',routeOrigin=new THREE.Vector3(999,0,999),routeChapter=0,routeMesh,navGraph=[],navCache=new Map(),testingDrive=false;
+const creekWidth=2.6,bridgeRect={minX:12.6,maxX:21.4,minZ:-18,maxZ:-8};
+const fenceSegments=[];
+const cameraRay=new THREE.Raycaster();
+const ROAD_Y=.05, CAR_R=1.55, STOP_SECONDS=1.4;
+let simTime=0,selectedId=null,serviceId=null,skyDome,rainPoints,petalPoints,rippleMesh,flowerInstances,traffic=[],puffs=[],gateGroups=[],parcelGroup,rackFlowers,nightValue=0,uiTimer=0,engineGain,ambientGain,ambientFilter;
+const glows=[],particles=[],zoneMarkers=new Map(),roadCurves=[],tempDummy=new THREE.Object3D();
+const regularTemplates=[
+['bakery','home1',0,0],['flower','home2',1,1],['cafe','park',2,6],['book','home3',3,2],['post','home1',4,3],['bakery','home2',5,0],['flower','park',6,1],['book','home1',7,2],['bakery','home3',8,0],['post','home2',9,4],['cafe','home3',10,6],['harbor','home6',8,3],
+['bakery','meadow',10,6],['cafe','meadow',2,6],['meadow','post',7,6],['flower','meadow',6,1],
+['bakery','home7',8,0],['flower','home8',6,1],['post','home9',4,5],['book','home10',3,2],['harbor','home11',9,3],['cafe','home12',5,0],
+['home7','cafe',8,0],['home8','flower',1,1],['home9','post',7,5],['home10','book',3,2],['home11','meadow',10,6],['home12','bakery',5,0],
+['book','home11',7,2],['post','home12',9,4],['flower','home9',1,1],['bakery','home8',0,0],['cafe','home10',2,2],['post','fuel',3,4]];
+function groundHeight(x,z){return 12*THREE.MathUtils.smoothstep(x,30,49)*THREE.MathUtils.smoothstep(-z,25,58);}
+const TERRAIN_STEP=1.5,terrainGrid=new Map();
+function authoredTerrainHeight(x,z){
+ let h=groundHeight(x,z);
+ for(const s of spots){if(s.x<30||s.z> -22||!s.id.startsWith('home')&&s.id!=='fuel')continue;
+  const edge=Math.max(Math.abs(x-s.x)-5,Math.abs(z-(s.z+3))-8),blend=1-THREE.MathUtils.smoothstep(edge,0,4);
+  if(blend>0)h=THREE.MathUtils.lerp(h,groundHeight(s.x,s.z+3),blend);
+ }return h;
+}
+function gridHeight(gx,gz){const key=gx+','+gz;if(!terrainGrid.has(key))terrainGrid.set(key,authoredTerrainHeight(WORLD.x+gx*TERRAIN_STEP,WORLD.z+gz*TERRAIN_STEP));return terrainGrid.get(key);}
+function terrainHeight(x,z){
+ const gx=(x-WORLD.x)/TERRAIN_STEP,gz=(z-WORLD.z)/TERRAIN_STEP,ix=Math.floor(gx),iz=Math.floor(gz),u=gx-ix,v=gz-iz,h00=gridHeight(ix,iz),h10=gridHeight(ix+1,iz),h01=gridHeight(ix,iz+1),h11=gridHeight(ix+1,iz+1);
+ return u+v<=1?h00+(h10-h00)*u+(h01-h00)*v:h11+(h01-h11)*(1-u)+(h10-h11)*(1-v);
+}
+function placeOnGround(object,x,z,offset=0){object.position.set(x,terrainHeight(x,z)+offset,z);object.userData.groundConformed=true;return object;}
+function clipGroundPolygon(polygon,distance){
+ const result=[];for(let i=0;i<polygon.length;i++){const a=polygon[i],b=polygon[(i+1)%polygon.length],da=distance(a),db=distance(b),insideA=da>=-1e-8,insideB=db>=-1e-8;if(insideA)result.push(a);if(insideA!==insideB){const t=da/(da-db);result.push({x:a.x+(b.x-a.x)*t,z:a.z+(b.z-a.z)*t});}}return result;
+}
+function appendGroundPolygon(polygon,height,vertices,indices){
+ const minX=Math.floor((Math.min(...polygon.map(p=>p.x))-WORLD.x)/TERRAIN_STEP),maxX=Math.floor((Math.max(...polygon.map(p=>p.x))-WORLD.x)/TERRAIN_STEP),minZ=Math.floor((Math.min(...polygon.map(p=>p.z))-WORLD.z)/TERRAIN_STEP),maxZ=Math.floor((Math.max(...polygon.map(p=>p.z))-WORLD.z)/TERRAIN_STEP);
+ for(let ix=minX;ix<=maxX;ix++)for(let iz=minZ;iz<=maxZ;iz++){
+  const x0=WORLD.x+ix*TERRAIN_STEP,z0=WORLD.z+iz*TERRAIN_STEP,x1=x0+TERRAIN_STEP,z1=z0+TERRAIN_STEP;
+  let part=polygon;for(const plane of [p=>p.x-x0,p=>x1-p.x,p=>p.z-z0,p=>z1-p.z]){part=clipGroundPolygon(part,plane);if(part.length<3)break;}if(part.length<3)continue;
+  // Split along exactly the same diagonal as the terrain mesh, not just at sample points.
+  for(const side of [-1,1]){const half=clipGroundPolygon(part,p=>side*(TERRAIN_STEP-(p.x-x0)-(p.z-z0)));if(half.length<3)continue;
+   const base=vertices.length/3;half.forEach(p=>vertices.push(p.x,terrainHeight(p.x,p.z)+height,p.z));for(let i=1;i<half.length-1;i++)indices.push(base,base+i,base+i+1);
+  }
+ }
+}
+function groundPatch(w,d,x,z,color,offset=.025){
+ const vertices=[],indices=[];appendGroundPolygon([{x:x-w/2,z:z-d/2},{x:x+w/2,z:z-d/2},{x:x+w/2,z:z+d/2},{x:x-w/2,z:z+d/2}],offset,vertices,indices);const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geometry.setIndex(indices);geometry.computeVertexNormals();const patch=mesh(geometry,mat(color),false);patch.material.side=THREE.DoubleSide;patch.receiveShadow=true;patch.userData.groundConformed=true;scene.add(patch);return patch;
+}
+function planarDistance(a,b){return Math.hypot(a.x-b.x,a.z-b.z);}
+function makeTerrain(){
+ const vertices=[],colors=[],indices=[],rx=Math.ceil(WORLD.rx/TERRAIN_STEP),rz=Math.ceil(WORLD.rz/TERRAIN_STEP),columns=rx*2+1;
+ for(let iz=-rz;iz<=rz;iz++)for(let ix=-rx;ix<=rx;ix++){let dx=ix*TERRAIN_STEP,dz=iz*TERRAIN_STEP;const r=Math.hypot(dx/WORLD.rx,dz/WORLD.rz);if(r>1){dx/=r;dz/=r;}const x=WORLD.x+dx,z=WORLD.z+dz,h=r>1?authoredTerrainHeight(x,z):gridHeight(ix,iz);vertices.push(x,h-.02,z);const color=new THREE.Color(0xa6c38b).lerp(new THREE.Color(0x8caf7c),h/18);colors.push(color.r,color.g,color.b);if(ix<rx&&iz<rz){const j=(iz+rz)*columns+ix+rx;indices.push(j,j+columns,j+1,j+1,j+columns,j+columns+1);}}
+ const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));geometry.setAttribute('color',new THREE.Float32BufferAttribute(colors,3));geometry.setIndex(indices);geometry.computeVertexNormals();const material=mat(0xffffff);material.vertexColors=true;material.side=THREE.DoubleSide;const land=mesh(geometry,material,false);land.receiveShadow=true;land.userData.groundConformed=true;scene.add(land);scene.userData.terrain=land;
+}
+function makeHillStation(){
+ const s=spot('fuel'),g=new THREE.Group();s.group=g;g.userData.facadeRefined=true;g.userData.kind='fuel';
+ const add=(w,h,d,x,y,z,color)=>{const o=roundedBox(w,h,d,.12,color);o.position.set(x,y,z);g.add(o);return o;};
+ add(9,.25,8,0,.1,0,0xc9c5b7);add(7.2,3.4,4.5,0,1.85,0,C.mint);add(8,.25,5.3,0,3.7,0,C.cream);
+ add(1.3,2.4,.1,-2.4,1.45,2.3,C.wood);for(const x of [.2,2.1]){const win=add(1.5,1.5,.1,x,2,2.3,0x8ab4bf);win.userData.window=true;}
+ const label=flatSign('SOLBARAM · ⛽',6,.7);label.position.set(0,3.4,2.6);g.add(label);
+ add(12,.28,7,0,4.8,6,C.cream);add(12,.5,.25,0,4.65,9.5,C.mint);for(const x of [-5.5,5.5]){add(.25,4.6,.25,x,2.3,3.5,C.cream);colliders.push({x:s.x+x,z:s.z+3.5,r:.25});}
+ for(const x of [-4.3,4.3]){add(1.2,1.8,.9,x,1,4.5,C.rose);add(.88,.6,.12,x,1.35,5.02,C.cream);const meter=flatSign('2 🪙 / L',.85,.26);meter.position.set(x,1.35,5.1);g.add(meter);const hose=mesh(new THREE.TorusGeometry(.58,.06,6,16,Math.PI*1.4),mat(C.ink));hose.position.set(x+.65,.9,4.55);g.add(hose);colliders.push({x:s.x+x,z:s.z+4.5,r:.65});}
+ const sign=flatSign('언덕 주유소 · 정상 12 m',7,.7);sign.position.set(-7,3.4,2);g.add(sign);add(.16,3.5,.16,-7,1.6,2,C.wood);
+ placeOnGround(g,s.x,s.z);scene.add(g);colliders.push({x:s.x,z:s.z,r:4.6});
+ groundPatch(16,12,s.zone.x,s.zone.z-3,0xd7d2c1,.05);
+ addRoad([[s.x,s.z+3],[s.zone.x,s.zone.z]],3,0xd7d2c1,.03,false);
+}
+function makeWalkingPark(){
+ const g=new THREE.Group();g.userData.groundConformed=true;scene.add(g);scene.userData.parkObstacles=[];
+ const lawn=mesh(new THREE.CircleGeometry(15,64),mat(0x91b47b),false);lawn.rotation.x=-Math.PI/2;lawn.scale.y=.76;lawn.position.set(86,.025,14);g.add(lawn);
+ const pathPoints=[];for(let i=0;i<=24;i++){const a=i/24*Math.PI*2;pathPoints.push([86+Math.cos(a)*10,14+Math.sin(a)*7]);}addRoad(pathPoints,2.2,0xe2d6bf,.045,false);
+ addRoad([[79,33],[79,26],[82,21]],2.2,0xe2d6bf,.05,false);
+ const basin=mesh(new THREE.CylinderGeometry(2.2,2.4,.55,32),mat(0xd3c7a9));basin.position.set(86,.3,14);g.add(basin);colliders.push({x:86,z:14,r:2.5});
+ const water=mesh(new THREE.CircleGeometry(2.1,32),mat(C.water));water.rotation.x=-Math.PI/2;water.position.set(86,.6,14);g.add(water);ellipsoid(g,[.4,.85,.4],[86,1.2,14],C.cream);
+ for(const [x,z] of [[77,7],[95,8],[87,4],[76,17],[96,19],[86,25]]){addTree(x,z,.9,true);}
+ for(const [x,z,angle] of [[82,10,1],[90,18,-2]]){const bench=new THREE.Group();for(let i=0;i<3;i++){const slat=roundedBox(2.8,.15,.3,.035,C.wood);slat.position.set(0,.7,i*.32);bench.add(slat);}const back=roundedBox(2.8,.65,.15,.06,C.wood);back.position.set(0,1.1,-.1);bench.add(back);for(const side of [-1,1]){const leg=roundedBox(.15,.7,.8,.03,C.ink);leg.position.set(side,.35,.3);bench.add(leg);}bench.position.set(x,0,z);bench.rotation.y=angle;g.add(bench);colliders.push({x,z,r:1.5});scene.userData.parkObstacles.push(bench);}
+ const sign=flatSign('솔바람 산책 공원 · 보행자 전용',6,.65);sign.position.set(83,2.1,26);g.add(sign);const post=roundedBox(.16,2.1,.16,.03,C.wood);post.position.set(83,1,26);g.add(post);
+ // Bollards and a planted verge keep the entrance separate from the loading bay.
+ for(const x of [76,82]){const bollard=roundedBox(.3,1,.3,.07,C.cream);bollard.position.set(x,.5,26);g.add(bollard);colliders.push({x,z:26,r:.25});}
+ const names=['하나','누리','이든','보라','준'];
+ names.forEach((name,i)=>{const a=i/5*Math.PI*2;addResident(name,86+Math.cos(a)*10,14+Math.sin(a)*7,[C.peach,C.yellow,C.mint,C.rose,0xa4b8ce][i]);const resident=residents.at(-1);resident.userData.walker=true;resident.userData.walkIndex=i;resident.userData.phase=a;});
+}
+function makeExpandedDistrictDetails(){
+ const newHomes=spots.filter(s=>s.id.startsWith('home')&&Number(s.id.slice(4))>=7);
+ for(const s of newHomes){groundPatch(12,12,s.x,s.z,0x96b780);
+  addLamp(s.x+5.7,s.z+1);const treeX=s.x-6.8,treeZ=s.z-4;if(roadDistance(treeX,treeZ)>6)addTree(treeX,treeZ,.8,Number(s.id.slice(4))%2===0);
+  const variant=Number(s.id.slice(4))%3;if(variant===0){const chimney=s.group.getObjectByName('chimney');if(chimney){chimney.scale.y=1.25;chimney.position.y+=.2;}}else if(variant===1){const dormer=roundedBox(2,1.2,1.5,.2,C.cream);dormer.position.set(0,6.5,1.4);s.group.add(dormer);}else{const balcony=roundedBox(3.3,.18,1.4,.06,C.wood);balcony.position.set(0,4,3.8);s.group.add(balcony);}
+ }
+ for(const [x,z] of [[52,-34],[54,-46],[65,-55],[82,-84],[103,-88],[110,-43],[48,-76],[36,-77],[48,-103],[63,-106],[86,-101],[112,-28],[116,-48],[104,41],[71,45],[-80,-45],[-67,-82],[-37,-83],[-70,43],[-46,63]]){if(roadDistance(x,z)>7&&spots.every(s=>Math.hypot(s.x-x,s.z-z)>8&&Math.hypot(s.zone.x-x,s.zone.z-z)>8))addTree(x,z,.9,x>60&&z>0);}
+ for(const [text,x,z] of [['↑ 솔바람 주택가 · 오르막 주의',52,-20],['⛽ 정상 주유소 →',60,-55],['🌳 산책 공원 →',61,35]]){const sign=flatSign(text,5,.65);placeOnGround(sign,x,z,2.1);scene.add(sign);const post=roundedBox(.15,2.2,.15,.03,C.wood);placeOnGround(post,x,z,1);scene.add(post);}
+ const orchard=new THREE.InstancedMesh(new THREE.SphereGeometry(.13,8,6),mat(C.rose),36);for(let i=0;i<36;i++){const x=67+Math.sin(i*2.4)*1.8,z=-50+Math.cos(i*2.4)*1.6;tempDummy.position.set(x,terrainHeight(x,z)+2.5+i%3*.4,z);tempDummy.rotation.set(0,0,0);tempDummy.scale.setScalar(1);tempDummy.updateMatrix();orchard.setMatrixAt(i,tempDummy.matrix);}scene.add(orchard);
+ addTree(67,-50,.8);scene.userData.newHomeIds=newHomes.map(s=>s.id);
+}
+const lines=['빵을 하나 더 넣었어요. 네 몫이란다!','꽃은 받는 사람을 닮아 가더라.','다음에는 함께 책 이야기를 해요.','바다 건너 딸에게도 이 온기가 닿겠지.','작은 수고가 마을을 바꾸는구나.','이제 밤길도 외롭지 않겠어.','오리들도 네가 오는 소리를 알아!'];
+const geom=(type,...a)=>new THREE[type](...a), mat=(color,rough=.85)=>new THREE.MeshStandardMaterial({color,roughness:rough,metalness:.02});
+function mesh(g,m,shadow=true){const o=new THREE.Mesh(g,m);o.castShadow=shadow;o.receiveShadow=shadow;return o}
+function roundedBox(w,h,d,r=.25,color=C.cream){const s=geom('Shape');s.moveTo(-w/2+r,-h/2);s.lineTo(w/2-r,-h/2);s.quadraticCurveTo(w/2,-h/2,w/2,-h/2+r);s.lineTo(w/2,h/2-r);s.quadraticCurveTo(w/2,h/2,w/2-r,h/2);s.lineTo(-w/2+r,h/2);s.quadraticCurveTo(-w/2,h/2,-w/2,h/2-r);s.lineTo(-w/2,-h/2+r);s.quadraticCurveTo(-w/2,-h/2,-w/2+r,-h/2);const g=new THREE.ExtrudeGeometry(s,{depth:d,bevelEnabled:true,bevelSegments:2,steps:1,bevelSize:r*.45,bevelThickness:r*.45});g.center();return mesh(g,mat(color))}
+function pitchedRoof(color){const outline=new THREE.Shape();outline.moveTo(-4.25,0);outline.lineTo(0,2.6);outline.lineTo(4.25,0);outline.closePath();const geometry=new THREE.ExtrudeGeometry(outline,{depth:7.5,bevelEnabled:false,steps:1});geometry.translate(0,0,-3.75);return mesh(geometry,mat(color));}
+function addBuilding(s){const g=new THREE.Group(), body=roundedBox(7,5.2,6,.65,s.c);body.position.y=2.8;g.add(body);const roof=pitchedRoof(s.id==='post'?0x709f8d:0xb5786d);roof.position.y=5.7;g.add(roof);const door=roundedBox(1.35,2.5,.22,.18,0x8e664d);door.position.set(0,1.45,3.15);g.add(door);for(const x of [-2,2]){const win=roundedBox(1.25,1.25,.18,.2,0xffe8a0);win.position.set(x,3.15,3.18);win.userData.window=true;g.add(win)}const sign=roundedBox(4.5,.8,.22,.18,0xfff3d8);sign.position.set(0,5.05,3.4);g.add(sign);g.position.set(s.x,0,s.z);scene.add(g);colliders.push({x:s.x,z:s.z,r:4.5});s.group=g;return g}
+function addCottage(s){const g=addBuilding(s);const fence=mat(0xfff7e6);for(const i of [-5,-4,-3,3,4,5]){const p=roundedBox(.18,1.05,.18,.05,0xfff7e6);p.position.set(i*.75,.5,5);g.add(p)}for(const side of [-1,1]){const rail=roundedBox(2.1,.15,.15,.04,0xfff7e6);rail.position.set(side*3,.65,5);g.add(rail);}const mailbox=roundedBox(.65,.55,.65,.18,s.c);mailbox.position.set(4,.9,4.4);g.add(mailbox)}
+function addTree(x,z,scale=1,pink=false){const g=new THREE.Group();const trunk=mesh(geom('CylinderGeometry',.38,.55,3.1,9),mat(C.wood));trunk.position.y=1.5;g.add(trunk);for(let i=0;i<5;i++){const crown=mesh(geom('IcosahedronGeometry',1.7,2),mat(pink?0xf0b9bb:(i%2?0x91b976:0x83ab6b)));crown.scale.set(1.15,1,.95);crown.position.set(Math.cos(i*1.26)*1.05,3.5+Math.sin(i*2.1)*.4,Math.sin(i*1.26)*.8);g.add(crown)}g.position.set(x,0,z);g.scale.setScalar(scale);g.userData.phase=Math.random()*6;scene.add(g);trees.push(g);colliders.push({x,z,r:1.5*scale})}
+function addLamp(x,z){const g=new THREE.Group();const pole=mesh(geom('CylinderGeometry',.1,.14,3.7,8),mat(0x53675e));pole.position.y=1.85;g.add(pole);const glow=mesh(geom('SphereGeometry',.38,12,8),new THREE.MeshStandardMaterial({color:0xffd87e,emissive:0xffb63f,emissiveIntensity:.2}));glow.position.y=3.65;glow.userData.lamp=true;g.add(glow);g.position.set(x,0,z);scene.add(g);colliders.push({x,z,r:.25});}
+function addResident(name,x,z,c){const g=new THREE.Group();const body=mesh(geom('CapsuleGeometry',.55,1.0,5,10),mat(c));body.position.y=1.15;g.add(body);const head=mesh(geom('SphereGeometry',.62,16,12),mat(0xf2c69f));head.position.y=2.25;g.add(head);for(const sx of [-.22,.22]){const eye=mesh(geom('SphereGeometry',.055,8,6),mat(C.ink),false);eye.position.set(sx,2.35,.57);g.add(eye)}g.position.set(x,0,z);g.userData={name,origin:new THREE.Vector3(x,0,z),phase:Math.random()*9};scene.add(g);residents.push(g)}
+function init(){
+ scene=new THREE.Scene();scene.fog=new THREE.Fog(C.sky,90,215);camera=new THREE.PerspectiveCamera(48,innerWidth/innerHeight,.1,450);
+ renderer=new THREE.WebGLRenderer({antialias:true,powerPreference:'high-performance'});renderer.setSize(innerWidth,innerHeight);renderer.shadowMap.type=THREE.PCFSoftShadowMap;renderer.outputColorSpace=THREE.SRGBColorSpace;renderer.toneMapping=THREE.ACESFilmicToneMapping;renderer.toneMappingExposure=1;
+ renderer.domElement.setAttribute('aria-label','보들섬 3D 배달 게임');renderer.domElement.tabIndex=-1;
+ renderer.domElement.addEventListener('webglcontextlost',e=>{e.preventDefault();keys={};speed=0;persist();setModal('pause');showFatal('그래픽 연결이 끊겼어요. 브라우저의 다른 탭을 닫고 다시 열어 주세요.');});
+ document.body.prepend(renderer.domElement);composer=new EffectComposer(renderer);composer.addPass(new RenderPass(scene,camera));composer.addPass(new UnrealBloomPass(new THREE.Vector2(innerWidth,innerHeight),.16,.5,.9));
+ clock=new THREE.Clock();makeWorld();makeCar();makeMarker();setupExpandedHUD();applySave();buildRoadGraph();spawnOrders();addEvents();setQuality();setModal(null);$('#loading').classList.add('hidden');refreshSaveStatus();animate();
+}
+function makeWorld(){
+ const hemi=new THREE.HemisphereLight(0xfff4db,0x71846e,1.8);scene.add(hemi);scene.userData.hemi=hemi;
+ const sun=new THREE.DirectionalLight(0xffe1b1,2.5);sun.position.set(-40,100,35);sun.castShadow=true;sun.shadow.mapSize.set(2048,2048);sun.shadow.camera.left=sun.shadow.camera.bottom=-150;sun.shadow.camera.right=sun.shadow.camera.top=150;sun.shadow.camera.far=330;sun.shadow.bias=-.00025;sun.shadow.normalBias=.08;sun.shadow.radius=3;scene.add(sun);scene.userData.sun=sun;
+ skyDome=mesh(new THREE.SphereGeometry(280,24,16),new THREE.ShaderMaterial({side:THREE.BackSide,depthWrite:false,uniforms:{top:{value:new THREE.Color(0x94cddd)},bottom:{value:new THREE.Color(0xf9e9c9)}},vertexShader:'varying vec3 v; void main(){v=position;gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.);}',fragmentShader:'uniform vec3 top;uniform vec3 bottom;varying vec3 v;void main(){float h=smoothstep(-.1,.65,normalize(v).y);gl_FragColor=vec4(mix(bottom,top,h),1.);}' }),false);scene.add(skyDome);
+ const waterMat=new THREE.ShaderMaterial({uniforms:{time:{value:0},night:{value:0}},vertexShader:'varying vec3 p;uniform float time;void main(){p=position;vec3 q=position;q.z+=sin(q.x*.19+time)*.08+cos(q.y*.16+time*.8)*.06;gl_Position=projectionMatrix*modelViewMatrix*vec4(q,1.);}',fragmentShader:'varying vec3 p;uniform float time;uniform float night;void main(){float r=length(vec2((p.x-25.)/105.,(-p.y+22.)/103.));float waves=sin(p.x*.8+sin(p.y*.4+time)+time)*.025;float foam=(1.-smoothstep(1.03,1.085,r))*smoothstep(1.012,1.033,r)*(.45+.25*sin(r*160.-time*1.6));vec3 c=mix(vec3(.31,.64,.70),vec3(.075,.19,.30),night);gl_FragColor=vec4(c+waves+foam*.6,1.);}'});
+ const ocean=mesh(new THREE.PlaneGeometry(540,540,80,80),waterMat,false);ocean.rotation.x=-Math.PI/2;ocean.position.y=-.55;scene.add(ocean);scene.userData.ocean=ocean;
+ const base=mesh(new THREE.CylinderGeometry(WORLD.rx+2,WORLD.rx+4,2,128),mat(0xdccca1));base.scale.z=WORLD.rz/WORLD.rx;base.position.set(WORLD.x,-1.2,WORLD.z);scene.add(base);
+ // Districts: all doors face south, with a separate parking apron eight metres ahead.
+ Object.assign(spot('post'),{x:-32,z:23});Object.assign(spot('bakery'),{x:-16,z:3});Object.assign(spot('flower'),{x:0,z:0});Object.assign(spot('cafe'),{x:17,z:1});Object.assign(spot('book'),{x:32,z:0});
+ Object.assign(spot('harbor'),{x:-40,z:-30,unlock:3});Object.assign(spot('lighthouse'),{x:-54,z:-27});
+ Object.assign(spot('park'),{x:47,z:15});Object.assign(spot('home1'),{x:2,z:30});Object.assign(spot('home2'),{x:19,z:31});Object.assign(spot('home3'),{x:37,z:32});
+ Object.assign(spot('home4'),{x:44,z:-28,unlock:2});Object.assign(spot('home5'),{x:25,z:-32,unlock:2});Object.assign(spot('home6'),{x:7,z:-30,unlock:2});
+ spots.push({id:'bridgework',name:'돌다리 남쪽 작업장',x:23,z:-8,c:C.cream,icon:'🔧',unlock:1,zone:{x:23,z:-8}},{id:'marketwork',name:'항구 시장 남쪽 입구',x:-40,z:-15,c:C.cream,icon:'🔑',unlock:1,zone:{x:-40,z:-15}});
+ spots.forEach(s=>{s.zone=s.zone||{x:s.x,z:s.z+8};s.unlock=s.unlock||1;});
+ makeTerrain();
+ addRoad([[-32,31],[-24,28],[-23,19],[-16,11],[0,8],[17,9],[32,8],[38,11],[39,20],[47,23],[48,42],[37,40],[19,39],[2,38],[-20,38],[-32,31]],8);
+ addRoad([[-23,19],[-30,10],[-35,-9],[-40,-15],[-49,-15],[-54,-19]],8);
+ addRoad([[-40,-15],[-40,-22]],8);
+ addRoad([[8,8],[8,-2],[12,-5],[17,-6],[17,-20],[25,-24],[44,-20]],8);
+ addRoad([[17,-20],[7,-22]],8);
+ addRoad([[13,-5.6],[22,-5.6],[23,-8]],6.5);
+ addRoad([[-24,28],[-20,32],[-15,38]],7.5);
+ addRoad([[8,8],[8,20],[10,32],[14,38]],7.5);
+ addRoad([[44,-20],[53,-24],[60,-30],[61,-38],[61,-48],[66,-60],[58,-68],[58,-78],[71,-85],[91,-80],[105,-78],[108,-57],[93,-38],[73,-38],[61,-38]],9);
+ addRoad([[58,-78],[53,-82],[47,-84]],8);
+ addRoad([[66,-60],[73,-56],[83,-56],[86,-68],[74,-77],[58,-68]],9);
+ addRoad([[47,23],[62,29],[79,33],[95,31],[103,26]],9);
+ for(const [x,z] of [[108,-57],[47,-84],[103,26]]){const circle=mesh(new THREE.CircleGeometry(5.5,36),mat(C.road),false);circle.rotation.x=-Math.PI/2;placeOnGround(circle,x,z,.023);scene.add(circle);}
+ for(const s of spots){if(['park','meadow','fuel','lighthouse','bridgework','marketwork'].includes(s.id))continue;(s.id.startsWith('home')?addCottage:addBuilding)(s);decorateBuilding(s);}
+ const pond=mesh(new THREE.CircleGeometry(6.5,40),mat(0x72bfc4,.25));pond.rotation.x=-Math.PI/2;pond.position.set(49,.025,13);scene.add(pond);colliders.push({x:49,z:13,r:6.6});
+ for(let i=0;i<4;i++){const d=new THREE.Group();ellipsoid(d,[.45,.28,.3],[0,.28,0],C.cream);ellipsoid(d,[.21,.24,.21],[0,.53,.3],C.yellow);ellipsoid(d,[.13,.06,.18],[0,.5,.51],C.peach);d.position.set(47+i,0,13+Math.sin(i));d.userData.duck=true;scene.add(d);boatGroups.push(d);}
+ // Creek separates the north-eastern district; the bridge is its sole driveable crossing.
+ const stream=addRoad([[-5,-130],[-5,-66],[-5,-40],[-2,-23],[7,-15],[17,-13],[35,-14],[55,-12],[78,-16],[110,-20],[141,-24]],creekWidth,0x78b9c0,.035,false);
+ creekSamples=stream.userData.curve.getPoints(520);
+ const bridge=new THREE.Group();const deck=roundedBox(8.8,.3,10,.2,0xb9b4a5);deck.position.set(17,.08,-13);bridge.add(deck);
+ for(const x of [12.6,21.4]){const rail=roundedBox(.3,.7,10,.1,0xc9c3b3);rail.position.set(x,.7,-13);bridge.add(rail);}scene.add(bridge);scene.userData.bridge=bridge;
+ gateGroups=[makeGate(17,-9.3,8.8),makeGate(-40,-18,12)];
+ fenceLine(-46,-18,-46,-35);fenceLine(-34,-18,-34,-35);fenceLine(-46,-35,-34,-35);
+ fenceLine(-46,-18,-34,-18,3);
+ fenceLine(12.6,-9.3,21.4,-9.3,2);
+ for(const s of spots.filter(s=>s.id.endsWith('work'))){const x=s.zone.x+3.6,z=s.zone.z;const sign=flatSign(s.id==='bridgework'?'다리 수리 자재':'항구 시장 입구',3,.5);sign.position.set(x,1.8,z);scene.add(sign);const post=roundedBox(.12,1.8,.12,.02,C.wood);post.position.set(x,.9,z);scene.add(post);}
+
+ for(let i=0;i<5;i++){const b=new THREE.Group();ellipsoid(b,[1.7,.45,.72],[0,0,0],i%2?C.rose:C.cream);const mast=mesh(new THREE.CylinderGeometry(.05,.07,2.6,8),mat(C.wood));mast.position.y=1;b.add(mast);const sail=mesh(new THREE.ConeGeometry(1,1.8,3),mat(C.cream));sail.scale.z=.08;sail.position.set(.35,1,0);b.add(sail);b.position.set(-85-i*.6,-.15,-23+i*3.3);scene.add(b);boatGroups.push(b);}
+ addRoad([[-54,-19],[-62,-18]],1.6,0xd4ceb9,.029,false);
+ addRoad([[-62,-18],[-87,-18]],2.8,0xb48c65,.15,false);
+ for(let x=-63;x>=-87;x-=3){for(const z of [-19.5,-16.5]){const post=roundedBox(.2,1.4,.2,.04,C.wood);post.position.set(x,.3,z);scene.add(post);}}
+ const lh=spot('lighthouse');const tower=mesh(new THREE.CylinderGeometry(1.6,2.4,10,24),mat(C.cream));tower.position.set(lh.x,5,lh.z);scene.add(tower);colliders.push({x:lh.x,z:lh.z,r:2.4});
+ for(const y of [3,7]){const stripe=mesh(new THREE.CylinderGeometry(y===3?2.18:1.86,y===3?2.28:1.96,.85,24),mat(C.rose));stripe.position.set(lh.x,y,lh.z);scene.add(stripe);}
+ const cap=mesh(new THREE.ConeGeometry(2.2,1.8,24),mat(C.rose));cap.position.set(lh.x,11,lh.z);scene.add(cap);
+ const towerDoor=roundedBox(1.2,2.1,.15,.15,0x78695b);towerDoor.position.set(lh.x,1.1,lh.z+2.35);scene.add(towerDoor);
+ const towerWindow=mesh(new THREE.CircleGeometry(.42,20),mat(0x73969e));towerWindow.position.set(lh.x,7.9,lh.z+1.91);scene.add(towerWindow);
+ lighthouseBeam=new THREE.SpotLight(0xffe9a5,0,80,.18,.55);lighthouseBeam.position.set(lh.x,10,lh.z);scene.add(lighthouseBeam,lighthouseBeam.target);
+ for(let i=0;i<60;i++){const a=i/60*Math.PI*2,r=57+Math.sin(i*3)*9,x=Math.cos(a)*r,z=Math.sin(a)*r*.78;if(Math.hypot(x+32,z-34)>10&&spots.every(s=>Math.hypot(s.x-x,s.z-z)>8&&Math.hypot(s.zone.x-x,s.zone.z-z)>8)&&roadDistance(x,z)>7)addTree(x,z,.8+(i%4)*.12,i%5===0);}
+ for(const [x,z] of [[-22,5],[-7,4],[27,4],[54,18],[8,44],[29,46],[-46,-24]])addLamp(x,z);
+ const residentPlaces=[[-20,5],[-3,5],[35,5],[-49,-25],[25,-4],[-58,-27],[55,20]];
+ people.forEach((p,i)=>addResident(p[0],...residentPlaces[i],[C.peach,C.mint,C.rose,C.yellow][i%4]));
+ makeHillStation();makeWalkingPark();makeExpandedDistrictDetails();
+ for(let i=0;i<9;i++){const cloud=new THREE.Group();for(let j=0;j<4;j++)ellipsoid(cloud,[2.5,1.1,1.5],[j*2,Math.sin(j)*.5,0],C.cream);cloud.position.set(-70+i*18,32+i%3*4,-50+i%4*20);cloud.userData.speed=.4;scene.add(cloud);smokes.push(cloud);}
+ stars=pointField(260,0xfff2c4,.28,150,35,85);fireflies=pointField(55,0xffec80,.15,60,.5,5);
+ makeDetails();makeWeather();makeTraffic();
+ for(const [x,z,sx,sy,sz] of [[-22,-59,10,4,8],[-65,-59,11,5,7],[114,2,6,3,8],[-66,17,7,4,10]]){const hill=ellipsoid(scene,[sx,sy,sz],[x,-1,z],0x8caf7b);colliders.push({x,z,r:Math.min(sx,sz)*.75});}
+
+ // Static props and buildings use the same height field as wheels, roads and route paint.
+ for(const o of scene.children){if(o.userData.groundConformed||o.userData.curve||o.isLight||o.isPoints||o.isInstancedMesh||o===base||o===ocean||o===skyDome||o.position.y>25)continue;o.position.y+=terrainHeight(o.position.x,o.position.z);}
+ scene.traverse(o=>{if(o.userData.window||o.userData.lamp)glows.push(o);});
+ cameraObstacles=[...spots.filter(s=>s.group).map(s=>s.group),...trees,tower,cap,...scene.userData.parkObstacles];
+}
+function makeCar(){
+ car=new THREE.Group();carVisual=new THREE.Group();car.add(carVisual);scene.add(car);
+ const body=roundedBox(2.65,1.8,4.25,.45,C.mint);body.position.y=1.35;body.name='paint';carVisual.add(body);
+ const cab=roundedBox(2.5,1.05,3.45,.35,C.cream);cab.position.set(0,2.3,-.15);carVisual.add(cab);
+ const glass=roundedBox(2.12,.77,.08,.13,0x537b81);glass.position.set(0,2.35,1.62);carVisual.add(glass);
+ for(const x of [-1.27,1.27]){const side=roundedBox(.06,.7,1.25,.02,0x5e8990);side.position.set(x,2.35,.6);carVisual.add(side);}
+ for(const x of [-1.58,1.58])for(const z of [-1.3,1.25]){
+ const pivot=new THREE.Group();pivot.position.set(x,.58,z);carVisual.add(pivot);
+ const tire=mesh(new THREE.CylinderGeometry(.52,.52,.32,20),mat(0x3e4b48));tire.rotation.z=Math.PI/2;pivot.add(tire);
+ const hub=mesh(new THREE.CylinderGeometry(.26,.26,.35,16),mat(C.cream));hub.rotation.z=Math.PI/2;tire.add(hub);hub.rotation.set(0,0,0);
+ wheels.push({pivot,tire,front:z>0});
+ }
+ for(const x of [-.9,.9]){const lamp=mesh(new THREE.SphereGeometry(.23,14,10),new THREE.MeshStandardMaterial({color:C.cream,emissive:0xffce70,emissiveIntensity:.1}));lamp.position.set(x,1.27,2.19);carVisual.add(lamp);headlights.push(lamp);const light=new THREE.SpotLight(0xffe8ac,0,24,.42,.65);light.position.set(x,1.3,2.2);light.target.position.set(x,.05,17);carVisual.add(light,light.target);headlights.push(light);}
+ const bumper=roundedBox(2.8,.22,.3,.08,C.cream);bumper.position.set(0,.76,2.15);carVisual.add(bumper);
+ for(const x of [-.58,.58]){const rear=roundedBox(.88,.58,.08,.1,0x537b81);rear.name='rearGlass';rear.position.set(x,2.5,-2.12);carVisual.add(rear);const tail=roundedBox(.2,.32,.08,.06,C.rose);tail.position.set(x*1.8,.98,-2.24);carVisual.add(tail);}
+ const rearSign=flatSign('LITTLE PARCEL',1.7,.34);rearSign.name='rearBadge';rearSign.rotation.y=Math.PI;rearSign.position.set(0,1.47,-2.39);carVisual.add(rearSign);
+ const seam=roundedBox(.025,1.3,.03,.006,0x67947f);seam.position.set(0,1.25,-2.35);carVisual.add(seam);
+ for(const x of [-.16,.16]){const handle=roundedBox(.1,.22,.06,.025,C.cream);handle.position.set(x,1.22,-2.39);carVisual.add(handle);}
+ const backBumper=roundedBox(2.8,.2,.28,.07,C.cream);backBumper.position.set(0,.64,-2.25);carVisual.add(backBumper);
+ for(let i=0;i<5;i++){const rib=roundedBox(1,.05,.07,.01,0x547f73);rib.position.set(0,1.03+i*.12,2.2);carVisual.add(rib);}
+ for(const x of [-1.08,1.08]){const rail=roundedBox(.13,.2,3.25,.04,C.wood);rail.position.set(x,2.98,-.2);carVisual.add(rail);}
+ for(let i=0;i<5;i++){const slat=roundedBox(2.2,.12,.18,.025,C.wood);slat.position.set(0,2.88,-1.55+i*.65);carVisual.add(slat);}
+ rackFlowers=new THREE.Group();carVisual.add(rackFlowers);for(let i=0;i<9;i++)ellipsoid(rackFlowers,[.11,.09,.11],[-1.16,3.12,-1.5+i*.34],i%2?C.rose:C.yellow);
+ parcelGroup=new THREE.Group();carVisual.add(parcelGroup);
+ const cat=new THREE.Group();ellipsoid(cat,[.25,.27,.22],[0,0,0],0xd49d70);for(const x of [-.16,.16]){const ear=mesh(new THREE.ConeGeometry(.1,.19,3),mat(0xd49d70));ear.position.set(x,.26,0);cat.add(ear);ellipsoid(cat,[.025,.035,.02],[x*.7,.04,.21],C.ink);}cat.position.set(-.6,2.33,1.74);carVisual.add(cat);
+ car.position.set(-32,0,34);car.rotation.y=yaw;applyCosmetics();
+}
+function makeMarker(){
+ spots.forEach(s=>{const apron=mesh(new THREE.PlaneGeometry(5.8,5.4),mat(0xd6cbb5),false);apron.rotation.x=-Math.PI/2;placeOnGround(apron,s.zone.x,s.zone.z,.055);scene.add(apron);
+ for(const side of [-1,1])for(const z of [-1.9,0,1.9]){const dash=mesh(new THREE.PlaneGeometry(.12,.65),mat(C.cream),false);dash.rotation.x=-Math.PI/2;placeOnGround(dash,s.zone.x+side*2.45,s.zone.z+z,.061);scene.add(dash);}
+ const paint=flatSign(s.id==='fuel'?'⛽ 주유 정차':'배달 정차',2,.35);paint.rotation.x=-Math.PI/2;placeOnGround(paint,s.zone.x,s.zone.z+2,.063);scene.add(paint);
+ const g=new THREE.Group();const ring=mesh(new THREE.RingGeometry(2.63,2.96,48),new THREE.MeshBasicMaterial({color:0x205b91,side:THREE.DoubleSide}),false);ring.rotation.x=-Math.PI/2;ring.position.y=.125;g.add(ring);
+ const icon=labelSprite('정차 · 배달',2.4);icon.position.y=.9;g.add(icon);
+ const shaft=mesh(new THREE.CylinderGeometry(.5,1.8,15,16,1,true),new THREE.MeshBasicMaterial({color:C.yellow,transparent:true,opacity:0,depthWrite:false,side:THREE.DoubleSide}),false);shaft.position.y=7.5;g.add(shaft);
+ const edge=mesh(new THREE.RingGeometry(2.52,3.08,48),new THREE.MeshBasicMaterial({color:0xfffcf0,side:THREE.DoubleSide}),false);edge.rotation.x=-Math.PI/2;edge.position.y=.12;g.add(edge);
+ const center=flatSign('P · 정차',1.75,.45);center.rotation.x=-Math.PI/2;center.position.set(0,.13,0);g.add(center);
+ placeOnGround(g,s.zone.x,s.zone.z);g.visible=false;scene.add(g);zoneMarkers.set(s.id,g);});marker=new THREE.Group();
+}
+function spawnOrders(){
+ if(save.mainDone<15&&!orders.some(o=>o.main)){const i=save.mainDone,p=storyOrders[i];orders.unshift({id:nextOrderId++,main:true,mainIndex:i,...p,tip:38,state:'new',age:0});}
+ while(orders.length<6){const candidates=dailyTemplates(save.day,save.chapter),unused=candidates.filter(p=>!orders.some(o=>o.from===p[0]&&o.to===p[1]&&!o.main));const pool=unused.length?unused:candidates;
+  const far=pool.filter(p=>spot(p[0]).x>46&&spot(p[0]).z< -30||spot(p[1]).x>46&&spot(p[1]).z< -30),wantFar=save.chapter>=2&&!orders.some(o=>!o.main&&(spot(o.to).z< -40||spot(o.from).z< -40)),p=(wantFar&&far.length?far:pool)[save.regularIndex++%(wantFar&&far.length?far.length:pool.length)];
+  const distance=Math.hypot(spot(p[0]).zone.x-spot(p[1]).zone.x,spot(p[0]).zone.z-spot(p[1]).zone.z);orders.push({id:nextOrderId++,main:false,from:p[0],to:p[1],item:goods[p[2]],person:p[3],tip:22+p[2]+Math.floor(distance/12),state:'new',age:0,day:save.day});}
+ renderOrders();updateMarker();persist();
+}
+function dailyTemplates(day,chapter){const eligible=regularTemplates.filter(p=>spot(p[0]).unlock<=chapter&&spot(p[1]).unlock<=chapter);return eligible.map((p,i)=>({p,rank:Math.sin((i+1)*127.1+day*311.7)*43758.5453})).sort((a,b)=>(a.rank-Math.floor(a.rank))-(b.rank-Math.floor(b.rank))).map(x=>x.p);}
+function nextDay(){save.day++;orders=orders.filter(o=>o.main||o.state!=='new');if(!orders.some(o=>o.id===selectedId))selectedId=null;spawnOrders();notify(save.day+'일째 · 새로운 이웃의 주문이 도착했어요');}
+function renderOrders(){
+ const queueOpen=$('#orders .orderQueue')?.open||false;
+ const card=o=>'<div class="order '+(o.state==='accepted'?'active':o.state==='cargo'?'cargo':'')+'"><div class="route">'+(o.main?'⭐ 주요 '+(o.mainIndex+1)+'/15':'✉ 일반')+' · '+people[o.person||0][0]+'<span class="tip">+'+o.tip+'🪙</span></div><div class="item">'+spot(o.from).name+' → '+spot(o.to).name+'</div><b>'+escapeHTML(o.item)+'</b><div class="item">'+(o.state==='new'?escapeHTML(o.note||'주민을 조심하세요 · 배달 시간 제한은 없어요'):o.state==='accepted'?'수령 구역에 정차하세요':'배달 구역에 정차하세요')+'</div><button data-id="'+o.id+'">'+(o.state==='new'?'수락하기':selectedId===o.id?'안내 중':'길 안내')+'</button></div>';
+ const current=orders.filter(o=>o.main||o.state!=='new').sort((a,b)=>(b.id===selectedId)-(a.id===selectedId));
+ const available=orders.filter(o=>!o.main&&o.state==='new');
+ $('#orders').innerHTML='<div class="focusLabel">'+save.day+'일째 · 일반 배달 '+save.regularDone+'건 완료</div>'+current.map(card).join('')+(current.length?'':'<p class="emptyQueue">잠깐 쉬어도 괜찮아요.<br>새 주문을 펼쳐 다음 배달을 골라보세요.</p>')+(available.length?'<details class="orderQueue" '+(queueOpen?'open':'')+'><summary>새 주문 '+available.length+'개 보기</summary>'+available.map(card).join('')+'</details>':'');
+
+ $$('.order button').forEach(b=>b.onclick=()=>{const o=orders.find(o=>o.id===+b.dataset.id);if(o.state==='new')accept(o.id);else{selectedId=o.id;renderOrders();updateMarker();}});updateHUD();
+}
+function accept(id){if(!running||paused||mapOpen)return;const o=orders.find(x=>x.id===id);if(!o||o.state!=='new')return;o.state='accepted';o.age=0;selectedId=id;tone('accept');renderOrders();updateMarker();persist();notify(spot(o.from).name+' 앞 원 안에서 정차하세요');}
+function activeTarget(){const o=orders.find(o=>o.id===selectedId&&o.state!=='new')||orders.find(o=>o.state==='cargo')||orders.find(o=>o.state==='accepted');return o&&spot(o.state==='cargo'?o.to:o.from);}
+function updateMarker(){zoneMarkers.forEach((g,id)=>{const a=orders.some(o=>o.state==='accepted'&&o.from===id),b=orders.some(o=>o.state==='cargo'&&o.to===id),fuel=id==='fuel'&&save.chapter>=2;g.visible=a||b||id==='post'||fuel;g.children[1].visible=a||b||fuel||selectedId==='garage';g.children[2].visible=a||b||selectedId==='garage'||selectedId==='fuel';g.children[0].material.color.set(b?0x176951:a?0x205b91:fuel?0x99732e:0x708273);g.children[2].material.color.set(b?C.mint:C.yellow);const text=b?'배달 · 정차':a?'수령 · 정차':fuel?'⛽ 주유 · 정차':'차고 · 정차';if(g.userData.label!==text){const replacement=labelSprite(text,2.4);g.children[1].material.map.dispose();g.children[1].material.dispose();g.children[1].material=replacement.material;g.userData.label=text;}});}function spot(id){return spots.find(s=>s.id===id)}
+function interact(){if(!running||paused||mapOpen||Math.abs(speed)>.12)return;if(nearSpot?.id==='fuel')openFuelStation();else if(nearSpot?.id==='post'&&!serviceOrder())openGarage();else if(nearSpot&&!serviceOrder())bubble(nearSpot.name+' · '+lines[spots.indexOf(nearSpot)%7]);}
+function addParcel(){syncParcels();}
+function complete(o){
+ if(!orders.includes(o)||o.state!=='cargo')return;
+ const bonus=Math.max(0,12-Math.floor(o.age/40)*3);save.coins+=o.tip+bonus;orders.splice(orders.indexOf(o),1);if(!o.main)save.regularDone++;save.deliveryLog.unshift({day:save.day,item:o.item,to:spot(o.to).name,main:!!o.main});save.deliveryLog=save.deliveryLog.slice(0,50);
+ if(o.main){if(o.mainIndex!==save.mainDone)throw Error('주요 주문 순서 불일치');save.completed.push(o.mainIndex);save.mainDone++;const chapter=Math.min(5,1+Math.floor(save.mainDone/3));if(chapter!==save.chapter){save.chapter=chapter;unlockWorld();showLetter(chapter-1);}if(save.mainDone===15){$('#letterFrom').textContent='마지막 편지 · 우리 마을의 배달부';$('#letterText').textContent='열다섯 번의 배달이 마을을 다시 이어 주었어요. Little Parcel Co.의 문은 앞으로도 열려 있어요. 일반 배달과 밤의 축제를 자유롭게 즐겨 주세요.';setModal('letter');}}
+ residents.filter(r=>r.userData.name===people[o.person||0][0]).forEach(r=>r.userData.waveUntil=simTime+3);syncParcels();confetti();tone('coin');bubble(people[o.person||0][0]+': '+(o.main?storyThanks(o):lines[o.person||0]));selectedId=null;spawnOrders();notify('배달 완료! +'+(o.tip+bonus)+'🪙'+(bonus?' · 신선함 보너스 +'+bonus:''));persist();
+}
+function unlockWorld(){
+ scene.userData.bridge.visible=save.chapter>=2;gateGroups[0].visible=save.chapter<2;gateGroups[1].visible=save.chapter<3;
+ const h=spot('harbor');if(h.group){h.group.visible=true;const shutter=h.group.getObjectByName('marketShutter');if(shutter)shutter.visible=save.chapter<3;}
+ navCache.clear();routeTarget='';
+ if(save.chapter>=5&&!festival.length){for(let i=0;i<35;i++){const l=mesh(new THREE.SphereGeometry(.26,10,8),new THREE.MeshStandardMaterial({color:[C.yellow,C.rose,C.peach][i%3],emissive:[C.yellow,C.rose,C.peach][i%3],emissiveIntensity:1.2}),false);const t=i/34;l.position.set(-2+t*12,4.68-Math.sin(t*Math.PI)*.6,17);scene.add(l);festival.push(l);}gameTime=.81;}
+ if(save.chapter<5&&festival.length){festival.forEach(l=>{scene.remove(l);l.geometry.dispose();l.material.dispose();});festival=[];}
+}
+function setupExpandedHUD(){
+ const fuel=document.createElement('span');fuel.id='fuelPill';fuel.className='pill';fuel.innerHTML='⛽ <b id="fuel">60.0 / 60 L</b><meter id="fuelMeter" min="0" max="60" value="60" aria-label="남은 연료"></meter>';$('.topbar').append(fuel);
+ const button=document.createElement('button');button.id='fuelNavBtn';button.textContent='주유소 안내';$('#quickActions').prepend(button);
+ const interaction=document.createElement('button');interaction.id='touchInteract';interaction.textContent='차고 / 주유 · E';interaction.setAttribute('aria-label','차고 및 주유소 상호작용');$('#touchDrive').append(interaction);
+ $('.titleNote').innerHTML='확장된 섬 · 언덕 주택 6채 · 주민이 산책하는 공원<br>주민 충돌 / 연료 고갈 시 게임 오버<br><span class="warningNote">미션 내역·동전·물품 초기화</span> · 진행 자동 저장';
+ $('#help').innerHTML='WASD / 방향키 · 운전　Space · 브레이크<br>E · 차고 / 주유소　H · 경적　C · 시점　M · 지도<br>오르막: 감속·연료 소비 증가 · ⛽ 1 L = 2 동전<br>⚠ 주민 충돌 / 연료 고갈: 미션·동전 초기화';
+ const log=document.createElement('details');log.innerHTML='<summary>배달 내역 보기</summary><div id="deliveryLog"></div>';$('#pause .modalCard').append(log);
+ const legend=document.createElement('p');legend.className='mapLegend';legend.textContent='흰 점: 내 차량 · 초록: 배달 경로 · 파랑: 개울 · ⛽ 강 건너 정상 주유소 · 🔒 다리 수리 후 개방';$('#map').insertBefore(legend,$('.mapGrid'));
+}
+function updateFuelHUD(){
+ if(!$('#fuel'))return;$('#fuel').textContent=save.fuel.toFixed(1)+' / '+FUEL_CAPACITY+' L';$('#fuelMeter').value=save.fuel;$('#fuelPill').classList.toggle('low',save.fuel<=15);$('#fuelPill').classList.toggle('critical',save.fuel<=5);
+ if(save.fuel<=15&&!lowFuelWarned&&running&&!gameOver){lowFuelWarned=true;notify('⛽ 연료가 얼마 남지 않았어요. 주유소 안내로 경로를 확인하세요.');}if(save.fuel>15)lowFuelWarned=false;
+}
+function fuelPurchaseQuote(litres){const amount=Math.max(0,Math.min(litres,FUEL_CAPACITY-save.fuel));return {amount,cost:Math.ceil(amount*FUEL_PRICE-1e-7)};}
+function renderFuelStation(){
+ $('#fuelQuote').textContent='남은 연료 '+save.fuel.toFixed(1)+' / '+FUEL_CAPACITY+' L · 보유 동전 '+save.coins+' 🪙';
+ for(const [id,litres,label] of [['fuelFive',5,'5 L 충전'],['fuelTen',10,'10 L 충전'],['fuelFull',FUEL_CAPACITY,'가득 충전']]){const q=fuelPurchaseQuote(litres),b=$('#'+id);b.textContent=label+' · '+q.cost+' 🪙';b.disabled=q.amount<.01||save.coins<q.cost;}
+ if(save.coins<fuelPurchaseQuote(5).cost&&save.fuel<FUEL_CAPACITY-.01)$('#fuelQuote').textContent+=' · 동전이 부족해요. 배달 보상을 모아 주세요.';
+}
+function openFuelStation(){if(!running||gameOver||save.chapter<2||Math.abs(speed)>.12||planarDistance(car.position,spot('fuel').zone)>=2.75)return false;renderFuelStation();setModal('fuelStation');$('#fuelClose').focus();return true;}
+function refuel(litres){
+ if(!running||gameOver||$('#fuelStation').classList.contains('hidden')||Math.abs(speed)>.12||planarDistance(car.position,spot('fuel').zone)>=2.75)return false;
+ if(!Number.isFinite(litres)||litres<=0)return false;const q=fuelPurchaseQuote(litres);if(q.amount<.01||save.coins<q.cost){tone('no');renderFuelStation();return false;}
+ save.coins-=q.cost;save.fuel=Math.min(FUEL_CAPACITY,save.fuel+q.amount);updateHUD();renderFuelStation();persist();tone('coin');notify(q.amount.toFixed(1)+' L 충전 · '+q.cost+' 동전 결제');return true;
+}
+function showLetter(i){const s=story[i];$('#letterFrom').textContent=(i+1)+'장 · '+s.title;$('#letterText').innerHTML='<b>'+s.from+'</b><br><br>'+s.text+'<br><br>✨ '+s.unlock+(i===0?'<br><br>① 오른쪽 주요 주문의 수락하기를 눌러요.<br>② 안내선을 따라 빵집 앞 정차 구역으로 가요.<br>③ 브레이크로 완전히 멈추면 물품이 실려요.<br>④ 목적지에서도 정차하면 배달 완료!<br><small>WASD / 방향키 · 운전, Space · 브레이크<br>터치 화면에서는 아래 운전 버튼을 사용해요.<br>⚠ 주민과 충돌하면 게임 오버입니다.</small>':'');setModal('letter');}
+function confetti(){for(let i=0;i<28;i++)spawnParticle(car.position.x,3,car.position.z,[C.rose,C.yellow,C.peach,C.mint][i%4],2.5);}
+function updateDrive(dt,input=null){
+ if(!running||paused||mapOpen||gameOver)return;
+ if(save.fuel<=0){endDrive('fuel');return;}
+ const previous=car.position.clone(),previousYaw=yaw;
+ const acc=input?.throttle??((keys.KeyW||keys.ArrowUp?1:0)-(keys.KeyS||keys.ArrowDown?1:0)),turn=input?.turn??((keys.KeyA||keys.ArrowLeft?1:0)-(keys.KeyD||keys.ArrowRight?1:0)),brake=input?.brake??keys.Space;
+ const motionSign=Math.abs(speed)>.1?Math.sign(speed):Math.sign(acc)||1,sin=Math.sin(yaw)*motionSign,cos=Math.cos(yaw)*motionSign;
+ roadGrade=(terrainHeight(car.position.x+sin*.7,car.position.z+cos*.7)-terrainHeight(car.position.x-sin*.7,car.position.z-cos*.7))/1.4;
+ const uphill=Math.max(0,roadGrade),driveGrade=THREE.MathUtils.clamp(roadGrade,-.6,.6),driveUphill=Math.max(0,driveGrade),max=10*save.engine/(1+driveUphill*2.6);
+ speed+=acc*dt*5.8/(1+driveUphill*2.5);if(Math.abs(speed)>.1)speed-=Math.sign(speed)*driveGrade*dt*1.2;if(!acc)speed*=Math.exp(-2.4*dt);if(brake)speed*=Math.exp(-6*dt);if(Math.abs(speed)<.035)speed=0;speed=THREE.MathUtils.clamp(speed,-Math.min(4,max),max);
+ steer=THREE.MathUtils.lerp(steer,turn,1-Math.exp(-7*dt));yaw+=dt*speed/2.6*Math.tan(steer*.65)*(brake?1.15:1);
+ const dx=Math.sin(yaw)*speed*dt,dz=Math.cos(yaw)*speed*dt;const nx=car.position.x+dx,nz=car.position.z+dz;
+ if(canDrive(nx,nz)){placeOnGround(car,nx,nz);}else{speed*=-.15;}
+ const hit=residentCollision(previous,car.position,previousYaw,yaw);
+ if(hit){placeOnGround(car,hit.x,hit.z);yaw=hit.yaw;car.rotation.y=yaw;endDrive(hit.resident);return;}
+ const distance=planarDistance(previous,car.position);save.fuel=Math.max(0,save.fuel-distance*FUEL_PER_METRE*(1+uphill*3.8));updateFuelHUD();
+ if(save.fuel<=0){endDrive('fuel');return;}
+ car.rotation.y=yaw;carVisual.rotation.z=-steer*speed*.008;const front=terrainHeight(car.position.x+Math.sin(yaw)*1.3,car.position.z+Math.cos(yaw)*1.3),back=terrainHeight(car.position.x-Math.sin(yaw)*1.3,car.position.z-Math.cos(yaw)*1.3);carVisual.rotation.x=THREE.MathUtils.lerp(carVisual.rotation.x,-Math.atan2(front-back,2.6),1-Math.exp(-8*dt));carVisual.position.y=Math.sin(simTime*12)*Math.abs(speed)*.004;
+ wheels.forEach(w=>{w.pivot.rotation.y=w.front?steer*.65:0;w.tire.rotateY(-speed*dt/.52);});
+ nearSpot=spots.find(s=>s.unlock<=save.chapter&&Math.hypot(car.position.x-s.zone.x,car.position.z-s.zone.z)<2.75)||null;
+ updateService(dt);
+ if(Math.abs(speed)>3&&Math.random()<dt*7&&save.quality!=='low')spawnParticle(car.position.x, .35,car.position.z,keys.Space?C.rose:0xdcccac,.6);
+ if(engineOsc)engineOsc.frequency.setTargetAtTime(45+Math.abs(speed)*5,audio.currentTime,.1);
+}
+function residentCollision(from,to,fromYaw=yaw,toYaw=yaw){
+ const angle=Math.atan2(Math.sin(toYaw-fromYaw),Math.cos(toYaw-fromYaw)),steps=Math.max(1,Math.ceil(Math.max(Math.hypot(to.x-from.x,to.z-from.z)/.2,Math.abs(angle)/.08)));
+ for(let step=0;step<=steps;step++){const f=step/steps,x=from.x+(to.x-from.x)*f,z=from.z+(to.z-from.z)*f,heading=fromYaw+angle*f,sin=Math.sin(heading),cos=Math.cos(heading);
+  for(const resident of residents){if(!resident.visible)continue;const dx=resident.position.x-x,dz=resident.position.z-z,side=dx*cos-dz*sin,forward=dx*sin+dz*cos,edgeX=Math.max(0,Math.abs(side)-1.6),edgeZ=Math.max(0,Math.abs(forward)-2.4);
+   if(edgeX*edgeX+edgeZ*edgeZ<=.62*.62)return {resident,x,z,yaw:heading};
+  }
+ }return null;
+}
+function endDrive(reason){
+ if(gameOver||!running||paused)return;
+ gameOver=true;speed=0;steer=0;keys={};stopTimer=0;serviceId=null;nearSpot=null;carVisual.rotation.z=0;
+ $('#gameOverMessage').textContent=reason==='fuel'?'연료가 모두 소진되어 운행을 마쳤습니다. 다음에는 정상 주유소에서 미리 충전해 주세요.':reason.userData.name+' 주민과 차량이 부딪혔습니다.';
+ const retained={volume:save.volume,quality:save.quality,camSense:save.camSense,capacity:save.capacity,engine:save.engine,paint:save.paint,rack:save.rack,horn:save.horn};save={...defaults,...retained,completed:[],orders:[],deliveryLog:[]};orders=[];selectedId=null;nextOrderId=1;gameTime=.29;lowFuelWarned=false;syncParcels();applyCosmetics();unlockWorld();updateHUD();renderOrders();updateMarker();routePoints=[];if(routeMesh)routeMesh.visible=false;$('#nav')?.remove();$('#prompt').classList.add('hidden');$('#notice').classList.add('hidden');$('#help').classList.add('hidden');setModal('gameOver');tone('no');persist();$('#gameOverRestart').focus();
+}
+function resetCrash(){gameOver=false;placeOnGround(car,-32,34);yaw=2.53;car.rotation.y=yaw;carVisual.rotation.set(0,0,0);speed=0;steer=0;keys={};nearSpot=null;stopTimer=0;serviceId=null;cameraHeading=yaw;cameraLift=0;routeTarget='';navCache.clear();setModal(null);}
+function restartDrive(){resetCrash();spawnOrders();startGame();updateMarker();updateNavigation();persist();renderer.domElement.focus({preventScroll:true});notify('새 배달을 시작해요. 주민과 연료를 확인해 주세요.');}
+function updateResidents(time=simTime){
+residents.forEach(r=>{const p=r.userData.phase;if(r.userData.walker){const a=p+Math.sin(time*.048+p)*1.15;r.position.x=86+Math.cos(a)*10;r.position.z=14+Math.sin(a)*7;const direction=Math.cos(time*.048+p)>=0?1:-1;r.rotation.y=Math.atan2(-Math.sin(a)*10*direction,Math.cos(a)*7*direction);}else r.position.x=r.userData.origin.x+Math.sin(time*.3+p)*.35;r.position.y=terrainHeight(r.position.x,r.position.z)+Math.abs(Math.sin(time*5+p))*.07;if(r.userData.arm)r.userData.arm.rotation.z=r.userData.waveUntil>time?Math.sin(time*12)*.5+2:Math.sin(time*4)*.2;if(r.userData.legs)r.userData.legs.forEach((leg,i)=>leg.rotation.x=r.userData.walker?Math.sin(time*5+p+i*Math.PI)*.5:0);});
+ if(running&&!paused&&!mapOpen&&!gameOver){const hit=residentCollision(car.position,car.position);if(hit)endDrive(hit.resident);}
+}
+function updateWorld(dt,t){
+ if(gameOver)return;
+ simTime+=dt;const oldTime=gameTime;gameTime=(gameTime+dt/480)%1;if(dt>0&&gameTime<oldTime)nextDay();orders.forEach(o=>{if(o.state==='cargo')o.age+=dt;});
+ const daylight=THREE.MathUtils.smoothstep(Math.sin((gameTime-.25)*Math.PI*2),-.18,.45);nightValue=1-daylight;
+ const sky=new THREE.Color(0x9fcddd).lerp(new THREE.Color(0x192e50),nightValue),sunset=Math.exp(-Math.pow((gameTime-.76)/.055,2))+Math.exp(-Math.pow((gameTime-.25)/.055,2));
+ sky.lerp(new THREE.Color(0xe7a5a1),Math.min(.6,sunset*.6));skyDome.material.uniforms.top.value.copy(sky);skyDome.material.uniforms.bottom.value.copy(sky).lerp(new THREE.Color(0xffe5b8),daylight*.5);scene.fog.color.copy(sky);
+ scene.userData.sun.intensity=.12+daylight*2.4;scene.userData.hemi.intensity=.5+daylight*1.4;scene.userData.sun.color.set(0xffe4bd).lerp(new THREE.Color(0xd9a2a0),Math.min(.5,sunset*.5));
+ stars.material.opacity=nightValue;fireflies.material.opacity=nightValue*.8;
+ lighthouseBeam.intensity=save.chapter>=4?nightValue*35:0;lighthouseBeam.target.position.set(-54+Math.cos(simTime*.25)*50,3,-27+Math.sin(simTime*.25)*50);
+ headlights.forEach(h=>{if(h.isLight)h.intensity=nightValue*22;else h.material.emissiveIntensity=.1+nightValue*1.8;});
+ glows.forEach(o=>{o.material.emissive.set(0xffb84a);o.material.emissiveIntensity=nightValue*(o.userData.window ? .8 : 1.5);});
+ trees.forEach(tr=>tr.rotation.z=Math.sin(simTime*.8+tr.userData.phase)*.012);
+ updateResidents();if(gameOver)return;
+ boatGroups.forEach((b,i)=>{b.position.y=(b.userData.duck?.08:-.12)+Math.sin(simTime+i)*.08;b.rotation.z=Math.sin(simTime*.7+i)*.04;});
+ smokes.forEach(c=>{c.position.x+=c.userData.speed*dt;if(c.position.x>90)c.position.x=-90;});
+ zoneMarkers.forEach(g=>{g.children[1].position.y=.9+Math.sin(simTime*2)*.06;});
+ for(let i=particles.length-1;i>=0;i--){const p=particles[i];p.life-=dt;if(p.life<=0){scene.remove(p.mesh);p.mesh.geometry.dispose();p.mesh.material.dispose();particles.splice(i,1);continue;}p.mesh.position.addScaledVector(p.v,dt);p.v.y-=dt*2;p.mesh.rotation.z+=dt;p.mesh.material.opacity=Math.min(1,p.life);}
+ updateNature(dt);updateWeather(dt);updateTraffic(dt);
+ scene.userData.ocean.material.uniforms.time.value=simTime;scene.userData.ocean.material.uniforms.night.value=nightValue;
+ uiTimer+=dt;if(uiTimer>.15){uiTimer=0;const mins=Math.floor(gameTime*1440);$('#clock').textContent=String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0');updateNavigation();}
+ if(ambientGain){ambientGain.gain.setTargetAtTime(.035+rain*.05+nightValue*.015,audio.currentTime,.8);ambientFilter.frequency.setTargetAtTime(400+rain*1200,audio.currentTime,.8);}
+}
+
+function updateCamera(dt){
+ if(!running){camera.position.set(Math.cos(simTime*.045)*78,58,Math.sin(simTime*.045)*65);camera.lookAt(0,0,2);return;}
+ scene.updateMatrixWorld(true);
+ cameraHeading+=Math.atan2(Math.sin(yaw-cameraHeading),Math.cos(yaw-cameraHeading))*(1-Math.exp(-3*dt));
+ const dir=new THREE.Vector3(Math.sin(cameraHeading),0,Math.cos(cameraHeading)),focus=car.position.clone().add(new THREE.Vector3(0,1.9,0));
+ const desired=car.position.clone().add(iso?new THREE.Vector3(-23,29,25):dir.multiplyScalar(-15-Math.abs(speed)*.35).add(new THREE.Vector3(0,11,0)));
+ const safe=safeCameraPosition(focus,desired);cameraLift=THREE.MathUtils.lerp(cameraLift,Math.max(0,safe.y-desired.y),1-Math.exp(-3*dt));desired.y+=cameraLift;
+ const candidate=camera.position.clone().lerp(desired,1-Math.exp(-4*dt*save.camSense));
+ candidate.y=Math.max(car.position.y+9,terrainHeight(candidate.x,candidate.z)+3,candidate.y);const delta=candidate.clone().sub(focus);if(delta.length()<8)candidate.copy(focus).addScaledVector(delta.normalize(),8);
+ // The camera travels above roofs. Fade only the objects crossing the car silhouette during a transition.
+ cameraFrame++;for(const obstacle of cameraObstacles){if(!obstacle.userData.cameraBounds||cameraFrame%30===0)obstacle.userData.cameraBounds=new THREE.Box3().setFromObject(obstacle);const bounds=obstacle.userData.cameraBounds;if(candidate.x>bounds.min.x-.4&&candidate.x<bounds.max.x+.4&&candidate.z>bounds.min.z-.4&&candidate.z<bounds.max.z+.4)candidate.y=Math.max(candidate.y,bounds.max.y+.8);}
+ camera.position.copy(candidate);camera.lookAt(focus);
+ const occluded=new Set();for(const [x,z] of [[0,0],[1.4,0],[-1.4,0],[0,2.3],[0,-2.3]]){const origin=focus.clone().add(new THREE.Vector3(x,.3,z)),ray=camera.position.clone().sub(origin);cameraRay.set(origin,ray.normalize());cameraRay.near=.05;cameraRay.far=camera.position.distanceTo(origin);for(const hit of cameraRay.intersectObjects(cameraObstacles,true)){if(hit.object.isMesh)occluded.add(hit.object);}}
+ for(const object of occluded){if(!cameraFade.has(object)){const materials=(Array.isArray(object.material)?object.material:[object.material]);cameraFade.set(object,materials.map(m=>({m,opacity:m.opacity,transparent:m.transparent,depthWrite:m.depthWrite})));}}
+ for(const [object,materials] of cameraFade){let restored=true;for(const original of materials){const target=occluded.has(object)?Math.min(.18,original.opacity):original.opacity;original.m.transparent=true;original.m.depthWrite=false;original.m.opacity=THREE.MathUtils.lerp(original.m.opacity,target,1-Math.exp(-12*dt));if(Math.abs(original.m.opacity-original.opacity)>.01)restored=false;}if(!occluded.has(object)&&restored){for(const original of materials)Object.assign(original.m,{opacity:original.opacity,transparent:original.transparent,depthWrite:original.depthWrite});cameraFade.delete(object);}}
+ camera.fov=THREE.MathUtils.lerp(camera.fov,iso?42:48+Math.abs(speed)*.3,1-Math.exp(-4*dt));camera.updateProjectionMatrix();
+}
+
+function animate(){requestAnimationFrame(animate);const elapsed=clock.getDelta(),dt=Math.min(.05,elapsed);if(document.hidden)return;
+ if(running&&!paused&&!mapOpen&&!releaseTestDriving){updateDrive(dt);if(!paused)updateWorld(dt);}else if(!running){simTime+=dt;updateWorld(0);}
+ if(!releaseTestDriving)updateCamera(dt);if(save.quality==='low')renderer.render(scene,camera);else composer.render();
+ if(running&&!paused&&elapsed<.25){frameCount++;frameTime+=elapsed;if(frameTime>=8){if(frameCount/frameTime<24&&save.quality==='high'&&!autoQualityAdjusted){save.quality='medium';setQuality();autoQualityAdjusted=true;notify('부드러운 운전을 위해 그래픽을 보통으로 조정했어요');}frameCount=0;frameTime=0;}}
+}
+
+function addEvents(){
+ addEventListener('keydown',e=>{if(e.target.matches('input,select,textarea')&&e.code!=='Escape')return;
+ if(running&&!paused&&['Space','ArrowUp','ArrowDown','ArrowLeft','ArrowRight'].includes(e.code))e.preventDefault();if(e.repeat)return;
+ if(e.code==='Escape'){togglePause();return;}if(!running||paused)return;if(e.code==='KeyM'){toggleMap();return;}if(mapOpen)return;
+ keys[e.code]=true;if(e.code==='KeyE')interact();if(e.code==='KeyH')tone('horn');if(e.code==='KeyC'){iso=!iso;notify(iso?'아이소메트릭 카메라':'추적 카메라');}
+ });
+ addEventListener('keyup',e=>keys[e.code]=false);addEventListener('blur',()=>{keys={};if(running&&!paused)setModal('pause');});
+ addEventListener('resize',()=>{camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix();renderer.setSize(innerWidth,innerHeight);composer.setSize(innerWidth,innerHeight);});
+ $('#start').onclick=startGame;
+ $('#pauseBtn').onclick=togglePause;$('#mapBtn').onclick=toggleMap;$('#cameraBtn').onclick=()=>{if(running&&!paused){iso=!iso;persist();}};
+ $('#phoneToggle').onclick=()=>{const phone=$('.phone'),compact=phone.classList.toggle('compact');$('#phoneToggle').textContent=compact?'주문':'접기';$('#phoneToggle').setAttribute('aria-expanded',String(!compact));};
+ for(const button of $$('[data-drive]')){button.onpointerdown=e=>{if(!running||paused||mapOpen)return;e.preventDefault();button.setPointerCapture(e.pointerId);keys[button.dataset.drive]=true;};button.onpointerup=button.onpointercancel=button.onlostpointercapture=()=>{keys[button.dataset.drive]=false;};}$('#touchHorn').onclick=()=>tone('horn');
+ $('#rescueBtn').onclick=()=>{recoverVehicle();setModal(null);};$('#exportBtn').onclick=exportSave;$('#importBtn').onclick=()=>$('#saveFile').click();$('#saveFile').onchange=importSave;
+ $('#gameOverRestart').onclick=restartDrive;$('#gameOverTitle').onclick=()=>{resetCrash();$('#titleBtn').onclick();$('#start').textContent='배달 시작하기';};
+ $('#fuelFive').onclick=()=>refuel(5);$('#fuelTen').onclick=()=>refuel(10);$('#fuelFull').onclick=()=>refuel(FUEL_CAPACITY);$('#fuelClose').onclick=()=>setModal(null);$('#fuelNavBtn').onclick=()=>{if(!running||paused||mapOpen)return;if(save.chapter<2){notify('주요 배달 3개로 돌다리를 수리하면 정상 주유소가 열려요.');return;}selectedId='fuel';routeTarget='';updateMarker();updateNavigation();notify('강 건너 정상 주유소로 안내합니다. 원 안에 정차한 뒤 E를 누르세요.');};
+ $('#touchInteract').onclick=()=>{if(!running||paused||mapOpen)return;if(Math.abs(speed)>.12){notify('브레이크를 밟고 완전히 정차한 뒤 눌러 주세요.');return;}interact();};
+ addEventListener('visibilitychange',()=>{if(document.hidden&&!releaseTestDriving){keys={};persist();if(running&&!paused)setModal('pause');}});$('#resume').onclick=()=>setModal(null);$('#saveBtn').onclick=()=>{if(persist())notify('진행 상황을 저장했어요');else notify('저장하지 못했어요. 저장 파일을 내려받아 주세요.');};$('#titleBtn').onclick=()=>{persist();running=false;setModal(null);$('#hud').classList.add('hidden');$('#title').classList.remove('hidden');$('#title').inert=false;$('#start').textContent='이어서 배달하기';};
+ $('#garageBtn').onclick=()=>{if(!running||paused)return;if(nearSpot?.id==='post'&&Math.abs(speed)<.12)openGarage();else{selectedId='garage';updateMarker();notify('우체국 앞 정차 구역에서 E를 눌러 차고에 들어가세요');}};
+ $('#garageClose').onclick=()=>setModal(null);$('#letterNext').onclick=()=>setModal(null);$('.mapClose').onclick=toggleMap;
+ $('#volume').oninput=e=>{save.volume=+e.target.value;if(audio)audio.masterGain.gain.value=save.volume*.16;persist();};$('#quality').onchange=e=>{save.quality=e.target.value;setQuality();persist();};
+ $('#camSense').oninput=e=>{save.camSense=+e.target.value;persist();};
+ $('#resetSave').onclick=()=>{if(confirm('현재 배달 진행을 지우고 처음부터 시작할까요?')){save={...defaults,completed:[],orders:[]};orders=[];car.position.set(-32,0,34);yaw=2.53;gameTime=.29;selectedId=null;if(persist())location.reload();else notify('초기화 내용을 저장하지 못했어요. 파일로 백업한 뒤 다시 시도해 주세요.');}};
+ addEventListener('pagehide',()=>persist());setInterval(()=>{if(running)persist();},10000);
+}
+function startGame(){
+ running=true;setModal(null);if(audio?.state==='suspended')audio.resume().catch(()=>{});$('#title').classList.add('hidden');$('#title').inert=true;$('#hud').classList.remove('hidden');$('#hud').inert=false;
+ if(innerWidth<=760){$('.phone').classList.add('compact');$('#phoneToggle').textContent='주문';$('#phoneToggle').setAttribute('aria-expanded','false');}
+ cameraHeading=yaw;cameraLift=0;const focus=car.position.clone().add(new THREE.Vector3(0,1.9,0)),desired=car.position.clone().add(iso?new THREE.Vector3(-23,29,25):new THREE.Vector3(-Math.sin(yaw)*15,11,-Math.cos(yaw)*15));camera.position.copy(safeCameraPosition(focus,desired));initAudio();
+ if(save.fuel<=0){endDrive('fuel');return;}if(save.mainDone===0&&!save.introSeen){save.introSeen=true;showLetter(0);$('#letterText').insertAdjacentHTML('beforeend','<br><br><b>⛽ 출발 연료 60 L · 1 L = 2 동전</b><br>다리 수리 후 강 건너 정상 주유소에서 충전하세요. 주유소 안내 버튼으로 경로를 볼 수 있어요.<br><small class="warningNote">주민 충돌 / 연료 고갈 시 미션 내역·동전·물품이 초기화됩니다.</small>');}
+ if(!orders.some(o=>o.state!=='new'))notify(save.mainDone===15?'이웃의 새 주문을 펼쳐 자유롭게 배달해 보세요':'주요 주문을 수락하고 흰 테두리 안내선을 따라가세요');$('#help').classList.remove('hidden');setTimeout(()=>$('#help').classList.add('hidden'),15000);
+}
+function togglePause(){if(!running||gameOver)return;if(mapOpen){toggleMap();return;}setModal(paused?null:'pause');}
+function toggleMap(){if(!running||paused)return;mapOpen=!mapOpen;keys={};$('#map').classList.toggle('hidden',!mapOpen);if(mapOpen)drawMap();}
+function openGarage(){
+ $('#garage .modalCard>p').textContent='동전으로 밴을 가꾸어요. 정상 주유소에서 쓸 연료비도 남겨 주세요.';
+ const specs=[['capacity','적재 공간',save.capacity===3?'3 → 5칸':'5 → 8칸',save.capacity===3?90:180,save.capacity===8],['engine','엔진 튜닝','최고 속도 +30%',120,save.engine>1],['paint','복숭아색 페인트','차량 색상',45,save.paint==='peach'],['rack','꽃무늬 루프랙','랙 위 꽃 장식',55,save.rack==='flower'],['horn','새소리 경적','맑고 귀여운 경적',40,save.horn==='bird']];
+ $('#garageItems').innerHTML=specs.map(([k,a,b,c,owned])=>'<div class="shopItem"><b>'+a+'</b><br><small>'+b+'</small><button data-k="'+k+'" '+(owned?'disabled':'')+'>'+(owned?'구매 완료':c+'🪙')+'</button></div>').join('');
+ $$('#garageItems button').forEach(b=>b.onclick=()=>buy(b.dataset.k));setModal('garage');
+}
+function buy(k){
+ const owned=k==='capacity'?save.capacity===8:k==='engine'?save.engine>1:k==='paint'?save.paint==='peach':k==='rack'?save.rack==='flower':k==='horn'?save.horn==='bird':true;
+ if(owned)return false;const cost={capacity:save.capacity===3?90:180,engine:120,paint:45,rack:55,horn:40}[k];
+ if(save.coins<cost){tone('no');notify('동전이 조금 더 필요해요');return false;}
+ save.coins-=cost;if(k==='capacity')save.capacity=save.capacity===3?5:8;else if(k==='engine')save.engine=1.3;else save[k]={paint:'peach',rack:'flower',horn:'bird'}[k];
+ applyCosmetics();persist();tone('coin');openGarage();updateHUD();return true;
+}
+
+function normaliseSave(input){
+ const n={...defaults,...input},number=(v,d,min,max)=>Number.isFinite(Number(v))?THREE.MathUtils.clamp(Number(v),min,max):d;
+ n.mainDone=Math.floor(number(n.mainDone,0,0,15));n.chapter=Math.min(5,1+Math.floor(n.mainDone/3));n.completed=Array.from({length:n.mainDone},(_,i)=>i);
+ n.coins=Math.floor(number(n.coins,0,0,1000000));n.capacity=[3,5,8].includes(n.capacity)?n.capacity:3;n.engine=n.engine===1.3?1.3:1;
+ n.fuel=typeof n.fuel==='number'&&Number.isFinite(n.fuel)?THREE.MathUtils.clamp(n.fuel,0,FUEL_CAPACITY):FUEL_CAPACITY;n.day=Math.floor(number(n.day,1,1,100000));n.regularDone=Math.floor(number(n.regularDone,0,0,100000));n.deliveryLog=(Array.isArray(n.deliveryLog)?n.deliveryLog:[]).filter(x=>x&&typeof x==='object').slice(0,50).map(x=>({day:Math.floor(number(x.day,1,1,100000)),item:String(x.item||'배달 물품').slice(0,100),to:String(x.to||'이웃').slice(0,100),main:!!x.main}));
+ n.volume=number(n.volume,.55,0,1);n.camSense=number(n.camSense,1,.5,1.5);n.quality=['high','medium','low'].includes(n.quality)?n.quality:'high';
+ n.paint=n.paint==='peach'?'peach':'mint';n.rack=n.rack==='flower'?'flower':'wood';n.horn=n.horn==='bird'?'bird':'soft';n.regularIndex=Math.floor(number(n.regularIndex,0,0,100000));
+ const unique=new Set();let main=false,cargo=0;
+ n.orders=(Array.isArray(n.orders)?n.orders:[]).filter(o=>o&&typeof o==='object'&&spot(o.from)&&spot(o.to)&&['new','accepted','cargo'].includes(o.state)).slice(0,12).flatMap((o,i)=>{
+  if(o.main&&(main||o.mainIndex!==n.mainDone||n.mainDone>=15))return [];if(o.main)main=true;
+  let id=Number.isSafeInteger(o.id)&&o.id>0?o.id:i+1;while(unique.has(id))id++;unique.add(id);
+  const state=o.state==='cargo'&&++cargo>n.capacity?'accepted':o.state;
+  const safe={id,main:!!o.main,from:o.from,to:o.to,item:String(o.item||'배달 물품').slice(0,100),person:Math.floor(number(o.person,0,0,people.length-1)),tip:Math.floor(number(o.tip,22,0,100)),state,age:number(o.age,0,0,86400)};
+  if(o.main)Object.assign(safe,{mainIndex:n.mainDone},storyOrders[n.mainDone]);if(spot(safe.from).unlock>n.chapter||spot(safe.to).unlock>n.chapter)return [];
+  return [safe];
+ });
+ n.position=Array.isArray(n.position)&&n.position.length===2&&n.position.every(Number.isFinite)?n.position:null;
+ n.yaw=number(n.yaw,2.53,-100000,100000);n.gameTime=number(n.gameTime,.29,0,1);n.iso=!!n.iso;n.introSeen=!!n.introSeen;
+ n.selectedId=Number.isSafeInteger(n.selectedId)||['fuel','garage'].includes(n.selectedId)?n.selectedId:null;n.version=3;return n;
+}
+function applySave(){
+ gameOver=false;
+ save=normaliseSave(save);orders=save.orders.map(o=>({...o}));nextOrderId=Math.max(0,...orders.map(o=>o.id))+1;
+ if(save.position&&canDrive(save.position[0],save.position[1],true)&&!residentCollision({x:save.position[0],z:save.position[1]},{x:save.position[0],z:save.position[1]},save.yaw,save.yaw))placeOnGround(car,save.position[0],save.position[1]);else{placeOnGround(car,-32,34);save.yaw=2.53;}
+ yaw=save.yaw;cameraHeading=yaw;car.rotation.y=yaw;speed=0;steer=0;gameTime=save.gameTime;iso=save.iso;selectedId=save.selectedId;
+ $('#volume').value=save.volume;$('#quality').value=save.quality;$('#camSense').value=save.camSense;$('#start').textContent=save.mainDone||orders.some(o=>o.state!=='new')?'이어서 배달하기':'배달 시작하기';
+ applyCosmetics();syncParcels();unlockWorld();gameTime=save.gameTime;updateHUD();
+}
+function updateHUD(){$('#coins').textContent=save.coins;const count=orders.filter(o=>o.state==='cargo').length;$('#cargo').textContent=count+' / '+save.capacity+(count===save.capacity?' 🚐 가득 참':'');$('#chapter').textContent=save.chapter+'장 · '+save.mainDone+'/15';const mins=Math.floor(gameTime*1440);$('#clock').textContent=String(Math.floor(mins/60)).padStart(2,'0')+':'+String(mins%60).padStart(2,'0');updateFuelHUD();if($('#deliveryLog'))$('#deliveryLog').innerHTML=save.deliveryLog.length?save.deliveryLog.map(o=>'<div class="logLine">'+o.day+'일 · '+escapeHTML(o.item)+' → '+escapeHTML(o.to)+'</div>').join(''):'아직 완료한 배달이 없어요.';}
+function savePayload(){return {...save,version:3,orders:orders.map(o=>({...o})),position:gameOver?[-32,34]:car?[car.position.x,car.position.z]:null,yaw:gameOver?2.53:yaw,gameTime,iso,selectedId};}
+function refreshSaveStatus(){const status=$('#saveStatus');status.hidden=!(storageProblem||loadNotice);status.textContent=storageProblem||loadNotice;if(storageRecovered){status.hidden=false;status.textContent='이전 자동 저장에서 진행을 복구했어요. 메뉴에서 저장 파일을 백업해 주세요.';}}
+function persist(storage=null){
+ try{storage=storage||localStorage;const payload=JSON.stringify(savePayload()),old=storage.getItem(SAVE_KEY);if(old){try{JSON.parse(old);storage.setItem(SAVE_KEY+'.backup',old);}catch(e){}}
+ storage.setItem(SAVE_KEY,payload);if(gameOver)storage.setItem(SAVE_KEY+'.backup',payload);storageProblem='';refreshSaveStatus();return true;
+ }catch(e){storageProblem='자동 저장에 실패했어요. 메뉴 → 저장 파일 내려받기로 진행을 보관해 주세요.';refreshSaveStatus();return false;}
+}
+function exportSave(){const data=new Blob([JSON.stringify(savePayload(),null,2)],{type:'application/json'}),url=URL.createObjectURL(data),link=document.createElement('a');link.href=url;link.download='Little-Parcel-save.json';link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);notify('현재 진행을 저장 파일로 내려받았어요');}
+async function importSave(event){const file=event.target.files?.[0];if(!file)return;try{if(file.size>200000)throw Error('파일이 너무 큽니다');const data=JSON.parse(await file.text());if(!data||typeof data!=='object'||Array.isArray(data)||!Number.isInteger(data.mainDone)||!Array.isArray(data.orders))throw Error('형식');if(!confirm('저장 파일의 진행으로 현재 배달을 바꿀까요?'))return;save=normaliseSave(data);applySave();navCache.clear();spawnOrders();updateMarker();setQuality();persist();notify('저장 파일을 불러왔어요');}catch(e){notify('올바른 Little Parcel 저장 파일을 선택해 주세요');}finally{event.target.value='';}}
+function recoverVehicle(){const candidates=navGraph.map(n=>n.p).filter(p=>canDrive(p.x,p.z,true)&&!residentCollision(p,p));candidates.sort((a,b)=>a.distanceToSquared(car.position)-b.distanceToSquared(car.position));const destination=candidates[0]||new THREE.Vector3(-32,0,34);car.position.copy(destination);speed=0;steer=0;keys={};stopTimer=0;routeTarget='';persist();notify('가까운 안전한 길로 이동했어요. 물품과 동전은 그대로예요');}
+function escapeHTML(value){return String(value).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+
+function notify(s){const n=$('#notice');n.textContent=s;n.classList.remove('hidden');clearTimeout(n._t);n._t=setTimeout(()=>n.classList.add('hidden'),3200)}function bubble(s){const b=document.createElement('div');b.className='bubble';b.textContent=s;document.body.append(b);setTimeout(()=>b.remove(),3500)}
+function initAudio(){if(audio)return;try{audio=new (window.AudioContext||window.webkitAudioContext)();audio.masterGain=audio.createGain();audio.masterGain.gain.value=save.volume*.16;audio.masterGain.connect(audio.destination);engineOsc=audio.createOscillator();const g=audio.createGain();engineOsc.type='triangle';engineOsc.frequency.value=55;g.gain.value=.035;engineGain=g;engineOsc.connect(g).connect(audio.masterGain);engineOsc.start();startAmbient();music()}catch(e){audio=null}}
+function tone(type){if(!audio)return;const o=audio.createOscillator(),g=audio.createGain();o.connect(g).connect(audio.masterGain);let f=type==='coin'?880:type==='horn'?(save.horn==='bird'?760:240):type==='no'?130:type==='pickup'?520:type==='bump'?80:420;o.type=type==='horn'?'sine':'triangle';o.frequency.setValueAtTime(f,audio.currentTime);if(type==='coin')o.frequency.exponentialRampToValueAtTime(1320,audio.currentTime+.16);g.gain.setValueAtTime(.6,audio.currentTime);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+(type==='horn'?.35:.22));o.start();o.stop(audio.currentTime+.4)}
+function music(){
+ if(!audio)return;const chords=[[130.81,164.81,196,246.94],[110,130.81,164.81,196],[87.31,130.81,174.61,220],[98,146.83,196,246.94]];let beat=0;
+ setInterval(()=>{if(!running||paused||!audio)return;const chord=chords[Math.floor(beat/8)%4],f=chord[beat%4],o=audio.createOscillator(),g=audio.createGain();o.type='triangle';o.frequency.value=f*(beat%8>3?2:1);g.gain.setValueAtTime(.001,audio.currentTime);g.gain.linearRampToValueAtTime(.12,audio.currentTime+.015);g.gain.exponentialRampToValueAtTime(.001,audio.currentTime+1.4);o.connect(g).connect(audio.masterGain);o.start();o.stop(audio.currentTime+1.5);
+ if(beat%16===0&&nightValue<.5){const bird=audio.createOscillator(),bg=audio.createGain();bird.frequency.setValueAtTime(1700,audio.currentTime);bird.frequency.exponentialRampToValueAtTime(2300,audio.currentTime+.12);bg.gain.setValueAtTime(.04,audio.currentTime);bg.gain.exponentialRampToValueAtTime(.001,audio.currentTime+.3);bird.connect(bg).connect(audio.masterGain);bird.start();bird.stop(audio.currentTime+.31);}beat++;},480);
+}
+function ellipsoid(parent,scale,pos,color){const o=mesh(new THREE.SphereGeometry(1,12,9),mat(color));o.scale.set(...scale);o.position.set(...pos);parent.add(o);return o;}
+function labelSprite(text,size=3){
+ const canvas=document.createElement('canvas');canvas.width=512;canvas.height=96;const ctx=canvas.getContext('2d');ctx.fillStyle='#fff9e9';ctx.beginPath();ctx.roundRect(4,4,504,88,24);ctx.fill();ctx.fillStyle='#50665b';ctx.font='bold 31px sans-serif';ctx.textAlign='center';ctx.textBaseline='middle';ctx.fillText(text,256,48,485);const texture=new THREE.CanvasTexture(canvas);texture.colorSpace=THREE.SRGBColorSpace;const sprite=new THREE.Sprite(new THREE.SpriteMaterial({map:texture,depthWrite:false}));sprite.scale.set(size,size*96/512,1);return sprite;
+}
+function addRoad(points,width,color=C.road,y=ROAD_Y,track=true){
+ y+=scene.children.filter(o=>o.userData.curve).length*.0008;
+ const curve=new THREE.CatmullRomCurve3(points.map(p=>new THREE.Vector3(p[0],y,p[1])));const vertices=[],idx=[],n=Math.max(points.length*14,Math.ceil(curve.getLength()/.8));let previous;
+ for(let i=0;i<=n;i++){const p=curve.getPoint(i/n),t=curve.getTangent(i/n),normal=new THREE.Vector3(-t.z,0,t.x).normalize(),left=p.clone().addScaledVector(normal,-width/2),right=p.clone().addScaledVector(normal,width/2);if(previous)appendGroundPolygon([previous.left,previous.right,right,left],y,vertices,idx);previous={left,right};}
+ const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(vertices,3));g.setIndex(idx);g.computeVertexNormals();const road=mesh(g,mat(color));road.material.side=THREE.DoubleSide;road.castShadow=false;road.material.depthWrite=false;road.renderOrder=1;scene.add(road);road.userData.curve=curve;curve.userData={width};if(track)roadCurves.push(curve);return road;
+}
+function roadDistance(x,z){let min=1000;roadCurves.forEach(c=>{for(let i=0;i<=60;i++){const p=c.getPoint(i/60);min=Math.min(min,Math.hypot(x-p.x,z-p.z));}});return min;}
+function decorateBuilding(s){
+ const g=s.group;g.userData.kind=s.id;
+ // Distinct silhouettes and shop-specific furnishings share the same safe loading apron.
+ const board=flatSign(s.name.replace('Little Parcel 우체국','Little Parcel Co.'),5,.65);board.position.set(0,5.12,3.7);g.add(board);
+ const box=(w,h,d,x,y,z,color)=>{const b=roundedBox(w,h,d,Math.min(.15,h*.2),color);b.position.set(x,y,z);g.add(b);return b;};
+ const display=(x,width=2)=>{const glass=box(width,1.8,.13,x,2.15,3.43,0x5b898b);glass.userData.window=true;box(width+.18,.16,.42,x,1.15,3.55,C.cream);return glass;};
+ if(s.id==='bakery'){
+  g.children[1].scale.set(1.05,.8,1);const dormer=roundedBox(1.7,1.4,1,.2,C.cream);dormer.position.set(0,6.4,2.2);g.add(dormer);const roundWindow=mesh(new THREE.CircleGeometry(.42,20),mat(0x6d9090));roundWindow.position.set(0,6.4,2.75);g.add(roundWindow);
+  display(-2);display(2);
+  for(let i=0;i<6;i++){const bread=ellipsoid(g,[.29,.15,.19],[-2.65+(i%3)*.6,1.5+Math.floor(i/3)*.5,3.57],0xd9a66b);bread.rotation.z=.15;}
+  const basket=box(1.5,.6,.9,-4.7,.5,2.9,C.wood);for(let i=0;i<3;i++)ellipsoid(g,[.13,.58,.13],[-5.15+i*.35,1,2.9],0xeac594);
+  const breadSign=ellipsoid(g,[.75,.3,.15],[0,6.2,3.55],0xe2b16b);
+ }else if(s.id==='flower'){
+  g.children[1].material.color.set(0x879e76);
+  const greenhouse=box(2.8,2.5,3,-4.5,1.45,-.3,0xc2dbcc);greenhouse.material.transparent=true;greenhouse.material.opacity=.65;
+  for(const x of [-3,-2,2,3]){const i=x+3;const pot=mesh(new THREE.CylinderGeometry(.27,.2,.48,12),mat(0xc1856e));pot.position.set(x,.3,4.3);g.add(pot);for(let j=0;j<3;j++)ellipsoid(g,[.14,.16,.14],[x+Math.sin(j*2)*.17,.8+j*.09,4.3],i%2?C.rose:C.yellow);}
+  const arch=mesh(new THREE.TorusGeometry(1.1,.14,8,20,Math.PI),mat(0x6c936a));arch.position.set(0,2.5,3.8);g.add(arch);
+ }else if(s.id==='cafe'){
+  g.children[1].scale.y=.58;const cafeBadge=flatSign('☕',.8,.6);cafeBadge.position.set(0,5.95,3.25);g.add(cafeBadge);
+  display(-2,2.25);display(2,2.25);
+  const terrace=box(4,.18,5,5.8,.1,.1,0xb8a388);
+  for(const z of [-1.3,1.5]){const table=mesh(new THREE.CylinderGeometry(.7,.7,.13,20),mat(C.wood));table.position.set(5.8,1,z);g.add(table);box(.15,.9,.15,5.8,.5,z,C.ink);
+  for(const x of [4.8,6.8]){box(.5,.12,.55,x,.5,z,C.mint);box(.5,.65,.12,x,.8,z-.25,C.mint);}
+  const cup=mesh(new THREE.CylinderGeometry(.13,.1,.22,12),mat(C.cream));cup.position.set(5.8,1.16,z);g.add(cup);}
+  const umbrella=mesh(new THREE.ConeGeometry(2.2,.75,16),mat(C.cream));umbrella.position.set(5.8,3.6,0);g.add(umbrella);box(.09,3.4,.09,5.8,1.7,0,C.wood);
+  colliders.push({x:s.x+5.8,z:s.z,r:2.05});
+ }else if(s.id==='book'){
+  g.children[1].scale.y=1.12;
+  g.children[1].material.color.set(0x657d94);display(-2);display(2);
+  for(const x of [-2,2])for(let i=0;i<5;i++)box(.25,.5+(i%2)*.13,.22,x-.65+i*.32,1.65,3.56,[C.rose,C.yellow,C.mint][i%3]);
+  box(1.6,1.55,.65,-4.5,.85,2.8,C.wood);
+  for(let i=0;i<6;i++)box(.18,.55,.38,-5+i*.21,1,3,[C.peach,C.sky,C.cream][i%3]);
+  const dormer=roundedBox(1.7,1.4,1.3,.2,C.cream);dormer.position.set(0,6.5,1.8);g.add(dormer);
+ }else if(s.id==='post'){
+  g.children[1].scale.set(1.06,.85,1.02);
+  const clockFace=mesh(new THREE.CircleGeometry(.65,24),mat(C.cream));clockFace.position.set(0,7.85,3.52);g.add(clockFace);
+  box(.06,.43,.04,0,8,3.58,C.ink);box(.38,.06,.04,.17,7.85,3.58,C.ink);
+  box(.85,1.25,.7,-4.5,.75,3,C.rose);const mail=flatSign('POST',.65,.22);mail.position.set(-4.5,1.05,3.41);g.add(mail);
+  const garageRoof=mesh(new THREE.ConeGeometry(2.8,1.1,4),mat(C.mint));garageRoof.rotation.y=Math.PI/4;garageRoof.position.set(5.9,3.3,0);g.add(garageRoof);
+  for(const x of [4.2,7.6])box(.2,3,.2,x,1.5,0,C.wood);
+ }else if(s.id==='harbor'){
+  g.children[1].scale.y=.65;const shutter=box(6.3,2.9,.22,0,2,3.5,0x95aaa3);shutter.name='marketShutter';
+  for(const x of [-2.3,2.3]){box(1.3,.7,1,x,.5,4.25,C.wood);for(let j=0;j<3;j++)ellipsoid(g,[.25,.15,.15],[x-.4+j*.36,.96,4.25],0x9fbabd);}
+ }
+ if(!s.id.startsWith('home')){const length=s.id==='flower'?4.4:6.3;for(let i=0;i<7;i++){const awning=box(length/7,.14,1.25,-length/2+(i+.5)*length/7,4.08,3.8,i%2?s.c:C.cream);awning.rotation.x=.16;}}
+ else{g.children[1].scale.y=s.id==='home2'?1.2:.8;const shutter=box(.35,1.3,.15,-2.85,3.15,3.4,0x86a48d);box(.35,1.3,.15,2.85,3.15,3.4,0x86a48d);}
+ const chimney=box(.7,1.7,.7,2,7,0,0xb17b65);chimney.name='chimney';puffs.push({x:s.x+2,z:s.z,y:terrainHeight(s.x,s.z)+7.7,phase:Math.random()*8});
+ refineFacade(s,box);
+}
+function refineFacade(s,box){
+ const g=s.group,roof=g.children[1];
+ const baseColor=s.id==='book'?0x677f87:s.id==='flower'?0x769a7c:s.id==='post'?0x628977:0xd2ac85;
+ box(6.7,.55,.1,0,.55,3.32,baseColor);
+ for(const x of [-3.3,3.3])box(.22,4.6,.16,x,2.75,3.38,C.cream);
+ // Shopfront framing remains inside the original collision footprint.
+ if(!s.id.startsWith('home'))for(const win of g.children.slice(3,5))win.visible=false;
+ if(s.id==='bakery'){
+  for(const x of [-2,2]){for(const edge of [-1.1,1.1])box(.1,1.95,.12,x+edge,2.15,3.55,C.cream);box(2.3,.1,.14,x,3.16,3.55,C.cream);box(.08,1.8,.14,x,2.15,3.6,C.cream);}
+  for(let i=0;i<5;i++)box(6.5,.045,.055,0,3.6+i*.22,3.35,0xe8d0ac);
+  box(1.75,.18,1.25,0,.12,3.78,0xc8b59b);
+ }else if(s.id==='flower'){
+  roof.scale.set(1.03,.32,1);roof.material.color.set(0x738f72);g.children[5].material.color.set(0xe4ebd8);
+  for(const x of [-2,2]){const pane=box(1.55,1.65,.12,x,2.7,3.44,0x789c91);pane.userData.window=true;box(1.7,.13,.16,x,1.85,3.54,C.cream);for(const z of [-.65,.65])box(.08,1.8,.14,x+z,2.7,3.54,C.cream);}
+  for(const x of [-5.85,-4.5,-3.15])box(.09,2.6,.1,x,1.5,1.27,C.cream);
+  for(const y of [.4,1.5,2.7])box(2.8,.09,.1,-4.5,y,1.27,C.cream);
+  const glassRoof=pitchedRoof(0xa9cbb3);glassRoof.scale.set(.38,.35,.43);glassRoof.position.set(-4.5,2.8,-.3);g.add(glassRoof);
+  for(const x of [-3.15,3.15])for(let i=0;i<4;i++)ellipsoid(g,[.16,.22,.07],[x,1.9+i*.5,3.58],0x74966b);
+ }else if(s.id==='cafe'){
+  roof.visible=false;const hip=mesh(new THREE.ConeGeometry(5.2,1.65,4),mat(0x7b8d88));hip.rotation.y=Math.PI/4;hip.scale.z=.93;hip.position.y=6.4;g.add(hip);
+  box(7.4,.22,6.35,0,5.65,0,C.cream);
+  for(const x of [-2,2]){box(2.4,.1,.16,x,3.15,3.58,C.cream);box(.1,1.8,.16,x,2.15,3.58,C.cream);}
+  for(const x of [-2.1,2.1])for(let i=0;i<6;i++)box(2.35,.055,.08,x,.85+i*.19,3.35,0xd0b58e);
+ }else if(s.id==='book'){
+  roof.scale.set(.91,1.25,.96);g.children[0].scale.x=.92;
+  for(const x of [-2,2]){box(.12,2.05,.15,x-1.05,2.15,3.57,C.cream);box(.12,2.05,.15,x+1.05,2.15,3.57,C.cream);box(2.2,.1,.15,x,3.18,3.57,C.cream);box(2.2,.1,.15,x,2.1,3.58,C.cream);}
+  for(const x of [-2.7,2.7])box(.16,4.3,.12,x,2.8,3.4,0x617980);
+  for(const x of [-1,1]){const round=mesh(new THREE.CircleGeometry(.34,20),mat(0x709293));round.position.set(x*1.8,6.35,3.7);g.add(round);}
+ }else if(s.id==='post'){
+  for(const x of [-2.1,2.1])for(let i=0;i<8;i++)box(2.35,.055,.08,x,.95+i*.4,3.35,0x80a891);
+  for(const x of [-2,2]){const frame=mesh(new THREE.RingGeometry(.6,.74,24),mat(C.cream));frame.position.set(x,3.05,3.52);g.add(frame);const pane=mesh(new THREE.CircleGeometry(.6,24),mat(0x73979b));pane.position.set(x,3.05,3.5);pane.userData.window=true;g.add(pane);box(.075,1.2,.1,x,3.05,3.55,C.cream);box(1.2,.075,.1,x,3.05,3.55,C.cream);}
+  box(1.85,1.7,1.5,0,7.65,2.5,C.cream);const cap=mesh(new THREE.ConeGeometry(1.4,.85,4),mat(0x628977));cap.rotation.y=Math.PI/4;cap.position.set(0,8.9,2.5);g.add(cap);
+  const slots=box(.6,.09,.08,-4.5,1.37,3.42,C.ink);slots.name='postboxSlot';
+ }else if(s.id.startsWith('home')){
+  const index=+s.id.slice(4);for(const x of [-2,2]){box(1.5,.3,.5,x,2.34,3.56,0xb08d6b);for(let i=0;i<4;i++)ellipsoid(g,[.13,.12,.13],[x-.48+i*.32,2.6,3.6],index%2?C.rose:C.yellow);}
+  if(index%2){box(2.5,.18,1.5,0,3.5,3.9,0x86a28e);for(const x of [-1.1,1.1])box(.12,3.3,.12,x,1.65,4.42,C.cream);}
+ }
+ g.userData.facadeRefined=true;
+}
+function makeGate(x,z,width){const g=new THREE.Group();for(const a of [-1,1]){const p=roundedBox(.24,1.5,.25,.04,C.wood);p.position.set(a*width/2,.75,0);g.add(p);}const rail=roundedBox(width,.35,.25,.06,C.peach);rail.position.y=1;g.add(rail);const sign=labelSprite('수리 중 · 배달로 함께 열어요',5);sign.position.y=2;g.add(sign);g.position.set(x,0,z);scene.add(g);return g;}
+function canDrive(x,z,ignoreTraffic=false){
+ if(Math.hypot((x-WORLD.x)/(WORLD.rx-3),(z-WORLD.z)/(WORLD.rz-3))>1)return false;
+ const onBridge=save.chapter>=2&&x>bridgeRect.minX+CAR_R&&x<bridgeRect.maxX-CAR_R&&z>bridgeRect.minZ&&z<bridgeRect.maxZ;
+ if(!onBridge&&polyDistance(x,z,creekSamples)<creekWidth/2+CAR_R)return false;
+ for(const f of fenceSegments){if(f.until&&save.chapter>=f.until)continue;if(segmentDistance(x,z,f.a,f.b)<CAR_R+.12)return false;}
+ if(colliders.some(c=>Math.hypot(x-c.x,z-c.z)<c.r+CAR_R))return false;
+ return true;
+}
+function serviceOrder(){
+ if(!nearSpot)return null;
+ return orders.find(o=>o.state==='cargo'&&o.to===nearSpot.id)||orders.find(o=>o.state==='accepted'&&o.from===nearSpot.id)||null;
+}
+function updateService(dt){
+ if(gameOver)return;
+ const o=serviceOrder();if(!o){stopTimer=0;serviceId=null;$('#prompt').classList.toggle('hidden',!['post','fuel'].includes(nearSpot?.id));if(nearSpot?.id==='post')$('#prompt').textContent='E · 우체국 차고';if(nearSpot?.id==='fuel')$('#prompt').textContent=Math.abs(speed)>.12?'⛽ 원 안에 정차한 뒤 E · 주유':'E · 주유하기 · 1 L = 2 동전';return;}
+ $('#prompt').classList.remove('hidden');
+ if(o.state==='accepted'&&orders.filter(x=>x.state==='cargo').length>=save.capacity){stopTimer=0;$('#prompt').textContent='🚐 가득 찼어요 · 기존 물품을 먼저 배달해 주세요';return;}
+ if(serviceId!==o.id){stopTimer=0;serviceId=o.id;}
+ if(Math.abs(speed)>.12){stopTimer=0;$('#prompt').textContent='브레이크를 밟고 원 안에 완전히 정차하세요';return;}
+ stopTimer+=dt;$('#prompt').textContent=(o.state==='cargo'?'배달하는 중':'물품을 싣는 중')+' · '+Math.min(100,Math.floor(stopTimer/STOP_SECONDS*100))+'%';
+ if(stopTimer>=STOP_SECONDS){stopTimer=0;serviceId=null;if(o.state==='cargo')complete(o);else{o.state='cargo';o.age=0;syncParcels();tone('pickup');selectedId=o.id;renderOrders();updateMarker();persist();notify(o.item+' 수령 완료 · '+spot(o.to).name+'으로 가요');}}
+}
+function syncParcels(){
+ if(!parcelGroup)return;for(const o of [...parcelGroup.children]){o.traverse(m=>{if(m.isMesh){m.geometry.dispose();m.material.dispose();}});parcelGroup.remove(o);}
+ orders.filter(o=>o.state==='cargo').forEach((o,i)=>{const p=roundedBox(.62,.52,.75,.07,0xc99b6b);p.position.set((i%3-1)*.69,3.24+Math.floor(i/6)*.57,-1.1+Math.floor(i%6/3)*.9);p.userData.birth=simTime;const ribbon=roundedBox(.1,.54,.77,.015,C.cream);p.add(ribbon);parcelGroup.add(p);});
+}
+function applyCosmetics(){if(!carVisual)return;carVisual.getObjectByName('paint').material.color.set(save.paint==='peach'?C.peach:C.mint);rackFlowers.visible=save.rack==='flower';}
+function setModal(id){if(gameOver&&id!=='gameOver')return;['pause','garage','letter','gameOver','fuelStation'].forEach(x=>{$('#'+x).classList.toggle('hidden',x!==id);$('#'+x).inert=x!==id;});paused=!!id;keys={};$('#hud').inert=!!id||!running;if(id){mapOpen=false;$('#map').classList.add('hidden');}if(engineGain)engineGain.gain.setTargetAtTime(id?0:.035,audio.currentTime,.2);}
+function setQuality(){const ratio=Math.min(devicePixelRatio,save.quality==='high'?1.5:save.quality==='medium'?1.1:.75);renderer.setPixelRatio(ratio);composer.setPixelRatio(ratio);renderer.shadowMap.enabled=save.quality!=='low';composer.passes[1].enabled=save.quality!=='low';if(flowerInstances){flowerInstances.count=save.quality==='low'?140:480;const stems=scene.getObjectByName('flowerStems');if(stems)stems.count=flowerInstances.count;}if(rainPoints)rainPoints.geometry.setDrawRange(0,save.quality==='low'?150:650);}
+function updateNavigation(){
+ const t=selectedId==='garage'?spot('post'):selectedId==='fuel'?spot('fuel'):activeTarget();if(!t){$('#nav')?.remove();routePoints=[];if(routeMesh)routeMesh.visible=false;return;}
+ if(routeTarget!==t.id||routeChapter!==save.chapter||car.position.distanceTo(routeOrigin)>3){routePoints=findRoadRoute(car.position,t.zone);routeTarget=t.id;routeChapter=save.chapter;routeOrigin.copy(car.position);showRoute();}
+ let n=$('#nav');if(!n){n=document.createElement('div');n.id='nav';n.className='glass';Object.assign(n.style,{position:'absolute',left:'18px',top:'18px',padding:'12px',borderRadius:'18px',maxWidth:'260px'});$('#hud').append(n);}
+ const next=routePoints.find(p=>p.distanceTo(car.position)>4)||routePoints.at(-1);
+ let distance=0;for(let i=1;i<routePoints.length;i++)distance+=routePoints[i].distanceTo(routePoints[i-1]);
+ const angle=next?Math.atan2(next.x-car.position.x,next.z-car.position.z)-yaw:0;
+ n.innerHTML='<b>'+t.name+'</b><br><span style="display:inline-block;transform:rotate('+(-angle*180/Math.PI)+'deg)">↑</span> '+(next?Math.round(distance)+' m · 도로를 따라가세요':'현재 통행 가능한 도로를 찾을 수 없어요')+'<br><small>'+(t.id==='fuel'?'원 안에 정차 → E · 유료 주유':'흰 테두리 길을 따라 원 안에 정차')+'</small>'+(roadGrade>.06?'<span class="gradeTag">↗ 오르막 · 감속 / 연료 소비 증가</span>':'');
+ if(mapOpen)drawMap();
+}
+function drawMap(){
+ const grid=$('.mapGrid');grid.innerHTML='<canvas id="mapCanvas" style="width:100%;height:100%"></canvas>';const c=$('#mapCanvas');c.width=900;c.height=620;const ctx=c.getContext('2d'),scale=2.65,p=(x,z)=>[450+(x-WORLD.x)*scale,310+(z-WORLD.z)*scale];ctx.fillStyle='#85bdc8';ctx.fillRect(0,0,900,620);ctx.fillStyle='#b5cd97';ctx.beginPath();ctx.ellipse(450,310,WORLD.rx*scale,WORLD.rz*scale,0,0,Math.PI*2);ctx.fill();
+ const [hx,hy]=p(79,-73);ctx.fillStyle='#91b381';ctx.beginPath();ctx.ellipse(hx,hy,95,91,-.15,0,Math.PI*2);ctx.fill();ctx.fillStyle='#4f6954';ctx.textAlign='center';ctx.font='bold 15px sans-serif';ctx.fillText('솔바람 언덕 · 정상 12 m',hx,hy-100);const [px,py]=p(86,14);ctx.fillStyle='#88ad74';ctx.beginPath();ctx.ellipse(px,py,41,30,0,0,Math.PI*2);ctx.fill();
+ ctx.strokeStyle='#6bafbd';ctx.lineWidth=creekWidth*scale;ctx.beginPath();creekSamples.forEach((v,i)=>{const [x,y]=p(v.x,v.z);i?ctx.lineTo(x,y):ctx.moveTo(x,y);});ctx.stroke();
+ ctx.strokeStyle='#ead8b7';roadCurves.forEach(curve=>{ctx.lineWidth=curve.userData.width*scale;ctx.beginPath();for(let i=0;i<=140;i++){const v=curve.getPoint(i/140);const [x,y]=p(v.x,v.z);i?ctx.lineTo(x,y):ctx.moveTo(x,y);}ctx.stroke();});
+ spots.forEach(s=>{const [x,y]=p(s.zone.x,s.zone.z);ctx.fillStyle=s.unlock>save.chapter?'#77796d':zoneMarkers.get(s.id).visible?'#b07834':'#50695b';ctx.beginPath();ctx.arc(x,y,s.id==='fuel'?7:4,0,7);ctx.fill();ctx.font=(s.id==='fuel'?'bold 13px':'11px')+' sans-serif';ctx.textAlign='center';const labels={post:'우체국',bakery:'빵집',flower:'꽃집',cafe:'카페',book:'서점',bridgework:'다리 작업장',marketwork:'시장 입구',fuel:'⛽ 주유소',meadow:'산책 공원',park:'연못 공원'};ctx.fillText((s.unlock>save.chapter?'🔒 ':'')+(labels[s.id]||s.name.replace('오두막','집')),x,y-9);});
+ ctx.strokeStyle='#387f71';ctx.lineWidth=5;ctx.setLineDash([8,5]);ctx.beginPath();routePoints.forEach((v,i)=>{const [rx,ry]=p(v.x,v.z);i?ctx.lineTo(rx,ry):ctx.moveTo(rx,ry);});ctx.stroke();ctx.setLineDash([]);
+ const [x,y]=p(car.position.x,car.position.z);ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x,y,9,0,7);ctx.fill();ctx.fillStyle='#e0857e';ctx.beginPath();ctx.arc(x,y,5,0,7);ctx.fill();
+}
+function pointField(count,color,size,spread,y0,y1){const pos=[];for(let i=0;i<count;i++){const x=WORLD.x+(Math.random()-.5)*spread*2,z=WORLD.z+(Math.random()-.5)*spread*1.8;pos.push(x,y0+Math.random()*(y1-y0)+(y0<5?terrainHeight(x,z):0),z);}const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));const p=new THREE.Points(g,new THREE.PointsMaterial({color,size,transparent:true,opacity:0,depthWrite:false}));scene.add(p);return p;}
+function makeDetails(){
+ flowerInstances=new THREE.InstancedMesh(flowerGeometry(),mat(C.rose),480);
+ const beds=[[-21,1],[-11,1],[-5,-1],[5,-1],[12,-2],[22,-2],[27,-1],[37,-1],[-3,29],[7,29],[14,30],[24,30],[32,31],[42,31],[55,18],[-36,22],[-27,22],[2,-31],[12,-31],[20,-33],[30,-33],[39,-29],[49,-29],[-51,-28]];
+ const stems=new THREE.InstancedMesh(new THREE.CylinderGeometry(.014,.019,.3,5),mat(0x5d865b),480);stems.name='flowerStems';
+ for(let i=0;i<480;i++){const center=beds[i%beds.length],a=i*2.399,r=.18+((i*7)%17)/17*.9,x=center[0]+Math.cos(a)*r,z=center[1]+Math.sin(a)*r;tempDummy.position.set(x,.48,z);tempDummy.scale.set(.95,.42,.95);tempDummy.rotation.set(0,a,0);tempDummy.updateMatrix();flowerInstances.setMatrixAt(i,tempDummy.matrix);flowerInstances.setColorAt(i,new THREE.Color([C.rose,C.cream,C.yellow][i%3]));tempDummy.position.set(x,.33,z);tempDummy.scale.setScalar(1);tempDummy.updateMatrix();stems.setMatrixAt(i,tempDummy.matrix);}scene.add(flowerInstances,stems);
+ for(const [x,z] of beds){const bed=roundedBox(2.6,.18,2.2,.25,0x92795e);bed.position.set(x,.07,z);scene.add(bed);ellipsoid(scene,[1.1,.23,.85],[x,.23,z],0x7fa16a);}
+ makePlannedGardens();
+ makePostalGreen();
+ for(const [x,z] of [[0,23],[8,23],[55,22],[-59,-25]]){const b=new THREE.Group();for(let i=0;i<3;i++){const slat=roundedBox(2.8,.13,.24,.035,C.wood);slat.position.set(0,.75,i*.3);b.add(slat);}const back=roundedBox(2.8,.6,.15,.05,C.wood);back.position.set(0,1.15,-.1);b.add(back);for(const a of [-1,1]){const leg=roundedBox(.15,.7,.7,.04,C.ink);leg.position.set(a,.35,.2);b.add(leg);}b.position.set(x,0,z);scene.add(b);colliders.push({x,z:z+.2,r:1.35});const pad=mesh(new THREE.CircleGeometry(2,24),mat(0xded4ba));pad.rotation.x=-Math.PI/2;pad.position.set(x,.026,z);scene.add(pad);}
+ for(let i=0;i<6;i++){const g=new THREE.Group();ellipsoid(g,[.17,.15,.25],[0,0,0],C.cream);for(const x of [-1,1])ellipsoid(g,[.22,.035,.12],[x*.2,.06,0],C.ink);g.position.set(...[[-50,.22,-16],[52,.22,22],[-25,.22,17],[9,.22,26],[43,.22,-24],[29,.22,43]][i]);g.userData.home=g.position.clone();g.userData.fly=0;scene.add(g);birds.push(g);}
+ for(let i=0;i<12;i++){const b=new THREE.Group();for(const x of [-1,1])ellipsoid(b,[.15,.035,.2],[x*.12,0,0],i%2?C.yellow:C.rose);b.position.set(...[[-5,1.5,0],[5,1.5,0],[55,1.5,18],[7,1.5,29]][i%4]);b.userData.home=b.position.clone();b.userData.phase=i;scene.add(b);butterflies.push(b);}
+ const cat=new THREE.Group();ellipsoid(cat,[.6,.2,.3],[0,0,0],0xdca477);ellipsoid(cat,[.24,.23,.24],[.5,.04,0],0xdca477);for(const x of [.4,.65]){const e=mesh(new THREE.ConeGeometry(.09,.2,3),mat(0xdca477));e.position.set(x,.24,0);cat.add(e);}cat.position.set(0,.99,23.25);scene.add(cat);
+ for(let i=0;i<36;i++){const rock=mesh(new THREE.IcosahedronGeometry(.5+i%3*.15,1),mat(0xb0b4a0));const a=i/36*Math.PI*2;rock.position.set(WORLD.x+Math.cos(a)*(WORLD.rx-1),.1,WORLD.z+Math.sin(a)*(WORLD.rz-1));rock.scale.y=.7;scene.add(rock);}
+ for(let i=0;i<4;i++){const barrel=mesh(new THREE.CylinderGeometry(.45,.4,.95,12),mat(C.wood));barrel.position.set(-44.7,.48,-25+i*.95);scene.add(barrel);const band=mesh(new THREE.TorusGeometry(.44,.045,6,16),mat(C.ink));band.rotation.x=Math.PI/2;band.position.copy(barrel.position);scene.add(band);}
+ // Bunting belongs to the square, attached to two visible timber posts.
+ for(const x of [-2,10]){const pole=roundedBox(.18,4.8,.18,.04,C.wood);pole.position.set(x,2.4,17);scene.add(pole);colliders.push({x,z:17,r:.18});}
+ const cordPoints=[];
+ for(let i=0;i<=16;i++){const x=-2+i*.75,y=4.8-Math.sin(i/16*Math.PI)*.6;cordPoints.push(new THREE.Vector3(x,y,17));if(i&&i<16){const flag=mesh(new THREE.ConeGeometry(.2,.4,3),mat([C.peach,C.mint,C.yellow][i%3]));flag.rotation.z=Math.PI;flag.scale.z=.07;flag.position.set(x,y-.2,17);scene.add(flag);}}
+ scene.add(new THREE.Line(new THREE.BufferGeometry().setFromPoints(cordPoints),new THREE.LineBasicMaterial({color:C.wood})));
+
+ residents.forEach(r=>{const arm=roundedBox(.22,.75,.25,.08,r.children[0].material.color);arm.position.set(.65,1.4,0);r.add(arm);r.userData.arm=arm;if(r.userData.walker){r.userData.legs=[];for(const side of [-1,1]){const leg=roundedBox(.25,.6,.3,.07,0x65776c);leg.position.set(side*.27,.35,0);r.add(leg);r.userData.legs.push(leg);}}});
+}
+function spawnParticle(x,y,z,color,life){if(particles.length>100)return;const p=mesh(new THREE.CircleGeometry(.12,5),new THREE.MeshBasicMaterial({color,side:THREE.DoubleSide,transparent:true,depthWrite:false}),false);p.position.set(x,y,z);scene.add(p);particles.push({mesh:p,life,v:new THREE.Vector3((Math.random()-.5)*3,1+Math.random()*2,(Math.random()-.5)*3)});}
+function makeWeather(){rainPoints=pointField(650,0xcbe5eb,.065,125,0,30);petalPoints=pointField(180,0xf4babf,.12,120,0,15);rippleMesh=new THREE.InstancedMesh(new THREE.RingGeometry(.8,1,20),new THREE.MeshBasicMaterial({color:0xd1e8e2,transparent:true,opacity:.35,side:THREE.DoubleSide,depthWrite:false}),28);scene.add(rippleMesh);}
+function updateWeather(dt){
+ weatherTimer-=dt;if(weatherTimer<=0){weatherTimer=70+Math.random()*70;rain=rain?0:1;}rainPoints.material.opacity=rain*.7;petalPoints.material.opacity=rain?.1:.7;rippleMesh.visible=!!rain;
+ const a=rainPoints.geometry.attributes.position;for(let i=0;i<a.count;i++){let y=a.getY(i)-dt*12;const ground=terrainHeight(a.getX(i),a.getZ(i));if(y<ground)y=ground+30;a.setY(i,y);}a.needsUpdate=true;
+ const b=petalPoints.geometry.attributes.position;for(let i=0;i<b.count;i++){const x=((b.getX(i)-WORLD.x+dt*.7+120)%240)-120+WORLD.x,ground=terrainHeight(x,b.getZ(i));b.setXYZ(i,x,b.getY(i)<ground?ground+15:b.getY(i)-dt*.4,b.getZ(i));}b.needsUpdate=true;
+ for(let i=0;i<28;i++){const k=(simTime*.5+i*.13)%1;tempDummy.position.set(-25+i%7*8,.065,17+Math.floor(i/7)*5);tempDummy.rotation.set(-Math.PI/2,0,0);tempDummy.scale.setScalar(k*.6);tempDummy.updateMatrix();rippleMesh.setMatrixAt(i,tempDummy.matrix);}rippleMesh.instanceMatrix.needsUpdate=true;
+}
+function updateNature(dt){
+ birds.forEach((b,i)=>{if(Math.hypot(b.position.x-car.position.x,b.position.z-car.position.z)<6)b.userData.fly=4;b.userData.fly=Math.max(0,b.userData.fly-dt);const h=b.userData.home;b.position.y=THREE.MathUtils.lerp(b.position.y,b.userData.fly>0?4:.22,dt*2);b.position.x=h.x+Math.sin(simTime+i)*b.userData.fly;b.children.slice(1).forEach((w,j)=>w.rotation.z=Math.sin(simTime*15)*(j?1:-1)*.6);});
+ butterflies.forEach((b,i)=>{b.position.y=1.5+Math.sin(simTime+i)*.4;b.position.z=b.userData.home.z+Math.sin(simTime*.4+i)*1.3;b.children.forEach((w,j)=>w.rotation.z=Math.sin(simTime*17+i)*(j?1:-1));});
+ if(save.quality!=='low'&&Math.random()<dt*5){const c=puffs[Math.floor(Math.random()*puffs.length)];if(c)spawnParticle(c.x,c.y,c.z,0xe1dfd2,2);}
+ parcelGroup.children.forEach(p=>{const age=simTime-p.userData.birth;p.scale.setScalar(age<.5?Math.max(.1,1+Math.sin(age*9)*Math.exp(-age*8)*.25):1);});
+}
+function makeTraffic(){
+ for(let i=0;i<2;i++){const g=new THREE.Group();const b=roundedBox(1.8,.95,2.8,.25,i?C.peach:C.yellow);b.position.y=.9;g.add(b);const cab=roundedBox(1.6,.7,1.7,.22,C.cream);cab.position.set(0,1.65,-.1);g.add(cab);for(const x of [-.9,.9])for(const z of [-.9,.9]){const w=mesh(new THREE.CylinderGeometry(.35,.35,.25,12),mat(C.ink));w.rotation.z=Math.PI/2;w.position.set(x,.4,z);g.add(w);}g.userData.phase=.25+i*.5;scene.add(g);traffic.push(g);}
+}
+
+function updateTraffic(dt){const curve=roadCurves[0],length=curve.getLength();traffic.forEach(v=>{
+ v.userData.phase=(v.userData.phase+dt*2.6/length)%1;
+ const p=curve.getPointAt(v.userData.phase),t=curve.getTangentAt(v.userData.phase),normal=new THREE.Vector3(t.z,0,-t.x).normalize();
+ v.position.copy(p).addScaledVector(normal,2.05);v.position.y=terrainHeight(v.position.x,v.position.z);v.rotation.y=Math.atan2(t.x,t.z);
+ });}
+
+function startAmbient(){
+ const buffer=audio.createBuffer(1,audio.sampleRate*3,audio.sampleRate),data=buffer.getChannelData(0);let last=0;for(let i=0;i<data.length;i++){last=(last+Math.random()*.04-.02)*.98;data[i]=last;}
+ const source=audio.createBufferSource();source.buffer=buffer;source.loop=true;ambientFilter=audio.createBiquadFilter();ambientFilter.type='lowpass';ambientFilter.frequency.value=450;ambientGain=audio.createGain();ambientGain.gain.value=.04;source.connect(ambientFilter).connect(ambientGain).connect(audio.masterGain);source.start();
+}
+
+function flatSign(text,w,h){
+ const sprite=labelSprite(text,w),texture=sprite.material.map;
+ const sign=mesh(new THREE.PlaneGeometry(w,h),new THREE.MeshBasicMaterial({map:texture,transparent:true,side:THREE.DoubleSide}),false);sprite.material.dispose();return sign;
+}
+function flowerGeometry(){
+ const g=new THREE.BufferGeometry(),pos=[],norm=[],idx=[];
+ for(let petal=0;petal<5;petal++){const a=petal/5*Math.PI*2,cx=Math.cos(a)*.095,cz=Math.sin(a)*.095,base=pos.length/3;
+ pos.push(cx,.055,cz);norm.push(0,1,0);
+ for(let j=0;j<=8;j++){const q=j/8*Math.PI*2;pos.push(cx+Math.cos(q)*.09,0,cz+Math.sin(q)*.09);norm.push(0,1,0);if(j<8)idx.push(base,base+j+2,base+j+1);}
+ }g.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));g.setAttribute('normal',new THREE.Float32BufferAttribute(norm,3));g.setIndex(idx);return g;
+}
+function makePlannedGardens(){
+ // Small defined gardens leave the main road and all delivery aprons open.
+ for(const s of spots.filter(s=>s.id.startsWith('home'))){
+  for(const side of [-1,1]){const hedge=roundedBox(3.8,1.1,1,.35,0x87a274);hedge.position.set(s.x+side*2.4,.5,s.z-4.4);scene.add(hedge);colliders.push({x:s.x+side*2.4,z:s.z-4.4,r:1});}
+  addRoad([[s.x,s.z+3.8],[s.zone.x,s.zone.z]],1.3,0xddd6bf,.028,false);
+ }
+ const plaza=mesh(new THREE.CircleGeometry(4.7,40),mat(0xe2d7bd));plaza.rotation.x=-Math.PI/2;plaza.position.set(4,.027,21);scene.add(plaza);
+ const basin=mesh(new THREE.CylinderGeometry(1.7,1.8,.45,24),mat(0xd1c9b2));basin.position.set(4,.25,21);scene.add(basin);colliders.push({x:4,z:21,r:1.8});
+ const water=mesh(new THREE.CircleGeometry(1.48,32),mat(0x82c0c4));water.rotation.x=-Math.PI/2;water.position.set(4,.5,21);scene.add(water);
+ ellipsoid(scene,[.4,.65,.4],[4,.9,21],C.cream);
+ for(const [x,z] of [[-9,23],[12,23],[-39,35],[55,37]])addTree(x,z,.8,true);
+ // Pedestrian paths visually link the square, shops and homes.
+ addRoad([[-16,8],[-10,18],[4,21],[17,16],[32,5]],1.6,0xd4ceb9,.029,false);
+ for(const s of spots.filter(s=>['post','bakery','flower','cafe','book'].includes(s.id))){addRoad([[s.x-3.5,s.z+5.3],[s.x+3.5,s.z+5.3]],2,0xd8cfb7,.03,false);addRoad([[s.x,s.z+5],[s.zone.x,s.zone.z]],1.7,0xd8cfb7,.031,false);}
+}
+function makePostalGreen(){
+ const anchors=[[-44,40,2.4],[-39,45,2],[-25,47,2.4],[-17,47,1.8]];
+ scene.userData.visualGardens=[];
+ const petals=new THREE.InstancedMesh(flowerGeometry(),mat(C.rose),96);let instance=0;
+ for(const [x,z,r] of anchors){
+  if(roadDistance(x,z)<r+5||spots.some(s=>Math.hypot(s.zone.x-x,s.zone.z-z)<r+6)||!canDrive(x,z,true))continue;
+  scene.userData.visualGardens.push({x,z,r});
+  const lawn=mesh(new THREE.CircleGeometry(r*1.8,36),mat(0x96b67d),false);lawn.rotation.x=-Math.PI/2;lawn.scale.y=.86;lawn.position.set(x,.027,z);scene.add(lawn);
+  const soil=mesh(new THREE.CylinderGeometry(r,r,.12,32),mat(0x967e62));soil.position.set(x,.08,z);scene.add(soil);
+  const rim=mesh(new THREE.TorusGeometry(r,.075,6,32),mat(0xc5b59a));rim.rotation.x=Math.PI/2;rim.position.set(x,.16,z);scene.add(rim);
+  for(let j=0;j<3;j++)ellipsoid(scene,[r*.46,.46,r*.4],[x+Math.cos(j*2.1)*r*.34,.43,z+Math.sin(j*2.1)*r*.34],j%2?0x83a16c:0x769862);
+  colliders.push({x,z,r:r*.65});
+  for(let i=0;i<24;i++){const a=i*2.399,d=r*(.65+.2*(i%3)/2);tempDummy.position.set(x+Math.cos(a)*d,.35,z+Math.sin(a)*d);tempDummy.rotation.set(0,a,0);tempDummy.scale.set(1.9,.8,1.9);tempDummy.updateMatrix();petals.setMatrixAt(instance,tempDummy.matrix);petals.setColorAt(instance++,new THREE.Color([C.rose,C.cream,C.yellow][i%3]));}
+ }
+ petals.count=instance;scene.add(petals);
+ addRoad([[-34,36],[-40,39],[-43,42],[-39,47],[-29,45],[-20,44]],1.5,0xd5cab2,.04,false);
+ const bench=new THREE.Group();for(let i=0;i<3;i++){const slat=roundedBox(2.5,.13,.23,.035,C.wood);slat.position.set(0,.72,i*.28);bench.add(slat);}const back=roundedBox(2.5,.6,.12,.04,C.wood);back.position.set(0,1.1,-.1);bench.add(back);for(const x of [-1,1]){const leg=roundedBox(.13,.65,.65,.03,C.ink);leg.position.set(x,.32,.2);bench.add(leg);}bench.position.set(-44,0,43.5);bench.rotation.y=.5;scene.add(bench);colliders.push({x:-44,z:43.5,r:1.4});
+ const sign=flatSign('우체국 쉼터',2,.4);sign.position.set(-41.5,1.25,41);scene.add(sign);const pole=roundedBox(.12,1.3,.12,.025,C.wood);pole.position.set(-41.5,.65,41);scene.add(pole);colliders.push({x:-41.5,z:41,r:.13});
+ for(const [x,z] of [[-47,37],[-20,50]])if(roadDistance(x,z)>8&&spots.every(s=>Math.hypot(s.zone.x-x,s.zone.z-z)>10))addTree(x,z,.65,true);
+}
+function segmentDistance(x,z,a,b){
+ const dx=b.x-a.x,dz=b.z-a.z,l=dx*dx+dz*dz,t=l?Math.max(0,Math.min(1,((x-a.x)*dx+(z-a.z)*dz)/l)):0;return Math.hypot(x-a.x-dx*t,z-a.z-dz*t);
+}
+function polyDistance(x,z,points){let d=Infinity;for(let i=1;i<points.length;i++)d=Math.min(d,segmentDistance(x,z,points[i-1],points[i]));return d;}
+function fenceLine(x1,z1,x2,z2,until=0){
+ const a=new THREE.Vector3(x1,0,z1),b=new THREE.Vector3(x2,0,z2);fenceSegments.push({a,b,until});
+ if(until)return;
+ const group=new THREE.Group(),length=a.distanceTo(b),angle=Math.atan2(x2-x1,z2-z1);
+ for(let i=0;i<=Math.ceil(length);i++){const p=roundedBox(.16,1.15,.16,.035,C.cream);p.position.set(0,.57,(i/Math.ceil(length)-.5)*length);group.add(p);}
+ const rail=roundedBox(.12,.18,length,.03,C.cream);rail.position.y=.8;group.add(rail);group.position.copy(a).lerp(b,.5);group.rotation.y=angle;scene.add(group);
+}
+function safeCameraPosition(focus,desired){
+ const clip=q=>{const delta=q.clone().sub(focus),length=delta.length();if(length<.01)return q.clone();cameraRay.set(focus,delta.clone().normalize());cameraRay.far=length+.6;cameraRay.near=.05;const hit=cameraRay.intersectObjects(cameraObstacles,true).find(h=>h.object.isMesh&&h.object.visible);return hit?focus.clone().addScaledVector(delta.normalize(),Math.max(.15,hit.distance-.65)):q.clone();};
+ // Check the vehicle's silhouette, not just its centre: foliage can hide its rear.
+ const visible=q=>{for(const offset of [[0,0],[1.45,0],[-1.45,0],[0,2.4],[0,-2.4]]){const origin=focus.clone().add(new THREE.Vector3(offset[0],.3,offset[1])),delta=q.clone().sub(origin);cameraRay.set(origin,delta.clone().normalize());cameraRay.near=.05;cameraRay.far=delta.length()+.5;if(cameraRay.intersectObjects(cameraObstacles,true).some(h=>h.object.isMesh&&h.object.visible))return false;}return true;};
+ const direct=clip(desired);if(direct.distanceTo(focus)>=8&&visible(direct))return direct;
+ const candidates=[desired.clone().add(new THREE.Vector3(0,9,0)),desired.clone().add(new THREE.Vector3(0,18,0)),focus.clone().add(new THREE.Vector3(0,23,.1))];
+ for(const q of candidates){if(visible(q))return q;}
+ // A legal driving position beside overhanging foliage may have no full-silhouette view.
+ for(const q of candidates){const safe=clip(q);if(safe.distanceTo(focus)>=8)return safe;}
+ return direct;
+}
+function clearSegment(a,b){
+ const length=Math.hypot(b.x-a.x,b.z-a.z),n=Math.ceil(length/.45);
+ for(let i=0;i<=n;i++){const t=n?i/n:0;if(!canDrive(a.x+(b.x-a.x)*t,a.z+(b.z-a.z)*t,true))return false;}return true;
+}
+function buildRoadGraph(){
+ navGraph=[];for(const curve of roadCurves){const points=curve.getSpacedPoints(Math.ceil(curve.getLength()/1.4));let previous=-1;
+ for(const p of points){p.y=0;const i=navGraph.length;navGraph.push({p,edges:[]});if(previous>=0){const d=p.distanceTo(navGraph[previous].p);navGraph[i].edges.push([previous,d]);navGraph[previous].edges.push([i,d]);}previous=i;}}
+ // Junctions share close samples, so locked segments cannot be bypassed by a graph edge.
+ const roadCount=navGraph.length;
+ for(let i=0;i<roadCount;i++)for(let j=i+1;j<roadCount;j++){const d=navGraph[i].p.distanceTo(navGraph[j].p);if(d<2.1){navGraph[i].edges.push([j,d]);navGraph[j].edges.push([i,d]);}}
+ for(const s of spots){const p=new THREE.Vector3(s.zone.x,0,s.zone.z),i=navGraph.length;navGraph.push({p,edges:[]});
+ const close=navGraph.slice(0,roadCount).map((n,j)=>[j,n.p.distanceTo(p)]).sort((a,b)=>a[1]-b[1]).slice(0,6);
+ for(const [j,d] of close)if(d<10){navGraph[i].edges.push([j,d]);navGraph[j].edges.push([i,d]);}}
+}
+function findRoadRoute(start,target){
+ if(!navGraph.length)return [];
+ const goal=new THREE.Vector3(target.x,0,target.z),origin=new THREE.Vector3(start.x,0,start.z);
+ if(origin.distanceTo(goal)<2.6&&clearSegment(origin,goal))return [origin,goal].map(p=>p.setY(terrainHeight(p.x,p.z)));
+ const nodes=navGraph.map(n=>({p:n.p,edges:n.edges.slice()})),a=nodes.length,b=a+1;nodes.push({p:origin,edges:[]},{p:goal,edges:[]});
+ for(const index of [a,b]){const nearby=navGraph.map((n,i)=>[i,n.p.distanceTo(nodes[index].p)]).sort((u,v)=>u[1]-v[1]);let connected=0;
+ for(const [i,d] of nearby){if(d>24||connected>=8)break;if(clearSegment(nodes[index].p,nodes[i].p)){nodes[index].edges.push([i,d]);nodes[i].edges.push([index,d]);connected++;}}}
+ const distances=Array(nodes.length).fill(Infinity),previous=Array(nodes.length).fill(-1),visited=new Set();distances[a]=0;
+ for(let step=0;step<nodes.length;step++){let current=-1,best=Infinity;for(let i=0;i<nodes.length;i++)if(!visited.has(i)&&distances[i]<best){best=distances[i];current=i;}if(current<0)break;if(current===b)break;visited.add(current);
+ for(const [j,d] of nodes[current].edges){if(visited.has(j))continue;const key=save.chapter+':'+Math.min(current,j)+':'+Math.max(current,j);let clear;
+ if(current<a&&j<a){clear=navCache.get(key);if(clear===undefined){clear=clearSegment(nodes[current].p,nodes[j].p);navCache.set(key,clear);}}else clear=clearSegment(nodes[current].p,nodes[j].p);
+ if(clear&&best+d<distances[j]){distances[j]=best+d;previous[j]=current;}}}
+ if(!Number.isFinite(distances[b])){scene.userData.navFailure={nodes:nodes.length,startLinks:nodes[a].edges.length,goalLinks:nodes[b].edges.length,visited:visited.size,start:origin.toArray(),goal:goal.toArray(),blocked:navGraph.filter(n=>!canDrive(n.p.x,n.p.z,true)).slice(0,20).map(n=>n.p.toArray())};return [];}const path=[];for(let i=b;i>=0;i=previous[i]){path.unshift(nodes[i].p.clone());if(i===a)break;}
+ return path.map(p=>p.setY(terrainHeight(p.x,p.z)));
+}
+function showRoute(){
+ if(routeMesh){scene.remove(routeMesh);routeMesh.traverse(o=>{o.geometry?.dispose();if(o.material)(Array.isArray(o.material)?o.material:[o.material]).forEach(m=>m.dispose());});}
+ if(!routePoints.length){routeMesh=null;return;}
+ const points=routePoints.filter((p,i)=>!i||p.distanceTo(routePoints[i-1])>.01),group=new THREE.Group();
+ const strip=(width,height,color)=>{const pos=[],indices=[];let previous;points.forEach((p,i)=>{const before=points[Math.max(0,i-1)],after=points[Math.min(points.length-1,i+1)],dx=after.x-before.x,dz=after.z-before.z,length=Math.hypot(dx,dz)||1,nx=dz/length*width/2,nz=-dx/length*width/2,left={x:p.x+nx,z:p.z+nz},right={x:p.x-nx,z:p.z-nz};if(previous)appendGroundPolygon([previous.left,previous.right,right,left],height,pos,indices);previous={left,right};});const geometry=new THREE.BufferGeometry();geometry.setAttribute('position',new THREE.Float32BufferAttribute(pos,3));geometry.setIndex(indices);const ribbon=mesh(geometry,new THREE.MeshBasicMaterial({color,side:THREE.DoubleSide,depthWrite:false}),false);ribbon.renderOrder=5;group.add(ribbon);};
+ strip(.86,.14,0xfffcf0);strip(.56,.145,0x176951);
+ const arrowGeometry=new THREE.BufferGeometry();arrowGeometry.setAttribute('position',new THREE.Float32BufferAttribute([-.22,0,-.24,0,0,.04,.22,0,-.24,-.22,0,.02,0,0,.3,.22,0,.02],3));arrowGeometry.setIndex([0,1,3,3,1,4,1,2,4,4,2,5]);
+ const placements=[];let spacing=2;for(let i=1;i<points.length;i++){const a=points[i-1],b=points[i],length=a.distanceTo(b);while(spacing<=length){placements.push({p:a.clone().lerp(b,spacing/length),angle:Math.atan2(b.x-a.x,b.z-a.z)});spacing+=5;}spacing-=length;}
+ if(placements.length){const arrows=new THREE.InstancedMesh(arrowGeometry,new THREE.MeshBasicMaterial({color:0xfffcf0,side:THREE.DoubleSide,depthWrite:false}),placements.length);placements.forEach((a,i)=>{tempDummy.position.set(a.p.x,terrainHeight(a.p.x,a.p.z)+.16,a.p.z);tempDummy.rotation.set(0,a.angle,0);tempDummy.scale.setScalar(1);tempDummy.updateMatrix();arrows.setMatrixAt(i,tempDummy.matrix);});arrows.renderOrder=6;arrows.computeBoundingSphere();group.add(arrows);}else arrowGeometry.dispose();
+ group.userData={outlineWidth:.86,pathWidth:.56,arrows:placements.length};routeMesh=group;scene.add(group);
+}
+function storyThanks(o){return {bridge:'마지막 석재까지 도착했어. 다리를 열자!',market:'간판과 열쇠가 왔구나. 시장을 다시 열겠네!',lighthouse:'렌즈가 꼭 맞아! 오늘 밤부터 등대가 빛날 거야.',festival:'등불 준비 끝! 이제 우리 모두의 축제야.',ending:'우리의 마음을 이어 주어서 고마워.'}[o.event]||o.note||lines[o.person||0];}
+
+function driveRouteCheck(from,to,chapter){
+ save.chapter=chapter;navCache.clear();setModal(null);running=true;mapOpen=false;testingDrive=true;orders=[];speed=0;steer=0;keys={};
+ car.position.set(from.x,0,from.z);
+ const route=findRoadRoute(car.position,to);if(route.length<2)throw Error('경로 없음 '+JSON.stringify(to));
+ const goal=new THREE.Vector3(to.x,terrainHeight(to.x,to.z),to.z);let index=1,travel=0,maxDeviation=0,stalls=0;save.fuel=FUEL_CAPACITY;
+ const first=route.find(p=>p.distanceTo(car.position)>2)||goal;yaw=Math.atan2(first.x-car.position.x,first.z-car.position.z);
+ for(let frame=0;frame<12000;frame++){
+  while(index<route.length-1&&car.position.distanceTo(route[index])<3)index++;
+  const target=route[index],dist=car.position.distanceTo(goal),dx=target.x-car.position.x,dz=target.z-car.position.z;
+  const angle=Math.atan2(Math.sin(Math.atan2(dx,dz)-yaw),Math.cos(Math.atan2(dx,dz)-yaw));
+  const look=Math.max(2,Math.hypot(dx,dz)),turn=THREE.MathUtils.clamp(Math.atan2(2*2.6*Math.sin(angle),look)/.65,-1,1);
+  const limit=dist<5?Math.max(.8,dist*.65):Math.abs(angle)>.6?2.2:4.8;
+  const old=car.position.clone();updateDrive(.025,{throttle:dist<1.45?0:speed<limit?1:0,turn,brake:dist<1.45||speed>limit+.4});
+  travel+=old.distanceTo(car.position);if(dist>2&&old.distanceTo(car.position)<.0001)stalls++;
+  const deviation=polyDistance(car.position.x,car.position.z,route);maxDeviation=Math.max(maxDeviation,deviation);
+  if(dist<1.8&&Math.abs(speed)<.12){testingDrive=false;return {travel:Math.round(travel),seconds:frame*.025,maxDeviation:+maxDeviation.toFixed(2)};}
+  if(stalls>100)break;
+ }
+ testingDrive=false;throw Error('주행 미완료 '+JSON.stringify({from,to,at:[car.position.x.toFixed(1),car.position.z.toFixed(1)],index,stalls}));
+}
+
+function runChecks(){
+ const results=[];const check=(name,test)=>{try{if(!test())throw Error('검증 조건 불충족');results.push({name,pass:true});}catch(e){results.push({name,pass:false,error:e.message});}};
+ const fresh=()=>{gameOver=false;save={...defaults,completed:[],orders:[],deliveryLog:[],mainDone:0,chapter:1,regularIndex:0};orders=[];nextOrderId=1;speed=0;running=true;keys={};setModal(null);spawnOrders();unlockWorld();};
+ const at=(id)=>{const s=spot(id);placeOnGround(car,s.zone.x,s.zone.z);nearSpot=s;speed=0;stopTimer=0;serviceId=null;};
+ const waitService=()=>{for(let i=0;i<32;i++)updateService(.05);};
+ fresh();
+ check('모든 정차 구역 충돌 없이 접근 가능',()=>{save.chapter=5;const bad=spots.filter(s=>!canDrive(s.zone.x,s.zone.z,true));save.chapter=1;if(bad.length)throw Error(bad.map(s=>s.id).join(','));return true;});
+ check('각 챕터의 모든 열린 목적지까지 연결 경로',()=>{
+ for(const chapter of [1,2,3]){save.chapter=chapter;const start=[-32,34],seen=new Set([start.join(',')]),queue=[start];let cursor=0;
+ while(cursor<queue.length){const [x,z]=queue[cursor++];for(const [dx,dz] of [[1,0],[-1,0],[0,1],[0,-1]]){const nx=x+dx,nz=z+dz,key=nx+','+nz;if(!seen.has(key)&&canDrive(nx,nz,true)){seen.add(key);queue.push([nx,nz]);}}}
+ const unreachable=spots.filter(s=>s.unlock<=chapter&&!seen.has(s.zone.x+','+s.zone.z));if(unreachable.length)throw Error(chapter+'장: '+unreachable.map(s=>s.id).join(','));}save.chapter=1;return true;
+ });
+ check('주문 수락 및 표시',()=>{accept(orders[0].id);return orders[0].state==='accepted'&&zoneMarkers.get(orders[0].from).visible;});
+ check('이동 중 수령 불가',()=>{at(orders[0].from);speed=1;waitService();return orders[0].state==='accepted'&&stopTimer===0;});
+ check('정차 시간 충족 후 자동 수령',()=>{speed=0;waitService();return orders[0].state==='cargo'&&parcelGroup.children.length===1;});
+ check('목적지 자동 배달·보상·주요 주문 2번',()=>{at(orders[0].to);waitService();return save.mainDone===1&&save.coins===50&&orders.find(o=>o.main).mainIndex===1;});
+ fresh();
+ check('3칸 적재 한도·수락 주문 유지',()=>{orders=Array.from({length:4},(_,i)=>({id:i+1,from:'bakery',to:'home1',item:goods[0],person:0,tip:22,state:'accepted',age:0}));at('bakery');for(let i=0;i<4;i++)waitService();return orders.filter(o=>o.state==='cargo').length===3&&orders[3].state==='accepted';});
+ check('배달 뒤 빈칸에 남은 주문 수령',()=>{at('home1');waitService();at('bakery');waitService();return orders.filter(o=>o.state==='cargo').length===3;});
+ check('부족한 동전 구매 거부',()=>{save.coins=0;return !buy('capacity')&&save.capacity===3;});
+ check('3→5→8 확장·중복 구매 차감 방지',()=>{save.coins=1000;buy('capacity');const a=save.capacity===5;buy('capacity');const before=save.coins;buy('capacity');return a&&save.capacity===8&&save.coins===before;});
+ check('페인트·루프랙·엔진·경적 실제 적용',()=>{save.coins=1000;for(const k of ['paint','rack','engine','horn'])buy(k);return carVisual.getObjectByName('paint').material.color.getHex()===C.peach&&rackFlowers.visible&&save.engine===1.3&&save.horn==='bird';});
+ check('저장 직렬화와 재적용',()=>{persist();const disk=JSON.parse(localStorage.getItem(SAVE_KEY));save=disk;applySave();return save.capacity===8&&rackFlowers.visible&&save.paint==='peach'&&orders.some(o=>o.state==='cargo');});
+ fresh();
+ check('잠긴 다리·항구 통행 차단',()=>!canDrive(17,-13,true)&&!canDrive(-40,-18,true));
+ check('15개 주요 주문 순서·5개 챕터·엔딩',()=>{for(let i=0;i<15;i++){setModal(null);const o=orders.find(o=>o.main);if(!o||o.mainIndex!==i)throw Error('순서 '+i);accept(o.id);at(o.from);waitService();if(o.state!=='cargo')throw Error('수령 '+i);at(o.to);waitService();if(save.mainDone!==i+1)throw Error('배달 '+i);}return save.mainDone===15&&save.chapter===5&&!orders.some(o=>o.main)&&festival.length===35;});
+ check('해금 후 다리·항구 통행 가능',()=>canDrive(17,-13,true)&&canDrive(-40,-22,true)&&scene.userData.bridge.visible&&spot('harbor').group.visible);
+ check('반복 주문 10종 이상·주민 7명',()=>regularTemplates.length>=10&&people.length>=6);
+ setModal(null);orders=[];spawnOrders();
+ check('가속·감속·조향·바퀴',()=>{car.position.set(-20,0,35);yaw=0;speed=0;keys={KeyW:true};const z=car.position.z;for(let i=0;i<12;i++)updateDrive(.05);const moved=car.position.z>z&&speed>0;keys={KeyW:true,KeyA:true};for(let i=0;i<8;i++)updateDrive(.05);const turned=yaw>0;keys={Space:true};for(let i=0;i<30;i++)updateDrive(.05);return moved&&turned&&Math.abs(speed)<.12;});
+ check('건물·나무·확장된 해안 충돌',()=>{const tr=trees[0].position;return !canDrive(-16,3,true)&&!canDrive(tr.x,tr.z,true)&&!canDrive(140,0,true);});
+ check('일시정지 중 차량 및 주문 불변',()=>{setModal('pause');const p=car.position.clone(),n=orders.length;keys={KeyW:true};updateDrive(1);interact();return car.position.equals(p)&&orders.length===n;});
+ check('낮밤·전조등·등대·비',()=>{setModal(null);gameTime=.5;updateWorld(0);const day=nightValue<.1;gameTime=.9;rain=1;updateWorld(.1);return day&&nightValue>.9&&headlights.some(h=>h.isLight&&h.intensity>0)&&lighthouseBeam.intensity>0&&rainPoints.material.opacity>0;});
+ check('저품질 후처리·그림자·인스턴스 감소',()=>{save.quality='low';setQuality();return !renderer.shadowMap.enabled&&!composer.passes[1].enabled&&flowerInstances.count===140;});
+ check('고품질 복원',()=>{save.quality='high';setQuality();return renderer.shadowMap.enabled&&composer.passes[1].enabled&&flowerInstances.count===480;});
+ check('지도 경로·플레이어·목적지 캔버스',()=>{drawMap();return !!$('#mapCanvas')&&$('#mapCanvas').width===900;});
+
+ check('길 안내: 각 챕터 열린 목적지의 도로 경로',()=>{
+ for(const c of [1,2,3]){save.chapter=c;navCache.clear();for(const t of spots.filter(s=>s.unlock<=c)){const p=findRoadRoute({x:-32,z:34},t.zone);if(!p.length)throw Error(c+'장 '+t.id);if(p.some((v,i)=>i&&!clearSegment(p[i-1],v)))throw Error('경로 충돌 '+t.id);}}
+ save.chapter=1;navCache.clear();if(findRoadRoute({x:-32,z:34},spot('home4').zone).length)throw Error('잠긴 다리 우회');return true;
+ });
+ check('실제 가속·조향: 우체국 → 빵집',()=>{driveRouteCheck({x:-32,z:34},spot('bakery').zone,1);return true;});
+ check('실제 가속·조향: 빵집 → 주택가',()=>{driveRouteCheck(spot('bakery').zone,spot('home2').zone,1);return true;});
+ check('실제 가속·조향: 다리 건너 언덕 주택',()=>{driveRouteCheck(spot('cafe').zone,spot('home4').zone,2);return true;});
+ check('실제 가속·조향: 잠긴 시장 우회 → 등대',()=>{driveRouteCheck(spot('post').zone,spot('lighthouse').zone,1);return true;});
+ check('카메라 8방향 건물·나무 가림 보정',()=>{
+ scene.updateMatrixWorld(true);for(const spotData of spots.filter(s=>s.group)){const focus=new THREE.Vector3(spotData.zone.x,terrainHeight(spotData.zone.x,spotData.zone.z)+1.9,spotData.zone.z);for(let i=0;i<8;i++){const desired=focus.clone().add(new THREE.Vector3(Math.sin(i*Math.PI/4)*16,7,Math.cos(i*Math.PI/4)*16)),safe=safeCameraPosition(focus,desired),delta=safe.clone().sub(focus);cameraRay.set(focus,delta.clone().normalize());cameraRay.far=Math.max(0,delta.length()-.01);const hits=cameraRay.intersectObjects(cameraObstacles,true).filter(h=>h.object.isMesh);if(hits.length)throw Error(spotData.id+' 카메라 가림');}}return true;
+ });
+ check('시작 위치 카메라 최소 거리와 반복 갱신 안정성',()=>{car.position.set(-32,0,34);running=true;speed=0;const focus=new THREE.Vector3(-32,1.9,34);for(const mode of [false,true]){iso=mode;camera.position.set(0,58,65);for(let frame=0;frame<240;frame++)updateCamera(1/60);const distance=camera.position.distanceTo(focus);if(distance<8||distance>60)return false;}iso=false;return true;});
+ check('개울 곡선 위 실제 물 영역 통행 금지',()=>{save.chapter=3;return creekSamples.filter((p,i)=>i%12===0&&Math.hypot(p.x,p.z/.82)<65&&Math.abs(p.x-17)>4).every(p=>!canDrive(p.x,p.z,true));});
+ check('뒷유리·배지 위치 및 평면 간판',()=>{const glass=carVisual.getObjectByName('rearGlass'),badge=carVisual.getObjectByName('rearBadge');return glass.position.z< -2.08&&badge.isMesh&&badge.position.z< -2.35;});
+ check('서사 물품과 해금 사건 고정 연결',()=>storyOrders[2].event==='bridge'&&storyOrders[2].item.includes('석재')&&storyOrders[5].event==='market'&&storyOrders[8].item.includes('렌즈')&&storyOrders[8].event==='lighthouse'&&storyOrders[11].event==='festival');
+ save.chapter=5;save.mainDone=15;setModal(null);unlockWorld();
+
+ save.capacity=8;save.paint='peach';save.rack='flower';save.horn='bird';save.engine=1.3;save.coins=321;persist();
+ running=false;paused=true;keys={};const report=document.createElement('pre');report.id='checkResults';report.style='position:fixed;inset:12px;z-index:100;background:#fff9e9;padding:22px;overflow:auto;white-space:pre-wrap;font:16px monospace';report.textContent=JSON.stringify({passed:results.filter(r=>r.pass).length,total:results.length,results,navFailure:scene.userData.navFailure},null,2);document.body.append(report);
+}
+
+async function runReleaseChecks(){
+ runChecks();const report=$('#checkResults'),base=JSON.parse(report.textContent),results=base.results,journey=[];
+ const refresh=()=>{report.textContent=JSON.stringify({passed:results.filter(r=>r.pass).length,total:results.length,results,journey,finished:!releaseTestDriving},null,2);};
+ const check=(name,test)=>{try{if(!test())throw Error('검증 조건 불충족');results.push({name,pass:true});}catch(e){results.push({name,pass:false,error:e.message});}};
+ check('저장 불가 시 실패 반환과 지속 안내',()=>{const result=persist({getItem(){return null;},setItem(){throw Error('QuotaExceededError');}});const correct=!result&&!$('#saveStatus').hidden;persist();return correct;});
+ check('잘못된 저장 설정·중복 주문 안전 처리',()=>{const n=normaliseSave({mainDone:2,coins:-10,camSense:999,engine:100,paint:'bad',orders:[{id:1,from:'bakery',to:'home1',state:'cargo',person:999,item:'<img>',tip:999},{id:1,from:'bakery',to:'home1',state:'new'}]});return n.coins===0&&n.camSense===1.5&&n.engine===1&&n.orders[0].person===6&&n.orders[0].tip===100&&n.orders[0].id!==n.orders[1].id;});
+ check('주문 문자열은 HTML로 실행되지 않음',()=>escapeHTML('<img src=x onerror=alert(1)>').startsWith('&lt;'));
+ check('위치·방향·시점·물품 저장 복원',()=>{car.position.copy(spot('bakery').zone?new THREE.Vector3(spot('bakery').zone.x,0,spot('bakery').zone.z):car.position);yaw=.7;iso=true;persist();const disk=JSON.parse(localStorage.getItem(SAVE_KEY));const location=car.position.clone();save=disk;car.position.set(0,0,0);applySave();return car.position.distanceTo(location)<.01&&yaw===.7&&iso;});
+ check('일반 차량이 배달 차량의 길을 막지 않음',()=>{const p=spot('bakery').zone;traffic[0].position.set(p.x,0,p.z);return canDrive(p.x,p.z);});
+ check('안내 표지의 낮은 높이 유지',()=>{updateWorld(.1);return [...zoneMarkers.values()].every(g=>g.children[1].position.y<1.1);});
+ check('외부 그래픽·폰트 요청 없음',()=>performance.getEntriesByType('resource').every(r=>!/^https?:/.test(r.name)||new URL(r.name).origin===location.origin));
+ check('우체국 정원은 도로와 정차 구역 밖에 배치',()=>scene.userData.visualGardens.length===4&&scene.userData.visualGardens.every(g=>roadDistance(g.x,g.z)>=g.r+5&&spots.every(s=>Math.hypot(s.zone.x-g.x,s.zone.z-g.z)>=g.r+6)));
+ check('상점·주택 외벽 및 카페 독립 지붕 적용',()=>spots.filter(s=>s.group).every(s=>s.group.userData.facadeRefined)&&!spot('cafe').group.children[1].visible);
+ check('정차 표지의 흰 테두리와 수령·배달 라벨',()=>{updateMarker();return [...zoneMarkers.values()].every(g=>g.children[3].material.color.getHex()===0xfffcf0&&g.children[0].geometry.parameters.innerRadius===2.63&&g.children[0].position.y>g.children[3].position.y&&!!g.userData.label);});
+ check('길 안내는 흰 테두리·굵은 경로·방향 화살표',()=>{routePoints=findRoadRoute(car.position,spot('post').zone);showRoute();return routeMesh?.userData.outlineWidth>routeMesh?.userData.pathWidth&&routeMesh?.userData.pathWidth>=.5&&routeMesh?.userData.arrows>0;});
+ check('일반 차량은 플레이어 근접과 무관하게 같은 차선·속도로 주행',()=>{const positions=car.position.clone(),phases=traffic.map(v=>v.userData.phase);traffic.forEach(v=>v.userData.phase=.25);car.position.set(999,0,999);updateTraffic(.5);const first=traffic.map(v=>({p:v.position.clone(),phase:v.userData.phase}));traffic.forEach(v=>v.userData.phase=.25);car.position.copy(first[0].p);updateTraffic(.5);const good=traffic.every((v,i)=>v.position.distanceTo(first[i].p)<.000001&&v.userData.phase===first[i].phase&&v.userData.phase>.25);car.position.copy(positions);traffic.forEach((v,i)=>v.userData.phase=phases[i]);updateTraffic(0);return good;});
+ check('주민 충돌 검사: 전진·후진·차체 회전 및 빠른 통과',()=>{const r=residents[1].position,p={x:r.x+2.7,z:r.z};return !!residentCollision({x:r.x,z:r.z-8},{x:r.x,z:r.z+8},0,0)&&!!residentCollision({x:r.x,z:r.z+8},{x:r.x,z:r.z-8},0,0)&&!!residentCollision({x:r.x-8,z:r.z},{x:r.x+8,z:r.z},Math.PI/2,Math.PI/2)&&!residentCollision(p,p,0,0)&&!!residentCollision(p,p,0,Math.PI/2);});
+ check('주민 옆 2.4m 간격 통과는 충돌하지 않음',()=>{const r=residents[1].position;return !residentCollision({x:r.x+2.4,z:r.z+4},{x:r.x+2.4,z:r.z-4},0,0);});
+ gameOver=false;running=true;setModal(null);const residentTest=residents[1],progressBeforeCrash={coins:save.coins,mainDone:save.mainDone,orders:JSON.stringify(orders)};car.position.set(residentTest.position.x,0,residentTest.position.z+5);yaw=Math.PI;speed=0;steer=0;
+ check('실제 가속 중 주민 충돌 즉시 게임 오버',()=>{for(let i=0;i<120&&!gameOver;i++)updateDrive(.025,{throttle:1,turn:0,brake:false});return gameOver&&paused&&speed===0&&!$('#gameOver').classList.contains('hidden')&&$('#hud').inert;});
+ check('게임 오버 중 Esc·주행·물품·시간 진행 차단',()=>{const p=car.position.clone(),time=gameTime;togglePause();setModal(null);updateDrive(1,{throttle:1,turn:1});updateService(2);updateWorld(2);return gameOver&&paused&&car.position.equals(p)&&time===gameTime&&orders.length===0;});
+ check('게임 오버 저장·백업 모두 미션·돈·물품 초기화',()=>{persist();const data=JSON.parse(localStorage.getItem(SAVE_KEY)),backup=JSON.parse(localStorage.getItem(SAVE_KEY+'.backup'));return [data,backup].every(d=>d.position[0]===-32&&d.position[1]===34&&d.yaw===2.53&&d.coins===0&&d.mainDone===0&&d.regularDone===0&&d.orders.length===0&&d.deliveryLog.length===0&&d.fuel===FUEL_CAPACITY);});
+ check('재출발은 1장·첫 주문·0동전·빈 적재·가득 찬 연료',()=>{restartDrive();setModal(null);return !gameOver&&!paused&&car.position.x===-32&&car.position.z===34&&speed===0&&save.coins===0&&save.mainDone===0&&save.chapter===1&&orders.every(o=>o.state==='new')&&save.fuel===FUEL_CAPACITY&&!scene.userData.bridge.visible&&festival.length===0;});
+ gameOver=false;
+ check('섬 면적 확대와 실제 배달 주택 6채 추가',()=>WORLD.rx*WORLD.rz>74*74*.82*2&&scene.userData.newHomeIds.length===6&&scene.userData.newHomeIds.every(id=>spot(id).group&&regularTemplates.some(p=>p[0]===id||p[1]===id)));
+ check('차량 대비 도로 폭 확장·돌다리 연결',()=>roadCurves.every(c=>c.userData.width>=6.5)&&bridgeRect.maxX-bridgeRect.minX>=8);
+ check('산책 공원 주민 5명 실제 왕복·차도 이격',()=>{const walkers=residents.filter(r=>r.userData.walker),before=walkers.map(r=>r.position.clone());updateResidents(45);return walkers.length===5&&walkers.every((r,i)=>planarDistance(r.position,before[i])>1&&roadDistance(r.position.x,r.position.z)>5.5);});
+ check('정상 높이·새 주택 기초·정차 원의 동일 지형',()=>terrainHeight(spot('fuel').zone.x,spot('fuel').zone.z)>=11.9&&scene.userData.newHomeIds.every(id=>{const s=spot(id);return Math.abs(s.group.position.y-terrainHeight(s.x,s.z))<.01&&Math.abs(zoneMarkers.get(id).position.y-terrainHeight(s.zone.x,s.zone.z))<.01;}));
+ check('오르막 도로 삼각형 표면이 지형 안으로 꺼지지 않음',()=>{for(const road of scene.children.filter(o=>o.userData.curve&&o.geometry)){const p=road.geometry.attributes.position,index=road.geometry.index;for(let i=0;i<index.count;i+=111){const a=index.getX(i),b=index.getX(i+1),c=index.getX(i+2),x=(p.getX(a)+p.getX(b)+p.getX(c))/3,z=(p.getZ(a)+p.getZ(b)+p.getZ(c))/3,y=(p.getY(a)+p.getY(b)+p.getY(c))/3;if(y<terrainHeight(x,z)-.005)throw Error(JSON.stringify({x,z,y,ground:terrainHeight(x,z)}));}}return true;});
+ check('산책 주민의 전체 왕복 구간은 차도·정차 차량과 분리',()=>{placeOnGround(car,79,33);speed=0;const walkers=residents.filter(r=>r.userData.walker);for(let t=0;t<260;t+=5){updateResidents(t);if(gameOver||walkers.some(r=>roadDistance(r.position.x,r.position.z)<5.5)||residentCollision(car.position,car.position))return false;}return true;});
+ check('다리 해금 전 정상 주유소 안내 불가·해금 후 연결',()=>{save.chapter=1;navCache.clear();const blocked=!findRoadRoute({x:-32,z:34},spot('fuel').zone).length;save.chapter=2;navCache.clear();const path=findRoadRoute({x:-32,z:34},spot('fuel').zone);return blocked&&path.length>2&&path.some(p=>p.y>10);});
+ check('오르막 실제 주행: 감속·거리당 연료 증가·차체 높이',()=>{
+  running=true;setModal(null);save.engine=1;const run=(x,z)=>{placeOnGround(car,x,z);yaw=Math.PI;speed=0;steer=0;save.fuel=60;const start=car.position.clone();for(let i=0;i<120;i++)updateDrive(.025,{throttle:1,turn:0,brake:false});const metres=planarDistance(start,car.position);return {speed,metres,perMetre:(60-save.fuel)/metres,y:car.position.y,h:terrainHeight(car.position.x,car.position.z)};};const flat=run(-70,-5),hill=run(61,-34);if(!Number.isFinite(hill.perMetre))throw Error(JSON.stringify({flat,hill}));return hill.speed<flat.speed*.85&&hill.perMetre>flat.perMetre*1.3&&hill.y>0&&Math.abs(hill.y-hill.h)<.001&&!gameOver;
+ });
+ check('정차·지도·일시정지 중 연료 소모 없음',()=>{const before=save.fuel;speed=0;updateDrive(.5,{throttle:0,turn:0,brake:true});setModal('pause');updateDrive(2,{throttle:1});setModal(null);mapOpen=true;updateDrive(2,{throttle:1});mapOpen=false;return save.fuel===before;});
+ check('터치 상호작용 버튼으로 정차 중 주유소 진입',()=>{setModal(null);save.chapter=2;placeOnGround(car,73,-58);speed=0;nearSpot=spot('fuel');$('#touchInteract').click();return paused&&!$('#fuelStation').classList.contains('hidden');});
+ check('유료 주유: 부분·가득 충전·탱크 상한·중복 구매 차단',()=>{save.chapter=2;save.coins=100;save.fuel=42.4;placeOnGround(car,73,-56);speed=0;nearSpot=spot('fuel');if(!openFuelStation())return false;const partial=refuel(5)&&save.coins===90&&Math.abs(save.fuel-47.4)<.001,full=refuel(60)&&save.coins===64&&save.fuel===60;const coins=save.coins;return partial&&full&&!refuel(60)&&save.coins===coins;});
+ check('주유비 부족 및 주유소 밖 결제 거부',()=>{save.coins=0;save.fuel=20;const insufficient=!refuel(5)&&save.fuel===20;save.coins=100;placeOnGround(car,61,-38);const away=!refuel(5)&&save.coins===100;setModal(null);return insufficient&&away;});
+ check('연료 저장·복원·옛 저장 기본 만충·손상값 제한',()=>{const legacy=normaliseSave({mainDone:0,orders:[]}),bad=normaliseSave({fuel:999,day:-1,regularDone:-2}),nullFuel=normaliseSave({fuel:null}),nonFinite=normaliseSave({fuel:NaN});save.fuel=23.75;placeOnGround(car,73,-56);persist();save=JSON.parse(localStorage.getItem(SAVE_KEY));applySave();return legacy.fuel===60&&bad.fuel===60&&nullFuel.fuel===60&&nonFinite.fuel===60&&bad.day===1&&bad.regularDone===0&&save.fuel===23.75&&Math.abs(car.position.y-12)<.001;});
+ check('요일별 주문 순서 변경·수락/적재 보존·원거리 주문 편성',()=>{save.chapter=2;save.day=1;save.introSeen=true;const active={id:999,main:false,from:'book',to:'home8',item:'보존할 소포',person:2,tip:30,state:'cargo',age:5};orders=[active];const one=dailyTemplates(1,2).map(p=>p.join('|')).join(','),two=dailyTemplates(2,2).map(p=>p.join('|')).join(',');nextDay();return one!==two&&save.day===2&&orders.includes(active)&&orders.some(o=>o.to.startsWith('home')&&Number(o.to.slice(4))>=7);});
+ check('연료 고갈 실제 주행은 미션·돈·물품 초기화, 차량·설정 유지',()=>{setModal(null);save.coins=987;save.mainDone=8;save.chapter=3;save.regularDone=12;save.completed=[0,1,2];save.deliveryLog=[{day:1,item:'이전 배달',to:'집'}];save.engine=1.3;save.fuel=.0001;const volume=save.volume;placeOnGround(car,-70,-5);yaw=Math.PI;speed=3;updateDrive(.05,{throttle:1,turn:0,brake:false});return gameOver&&$('#gameOverMessage').textContent.includes('연료')&&save.coins===0&&save.mainDone===0&&save.regularDone===0&&save.deliveryLog.length===0&&save.completed.length===0&&save.engine===1.3&&save.fuel===60&&orders.length===0&&save.volume===volume;});
+ check('연료 고갈 후 새로고침으로 이전 진행 부활하지 않음',()=>{const disk=JSON.parse(localStorage.getItem(SAVE_KEY)),backup=JSON.parse(localStorage.getItem(SAVE_KEY+'.backup'));return disk.coins===0&&disk.mainDone===0&&backup.coins===0&&backup.mainDone===0;});
+ resetCrash();
+ save={...defaults,orders:[],completed:[],deliveryLog:[],introSeen:true};orders=[];nextOrderId=1;car.position.set(-32,0,34);yaw=2.53;speed=0;steer=0;iso=false;testingDrive=false;releaseTestDriving=true;running=true;setModal(null);navCache.clear();spawnOrders();unlockWorld();
+ let travelled=0,totalFrames=0;
+ async function leg(id){setModal(null);const target=spot(id),goal=new THREE.Vector3(target.zone.x,terrainHeight(target.zone.x,target.zone.z),target.zone.z);let path=findRoadRoute(car.position,target.zone),index=1,stalls=0,recoveryFrames=0,recoverySign=1,reverseGear=false;
+  if(path.length<2&&car.position.distanceTo(goal)>2.6)throw Error('경로 없음 '+id);
+  for(let frame=0;frame<10000;frame++){
+   if(gameOver)throw Error('주민 충돌로 주행 종료: '+id+' · '+$('#gameOverMessage').textContent);
+   while(index<path.length-1&&car.position.distanceTo(path[index])<2.8)index++;
+   const p=path[index]||goal,distance=car.position.distanceTo(goal),dx=p.x-car.position.x,dz=p.z-car.position.z,angle=Math.atan2(Math.sin(Math.atan2(dx,dz)-yaw),Math.cos(Math.atan2(dx,dz)-yaw));
+   if(!reverseGear&&Math.abs(angle)>2.2)reverseGear=true;else if(reverseGear&&Math.abs(angle)<1.2)reverseGear=false;
+   const reverse=reverseGear,heading=reverse?Math.atan2(Math.sin(angle-Math.PI),Math.cos(angle-Math.PI)):angle;
+   const turn=THREE.MathUtils.clamp(Math.atan2(2*2.6*Math.sin(heading),Math.max(2,Math.hypot(dx,dz)))/.65,-1,1)*(reverse?-1:1),limit=distance<5?Math.max(.6,distance*.6):Math.abs(heading)>.6?1.8:4.5;
+   let input={throttle:distance<1.35?0:reverse?(speed>-.9?-1:0):(speed<limit?1:0),turn,brake:distance<1.35||(!reverse&&speed>limit+.3)||(reverse&&speed>0)||(!reverse&&speed<0)};
+   if(recoveryFrames>0){input={throttle:-1,turn:recoverySign,brake:false};recoveryFrames--;}
+   const before=car.position.clone();updateDrive(.025,input);updateResidents(simTime+totalFrames*.025);updateTraffic(.025);travelled+=car.position.distanceTo(before);totalFrames++;
+   if(distance>2&&car.position.distanceTo(before)<.001)stalls++;else stalls=Math.max(0,stalls-1);
+   if(stalls>35){recoverySign=angle>0?-1:1;recoveryFrames=55;stalls=0;}
+   if(frame%40===0){scene.updateMatrixWorld(true);updateCamera(.05);}
+   if(frame%300===0){refresh();await new Promise(resolve=>setTimeout(resolve,0));}
+   if(distance<1.8&&Math.abs(speed)<.12){for(let i=0;i<65;i++){updateDrive(.025,{throttle:0,turn:0,brake:true});}return {target:id,seconds:+(frame*.025).toFixed(1),at:[+car.position.x.toFixed(2),+car.position.z.toFixed(2)]};}
+  }
+  throw Error('주행 미완료 '+JSON.stringify({id,at:car.position.toArray(),yaw,index,path:path.map(p=>[+p.x.toFixed(1),+p.z.toFixed(1)])}));
+ }
+ const fuelStops=[];
+ async function fuelStop(){if(save.chapter<2||save.fuel>=24)return;const beforeFuel=save.fuel,coins=save.coins;const drive=await leg('fuel');if(!openFuelStation()||!refuel(FUEL_CAPACITY))throw Error('유료 주유 실패 '+JSON.stringify({fuel:save.fuel,coins:save.coins}));setModal(null);fuelStops.push({before:+beforeFuel.toFixed(1),cost:coins-save.coins,drive});}
+ try{for(let i=0;i<15;i++){setModal(null);const o=orders.find(o=>o.main);if(!o||o.mainIndex!==i)throw Error('주문 순서 '+i);await fuelStop();accept(o.id);const pickup=await leg(o.from);if(o.state!=='cargo')throw Error('수령 실패 '+i);await fuelStop();selectedId=o.id;const delivery=await leg(o.to);if(save.mainDone!==i+1)throw Error('배달 실패 '+i);journey.push({order:i+1,pickup,delivery});refresh();}
+  results.push({name:'15개 주요 주문 연속 실제 가속·조향·정차·수령·배달',pass:true,metres:Math.round(travelled),simulatedMinutes:+(totalFrames*.025/60).toFixed(1)});
+  results.push({name:'연속 주요 미션 중 정상 주유소 실제 주행·유료 주유',pass:fuelStops.length>0&&fuelStops.every(s=>s.cost>0),stops:fuelStops});
+  const additional=[];for(const id of [...scene.userData.newHomeIds,'meadow']){await fuelStop();orders=orders.filter(o=>o.state!=='new');const o={id:nextOrderId++,from:'bakery',to:id,main:false,person:0,item:'확장 지역 피크닉 배달',tip:45,state:'new',age:0};orders.push(o);accept(o.id);await leg(o.from);if(o.state!=='cargo')throw Error('추가 집 수령 실패 '+id);await fuelStop();selectedId=o.id;additional.push(await leg(id));if(orders.includes(o))throw Error('추가 집 배달 실패 '+id);}
+  results.push({name:'추가 주택 6채·새 공원 실제 연속 수령/배달 주행',pass:additional.length===7,destinations:additional,totalMetres:Math.round(travelled),simulatedMinutes:+(totalFrames*.025/60).toFixed(1)});
+ }catch(e){results.push({name:journey.length===15?'확장 지역 실제 연속 배달 주행':'15개 주요 주문 연속 실제 가속·조향·정차·수령·배달',pass:false,error:e.message});}
+ releaseTestDriving=false;running=false;paused=true;persist();refresh();
+}
+
+init();
+if(new URLSearchParams(location.search).get('check')==='expansion'){
+ // Visual fixtures use the isolated QA slot, never the player's saved game.
+ save={...defaults,coins:240,fuel:34,mainDone:3,chapter:2,day:3,regularDone:4,orders:[],completed:[0,1,2],deliveryLog:[],introSeen:true};orders=[];nextOrderId=1;spawnOrders();unlockWorld();startGame();setModal(null);iso=true;gameTime=.4;weatherTimer=99999;rain=0;
+ const panel=document.createElement('div');panel.id='qaTour';panel.style='position:fixed;bottom:85px;left:18px;z-index:60;display:flex;gap:6px;flex-wrap:wrap;max-width:650px';
+ const position=(x,z)=>{setModal(null);placeOnGround(car,x,z);speed=0;steer=0;yaw=Math.PI;car.rotation.y=yaw;carVisual.rotation.set(0,0,0);gameTime=.4;cameraHeading=yaw;camera.position.set(x-23,terrainHeight(x,z)+29,z+25);nearSpot=spots.find(s=>planarDistance(car.position,s.zone)<2.75)||null;routeTarget='';updateNavigation();};
+ for(const [name,x,z] of [['새 공원',79,33],['언덕길',61,-39],['정상 주택가',91,-80],['주유소 앞',73,-58],['우체국',-32,34]]){const b=document.createElement('button');b.textContent=name;b.onclick=()=>position(x,z);panel.append(b);}
+ const fuelButton=document.createElement('button');fuelButton.textContent='주유 화면 확인';fuelButton.onclick=()=>{position(73,-58);openFuelStation();};panel.append(fuelButton);
+ const emptyButton=document.createElement('button');emptyButton.textContent='연료 고갈 확인 주행';emptyButton.onclick=()=>{position(-70,-5);save.fuel=.0001;speed=3;updateDrive(.05,{throttle:1,turn:0,brake:false});};panel.append(emptyButton);
+ const hide=document.createElement('button');hide.textContent='검증 버튼 숨기기';hide.onclick=()=>panel.remove();panel.append(hide);document.body.append(panel);position(79,33);
+}else if(new URLSearchParams(location.search).get('check')==='collision'){
+ const button=document.createElement('button');button.textContent='주민 충돌 확인 주행';button.style='position:fixed;bottom:20px;left:40%;z-index:60';button.onclick=()=>{button.remove();save={...defaults,coins:42,completed:[],orders:[],introSeen:true};orders=[];nextOrderId=1;spawnOrders();const order=orders.find(o=>o.main);order.state='cargo';selectedId=order.id;syncParcels();renderOrders();updateMarker();const resident=residents[1];car.position.set(resident.position.x,0,resident.position.z+5);yaw=Math.PI;speed=0;steer=0;startGame();for(let i=0;i<120&&!gameOver;i++)updateDrive(.025,{throttle:1,turn:0,brake:false});};document.body.append(button);
+}else if(new URLSearchParams(location.search).get('check')==='play'){
+ // Isolated manual QA uses normal player controls and its own save slot.
+}else if(new URLSearchParams(location.search).get('check')==='tour'){
+ startGame();setModal(null);save.chapter=5;unlockWorld();gameTime=.38;weatherTimer=99999;rain=0;orders=[];syncParcels();renderOrders();updateMarker();iso=true;
+ const panel=document.createElement('div');panel.style='position:fixed;bottom:20px;left:35%;z-index:60;display:flex;gap:8px';
+ for(const [name,x,z] of [['우체국',-32,34],['상점 거리',12,12],['주택 정원',20,40],['항구',-48,-20],['광장',4,26]]){const b=document.createElement('button');b.textContent=name;b.onclick=()=>{gameTime=.38;car.position.set(x,0,z);speed=0;yaw=Math.PI;camera.position.set(x-23,29,z+25);};panel.append(b);}document.body.append(panel);
+ car.position.set(12,0,12);yaw=Math.PI;
+}else if(new URLSearchParams(location.search).get('check')==='release'){
+ setTimeout(runReleaseChecks,500);
+}else if(new URLSearchParams(location.search).get('check')==='restore'){
+ const passed=save.coins===321&&save.capacity===8&&save.mainDone===15&&save.paint==='peach'&&rackFlowers.visible&&save.horn==='bird';const p=document.createElement('pre');p.id='restoreResults';p.style='position:fixed;inset:20px;background:white;z-index:100;padding:20px';p.textContent=JSON.stringify({passed,coins:save.coins,capacity:save.capacity,mainDone:save.mainDone,paint:save.paint,rack:save.rack,horn:save.horn});document.body.append(p);
+}else if(new URLSearchParams(location.search).has('check'))setTimeout(runChecks,500);
+</script>
+</body></html>

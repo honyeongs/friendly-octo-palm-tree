@@ -1,0 +1,20 @@
+CREATE TYPE "GameMode" AS ENUM ('SOLO_AI', 'ONE_VS_ONE', 'TWO_VS_TWO', 'FOUR_PLAYER_FFA');
+
+CREATE TABLE "User" (
+    "id" TEXT NOT NULL,
+    "nickname" TEXT NOT NULL,
+    "rp" INTEGER NOT NULL DEFAULT 1000,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT "User_pkey" PRIMARY KEY ("id")
+);
+
+CREATE TABLE "Match" (
+    "id" TEXT NOT NULL,
+    "mode" "GameMode" NOT NULL,
+    "status" TEXT NOT NULL,
+    "snapshot" JSONB NOT NULL,
+    "revision" INTEGER NOT NULL DEFAULT 0,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+    CONSTRAINT "Match_pkey" PRIMARY KEY ("id")
+);

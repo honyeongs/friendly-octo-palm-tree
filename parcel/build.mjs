@@ -1,0 +1,14 @@
+import { readFile, writeFile } from 'node:fs/promises';
+import { createRequire } from 'node:module';
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+const root=path.resolve(path.dirname(fileURLToPath(import.meta.url)),'..');
+const require=createRequire(path.join(root,'package.json'));
+const esbuild=require('esbuild');
+const runtime=await esbuild.build({absWorkingDir:root,entryPoints:['parcel/runtime-entry.js'],tsconfigRaw:{},bundle:true,format:'esm',minify:true,write:false,legalComments:'inline',alias:{three:path.join(root,'.parcel-build/package/build/three.module.js')}});
+const encoded=Buffer.from(runtime.outputFiles[0].contents).toString('base64');
+const license=await readFile(path.join(root,'.parcel-build/package/LICENSE'),'utf8');
+const source=await readFile(path.join(root,'parcel/game.html'),'utf8');
+const html=source.replace('<!-- PARCEL_RUNTIME -->','<!-- Bundled Three.js 0.169.0. '+license.replaceAll('--','—')+' -->\n<script id="parcelRuntime" type="application/octet-stream">'+encoded+'</script>');
+await writeFile(path.join(root,'index.html'),html);
+console.log(JSON.stringify({file:'index.html',bytes:Buffer.byteLength(html),externalRuntimeRequests:0}));
