@@ -1,0 +1,38 @@
+node_modules/
+dist/
+.env
+coverage/
+*.log
+.tools/
+.data/
+
+# Reproducible dependencies, build outputs and local tooling.
+.parcel-build/
+.cache/
+.npm/
+.vite/
+.parcel-cache/
+*.tsbuildinfo
+
+# Local secrets (keep non-secret configuration templates).
+.env.*
+!.env.example
+!.env.*.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.keystore
+id_rsa
+id_ed25519
+.aws/
+.azure/
+.ssh/
+credentials.json
+service-account*.json
+
+# Personal runtime state and crash dumps.
+*.sqlite
+*.sqlite3
+*.db
+*.dmp

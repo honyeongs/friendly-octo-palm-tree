@@ -1,0 +1,698 @@
+{
+  "passed": 70,
+  "total": 70,
+  "results": [
+    {
+      "name": "모든 정차 구역 충돌 없이 접근 가능",
+      "pass": true
+    },
+    {
+      "name": "각 챕터의 모든 열린 목적지까지 연결 경로",
+      "pass": true
+    },
+    {
+      "name": "주문 수락 및 표시",
+      "pass": true
+    },
+    {
+      "name": "이동 중 수령 불가",
+      "pass": true
+    },
+    {
+      "name": "정차 시간 충족 후 자동 수령",
+      "pass": true
+    },
+    {
+      "name": "목적지 자동 배달·보상·주요 주문 2번",
+      "pass": true
+    },
+    {
+      "name": "3칸 적재 한도·수락 주문 유지",
+      "pass": true
+    },
+    {
+      "name": "배달 뒤 빈칸에 남은 주문 수령",
+      "pass": true
+    },
+    {
+      "name": "부족한 동전 구매 거부",
+      "pass": true
+    },
+    {
+      "name": "3→5→8 확장·중복 구매 차감 방지",
+      "pass": true
+    },
+    {
+      "name": "페인트·루프랙·엔진·경적 실제 적용",
+      "pass": true
+    },
+    {
+      "name": "저장 직렬화와 재적용",
+      "pass": true
+    },
+    {
+      "name": "잠긴 다리·항구 통행 차단",
+      "pass": true
+    },
+    {
+      "name": "15개 주요 주문 순서·5개 챕터·엔딩",
+      "pass": true
+    },
+    {
+      "name": "해금 후 다리·항구 통행 가능",
+      "pass": true
+    },
+    {
+      "name": "반복 주문 10종 이상·주민 7명",
+      "pass": true
+    },
+    {
+      "name": "가속·감속·조향·바퀴",
+      "pass": true
+    },
+    {
+      "name": "건물·나무·확장된 해안 충돌",
+      "pass": true
+    },
+    {
+      "name": "일시정지 중 차량 및 주문 불변",
+      "pass": true
+    },
+    {
+      "name": "낮밤·전조등·등대·비",
+      "pass": true
+    },
+    {
+      "name": "저품질 후처리·그림자·인스턴스 감소",
+      "pass": true
+    },
+    {
+      "name": "고품질 복원",
+      "pass": true
+    },
+    {
+      "name": "지도 경로·플레이어·목적지 캔버스",
+      "pass": true
+    },
+    {
+      "name": "길 안내: 각 챕터 열린 목적지의 도로 경로",
+      "pass": true
+    },
+    {
+      "name": "실제 가속·조향: 우체국 → 빵집",
+      "pass": true
+    },
+    {
+      "name": "실제 가속·조향: 빵집 → 주택가",
+      "pass": true
+    },
+    {
+      "name": "실제 가속·조향: 다리 건너 언덕 주택",
+      "pass": true
+    },
+    {
+      "name": "실제 가속·조향: 잠긴 시장 우회 → 등대",
+      "pass": true
+    },
+    {
+      "name": "카메라 8방향 건물·나무 가림 보정",
+      "pass": true
+    },
+    {
+      "name": "시작 위치 카메라 최소 거리와 반복 갱신 안정성",
+      "pass": true
+    },
+    {
+      "name": "개울 곡선 위 실제 물 영역 통행 금지",
+      "pass": true
+    },
+    {
+      "name": "뒷유리·배지 위치 및 평면 간판",
+      "pass": true
+    },
+    {
+      "name": "서사 물품과 해금 사건 고정 연결",
+      "pass": true
+    },
+    {
+      "name": "저장 불가 시 실패 반환과 지속 안내",
+      "pass": true
+    },
+    {
+      "name": "잘못된 저장 설정·중복 주문 안전 처리",
+      "pass": true
+    },
+    {
+      "name": "주문 문자열은 HTML로 실행되지 않음",
+      "pass": true
+    },
+    {
+      "name": "위치·방향·시점·물품 저장 복원",
+      "pass": true
+    },
+    {
+      "name": "일반 차량이 배달 차량의 길을 막지 않음",
+      "pass": true
+    },
+    {
+      "name": "안내 표지의 낮은 높이 유지",
+      "pass": true
+    },
+    {
+      "name": "외부 그래픽·폰트 요청 없음",
+      "pass": true
+    },
+    {
+      "name": "우체국 정원은 도로와 정차 구역 밖에 배치",
+      "pass": true
+    },
+    {
+      "name": "상점·주택 외벽 및 카페 독립 지붕 적용",
+      "pass": true
+    },
+    {
+      "name": "정차 표지의 흰 테두리와 수령·배달 라벨",
+      "pass": true
+    },
+    {
+      "name": "길 안내는 흰 테두리·굵은 경로·방향 화살표",
+      "pass": true
+    },
+    {
+      "name": "일반 차량은 플레이어 근접과 무관하게 같은 차선·속도로 주행",
+      "pass": true
+    },
+    {
+      "name": "주민 충돌 검사: 전진·후진·차체 회전 및 빠른 통과",
+      "pass": true
+    },
+    {
+      "name": "주민 옆 2.4m 간격 통과는 충돌하지 않음",
+      "pass": true
+    },
+    {
+      "name": "실제 가속 중 주민 충돌 즉시 게임 오버",
+      "pass": true
+    },
+    {
+      "name": "게임 오버 중 Esc·주행·물품·시간 진행 차단",
+      "pass": true
+    },
+    {
+      "name": "게임 오버 저장·백업 모두 미션·돈·물품 초기화",
+      "pass": true
+    },
+    {
+      "name": "재출발은 1장·첫 주문·0동전·빈 적재·가득 찬 연료",
+      "pass": true
+    },
+    {
+      "name": "섬 면적 확대와 실제 배달 주택 6채 추가",
+      "pass": true
+    },
+    {
+      "name": "차량 대비 도로 폭 확장·돌다리 연결",
+      "pass": true
+    },
+    {
+      "name": "산책 공원 주민 5명 실제 왕복·차도 이격",
+      "pass": true
+    },
+    {
+      "name": "정상 높이·새 주택 기초·정차 원의 동일 지형",
+      "pass": true
+    },
+    {
+      "name": "오르막 도로 삼각형 표면이 지형 안으로 꺼지지 않음",
+      "pass": true
+    },
+    {
+      "name": "산책 주민의 전체 왕복 구간은 차도·정차 차량과 분리",
+      "pass": true
+    },
+    {
+      "name": "다리 해금 전 정상 주유소 안내 불가·해금 후 연결",
+      "pass": true
+    },
+    {
+      "name": "오르막 실제 주행: 감속·거리당 연료 증가·차체 높이",
+      "pass": true
+    },
+    {
+      "name": "정차·지도·일시정지 중 연료 소모 없음",
+      "pass": true
+    },
+    {
+      "name": "터치 상호작용 버튼으로 정차 중 주유소 진입",
+      "pass": true
+    },
+    {
+      "name": "유료 주유: 부분·가득 충전·탱크 상한·중복 구매 차단",
+      "pass": true
+    },
+    {
+      "name": "주유비 부족 및 주유소 밖 결제 거부",
+      "pass": true
+    },
+    {
+      "name": "연료 저장·복원·옛 저장 기본 만충·손상값 제한",
+      "pass": true
+    },
+    {
+      "name": "요일별 주문 순서 변경·수락/적재 보존·원거리 주문 편성",
+      "pass": true
+    },
+    {
+      "name": "연료 고갈 실제 주행은 미션·돈·물품 초기화, 차량·설정 유지",
+      "pass": true
+    },
+    {
+      "name": "연료 고갈 후 새로고침으로 이전 진행 부활하지 않음",
+      "pass": true
+    },
+    {
+      "name": "15개 주요 주문 연속 실제 가속·조향·정차·수령·배달",
+      "pass": true,
+      "metres": 2917,
+      "simulatedMinutes": 32.2
+    },
+    {
+      "name": "연속 주요 미션 중 정상 주유소 실제 주행·유료 주유",
+      "pass": true,
+      "stops": [
+        {
+          "before": 22.3,
+          "cost": 81,
+          "drive": {
+            "target": "fuel",
+            "seconds": 40.6,
+            "at": [
+              71.99,
+              -58.73
+            ]
+          }
+        },
+        {
+          "before": 20.9,
+          "cost": 96,
+          "drive": {
+            "target": "fuel",
+            "seconds": 46.1,
+            "at": [
+              71.8,
+              -57.68
+            ]
+          }
+        },
+        {
+          "before": 23.9,
+          "cost": 90,
+          "drive": {
+            "target": "fuel",
+            "seconds": 47.6,
+            "at": [
+              71.78,
+              -57.68
+            ]
+          }
+        },
+        {
+          "before": 21.3,
+          "cost": 88,
+          "drive": {
+            "target": "fuel",
+            "seconds": 88.2,
+            "at": [
+              71.98,
+              -58.73
+            ]
+          }
+        },
+        {
+          "before": 21.7,
+          "cost": 92,
+          "drive": {
+            "target": "fuel",
+            "seconds": 148.5,
+            "at": [
+              71.98,
+              -58.73
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "name": "추가 주택 6채·새 공원 실제 연속 수령/배달 주행",
+      "pass": true,
+      "destinations": [
+        {
+          "target": "home7",
+          "seconds": 32.8,
+          "at": [
+            71.75,
+            -37.92
+          ]
+        },
+        {
+          "target": "home8",
+          "seconds": 37.4,
+          "at": [
+            91.83,
+            -37.59
+          ]
+        },
+        {
+          "target": "home9",
+          "seconds": 43,
+          "at": [
+            107.6,
+            -55.82
+          ]
+        },
+        {
+          "target": "home10",
+          "seconds": 203.4,
+          "at": [
+            89.81,
+            -80.32
+          ]
+        },
+        {
+          "target": "home11",
+          "seconds": 181.4,
+          "at": [
+            69.79,
+            -84.79
+          ]
+        },
+        {
+          "target": "home12",
+          "seconds": 19.7,
+          "at": [
+            48.25,
+            -83.9
+          ]
+        },
+        {
+          "target": "meadow",
+          "seconds": 25.4,
+          "at": [
+            77.77,
+            32.89
+          ]
+        }
+      ],
+      "totalMetres": 5384,
+      "simulatedMinutes": 58.2
+    }
+  ],
+  "journey": [
+    {
+      "order": 1,
+      "pickup": {
+        "target": "bakery",
+        "seconds": 8.3,
+        "at": [
+          -17.06,
+          11.7
+        ]
+      },
+      "delivery": {
+        "target": "home1",
+        "seconds": 50.1,
+        "at": [
+          0.75,
+          38
+        ]
+      }
+    },
+    {
+      "order": 2,
+      "pickup": {
+        "target": "book",
+        "seconds": 95,
+        "at": [
+          33.22,
+          8.04
+        ]
+      },
+      "delivery": {
+        "target": "post",
+        "seconds": 81.4,
+        "at": [
+          -30.75,
+          30.99
+        ]
+      }
+    },
+    {
+      "order": 3,
+      "pickup": {
+        "target": "post",
+        "seconds": 0,
+        "at": [
+          -30.75,
+          30.99
+        ]
+      },
+      "delivery": {
+        "target": "bridgework",
+        "seconds": 20.2,
+        "at": [
+          21.82,
+          -7.55
+        ]
+      }
+    },
+    {
+      "order": 4,
+      "pickup": {
+        "target": "post",
+        "seconds": 80.2,
+        "at": [
+          -30.77,
+          30.99
+        ]
+      },
+      "delivery": {
+        "target": "home9",
+        "seconds": 49.5,
+        "at": [
+          107.6,
+          -55.81
+        ]
+      }
+    },
+    {
+      "order": 5,
+      "pickup": {
+        "target": "flower",
+        "seconds": 158.4,
+        "at": [
+          1.04,
+          8.66
+        ]
+      },
+      "delivery": {
+        "target": "home7",
+        "seconds": 28.1,
+        "at": [
+          71.76,
+          -37.92
+        ]
+      }
+    },
+    {
+      "order": 6,
+      "pickup": {
+        "target": "post",
+        "seconds": 45,
+        "at": [
+          -30.76,
+          30.9
+        ]
+      },
+      "delivery": {
+        "target": "marketwork",
+        "seconds": 57.2,
+        "at": [
+          -38.99,
+          -14.26
+        ]
+      }
+    },
+    {
+      "order": 7,
+      "pickup": {
+        "target": "harbor",
+        "seconds": 8,
+        "at": [
+          -40.62,
+          -20.93
+        ]
+      },
+      "delivery": {
+        "target": "lighthouse",
+        "seconds": 6.7,
+        "at": [
+          -53.28,
+          -17.97
+        ]
+      }
+    },
+    {
+      "order": 8,
+      "pickup": {
+        "target": "book",
+        "seconds": 115.6,
+        "at": [
+          30.76,
+          7.95
+        ]
+      },
+      "delivery": {
+        "target": "lighthouse",
+        "seconds": 28.3,
+        "at": [
+          -53.22,
+          -18.02
+        ]
+      }
+    },
+    {
+      "order": 9,
+      "pickup": {
+        "target": "harbor",
+        "seconds": 19.3,
+        "at": [
+          -39.73,
+          -20.79
+        ]
+      },
+      "delivery": {
+        "target": "lighthouse",
+        "seconds": 7,
+        "at": [
+          -53.13,
+          -18.11
+        ]
+      }
+    },
+    {
+      "order": 10,
+      "pickup": {
+        "target": "flower",
+        "seconds": 81.4,
+        "at": [
+          -1.22,
+          8.06
+        ]
+      },
+      "delivery": {
+        "target": "park",
+        "seconds": 59.5,
+        "at": [
+          45.81,
+          22.62
+        ]
+      }
+    },
+    {
+      "order": 11,
+      "pickup": {
+        "target": "bakery",
+        "seconds": 17.8,
+        "at": [
+          -14.85,
+          10.48
+        ]
+      },
+      "delivery": {
+        "target": "park",
+        "seconds": 74.2,
+        "at": [
+          45.83,
+          22.63
+        ]
+      }
+    },
+    {
+      "order": 12,
+      "pickup": {
+        "target": "post",
+        "seconds": 24.3,
+        "at": [
+          -30.75,
+          30.91
+        ]
+      },
+      "delivery": {
+        "target": "park",
+        "seconds": 104.3,
+        "at": [
+          45.82,
+          22.63
+        ]
+      }
+    },
+    {
+      "order": 13,
+      "pickup": {
+        "target": "harbor",
+        "seconds": 203.9,
+        "at": [
+          -40.24,
+          -20.77
+        ]
+      },
+      "delivery": {
+        "target": "home11",
+        "seconds": 56.4,
+        "at": [
+          69.78,
+          -84.78
+        ]
+      }
+    },
+    {
+      "order": 14,
+      "pickup": {
+        "target": "home10",
+        "seconds": 6.6,
+        "at": [
+          89.8,
+          -80.31
+        ]
+      },
+      "delivery": {
+        "target": "post",
+        "seconds": 231.5,
+        "at": [
+          -30.76,
+          30.99
+        ]
+      }
+    },
+    {
+      "order": 15,
+      "pickup": {
+        "target": "park",
+        "seconds": 24.3,
+        "at": [
+          45.84,
+          22.5
+        ]
+      },
+      "delivery": {
+        "target": "post",
+        "seconds": 104.3,
+        "at": [
+          -30.77,
+          30.99
+        ]
+      }
+    }
+  ],
+  "finished": true
+}

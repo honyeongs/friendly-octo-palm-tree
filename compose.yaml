@@ -1,0 +1,18 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: starlane
+      POSTGRES_PASSWORD: starlane_dev
+      POSTGRES_DB: starlane
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - starlane_db:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U starlane -d starlane"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  starlane_db:
