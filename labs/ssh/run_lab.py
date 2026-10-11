@@ -63,7 +63,7 @@ def run(output: Path, port: int):
                 f"Port {port}\nListenAddress 127.0.0.1\nHostKey {directory / 'host_key'}\n"
                 f"PidFile {directory / 'sshd.pid'}\nAuthorizedKeysFile {authorized}\n"
                 "PubkeyAuthentication yes\nPasswordAuthentication no\nKbdInteractiveAuthentication no\n"
-                "UsePAM no\nStrictModes no\nPermitRootLogin prohibit-password\n"
+                "UsePAM yes\nStrictModes no\nPermitRootLogin prohibit-password\n"
                 "LogLevel VERBOSE\nAllowTcpForwarding no\nX11Forwarding no\n",
                 encoding="utf-8",
             )
@@ -131,6 +131,12 @@ def run(output: Path, port: int):
             print(json.dumps(metadata, indent=2))
     finally:
         if started:
+            if sys.exc_info()[0] is not None:
+                diagnostic = subprocess.run(
+                    [executables["journalctl"], "-u", unit, "-o", "cat", "--no-pager"],
+                    capture_output=True, text=True, timeout=15,
+                )
+                print(diagnostic.stdout, file=sys.stderr)
             subprocess.run([executables["systemctl"], "stop", unit], capture_output=True, timeout=15)
             subprocess.run([executables["systemctl"], "reset-failed", unit], capture_output=True, timeout=15)
 
