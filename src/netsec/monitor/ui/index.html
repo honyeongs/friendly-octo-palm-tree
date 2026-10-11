@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>NetSec | 보안 운영</title><link rel="stylesheet" href="/ui/styles.css">
+</head>
+<body>
+  <div id="toast" role="status" class="toast hidden"></div>
+  <main id="gate" class="gate hidden">
+    <div class="gate-brand"><img src="/assets/shield-check.svg" alt="" width="36" height="36"><strong>NetSec Monitor</strong></div>
+    <section class="gate-content"><p class="eyebrow" id="gate-eyebrow">WORKSPACE</p><h1 id="gate-title">로그인</h1>
+      <form id="gate-form" class="stack">
+        <label class="setup-only hidden">조직 이름<input name="organization" maxlength="100"></label>
+        <label class="login-only">조직 ID<input name="org_id" autocomplete="organization" maxlength="64"></label>
+        <label class="setup-only hidden">관리자 이름<input name="display_name" maxlength="80"></label>
+        <label>이메일<input name="email" type="email" autocomplete="username" required maxlength="254"></label>
+        <label>비밀번호<input name="password" type="password" autocomplete="current-password" required maxlength="256"></label>
+        <p id="gate-error" class="error" role="alert"></p><button type="submit" class="primary" id="gate-submit">로그인</button>
+      </form>
+    </section>
+  </main>
+  <div id="workspace" class="workspace hidden">
+    <aside class="sidebar"><a class="brand" href="/"><img src="/assets/shield-check.svg" alt="" width="26" height="26">NetSec</a>
+      <div class="org-block"><span class="eyebrow">WORKSPACE</span><strong id="org-name"></strong></div>
+      <nav aria-label="주 메뉴">
+        <button data-view="incidents" class="nav-item active"><img src="/assets/shield-check.svg" alt="">탐지 사건<span id="nav-count"></span></button>
+        <button data-view="events" class="nav-item"><img src="/assets/search.svg" alt="">인증 기록</button>
+        <button data-view="sources" class="nav-item"><img src="/assets/folder-open.svg" alt="">연결 소스</button>
+        <button data-view="notifications" class="nav-item"><img src="/assets/shield-check.svg" alt="">알림</button>
+        <button data-view="users" class="nav-item admin-only"><img src="/assets/folder-open.svg" alt="">사용자</button>
+        <button data-view="policy" class="nav-item admin-only"><img src="/assets/rotate-ccw.svg" alt="">정책·예외</button>
+        <button data-view="audit" class="nav-item admin-only"><img src="/assets/search.svg" alt="">감사 기록</button>
+      </nav>
+      <a href="/compare/" target="_blank" rel="noopener" class="comparison-link">기존 보고서 비교 ↗</a>
+      <div class="account"><strong id="user-name"></strong><span id="user-role"></span><button id="password-open" class="subtle">비밀번호 변경</button><button id="logout" class="subtle">로그아웃</button></div>
+    </aside>
+    <main class="main">
+      <header class="topbar"><div><span class="eyebrow">SECURITY OPERATIONS</span><h1 id="view-title">탐지 사건</h1></div><div class="top-actions"><span id="updated-at"></span><button id="refresh" class="icon-button" title="새로 고침" aria-label="새로 고침"><img src="/assets/rotate-ccw.svg" alt=""></button><button id="export" class="icon-button writer-only" title="사건 JSON 내보내기" aria-label="사건 JSON 내보내기"><img src="/assets/download.svg" alt=""></button></div></header>
+      <section class="metrics" aria-label="전체 현황"><div><span>활성 사건</span><strong id="metric-active">0</strong></div><div><span>높은 위험</span><strong id="metric-high">0</strong></div><div><span>수집 이벤트</span><strong id="metric-events">0</strong></div><div><span>활성 소스</span><strong id="metric-sources">0</strong></div></section>
+      <div class="content-header"><div id="view-caption"></div><button id="create-source" class="primary admin-only hidden">소스 추가</button><button id="create-user" class="primary admin-only hidden">사용자 추가</button></div>
+      <form id="filters" class="filters"><div class="search-field"><img src="/assets/search.svg" alt=""><input id="search" placeholder="IP 또는 사용자 검색" aria-label="IP 또는 사용자 검색" maxlength="128"></div><select id="source-filter" aria-label="소스"><option value="">모든 소스</option></select><select id="status-filter" aria-label="사건 상태"><option value="">모든 상태</option><option value="open">신규</option><option value="investigating">조사 중</option><option value="resolved">해결</option><option value="false_positive">오탐</option></select><button type="submit">검색</button></form>
+      <div id="loading" class="loading hidden" role="status">불러오는 중...</div>
+      <section id="content" aria-live="polite"></section>
+      <footer id="pagination" class="pagination hidden"><span id="page-info"></span><div><button id="prev-page" class="icon-button" title="이전 페이지" aria-label="이전 페이지">←</button><button id="next-page" class="icon-button" title="다음 페이지" aria-label="다음 페이지">→</button></div></footer>
+    </main>
+  </div>
+  <dialog id="detail-dialog" class="detail-dialog"><header class="dialog-header"><div><span class="eyebrow">INCIDENT</span><h2 id="detail-title"></h2></div><button data-close="detail-dialog" class="icon-button" aria-label="닫기" title="닫기">×</button></header><div id="detail-content"></div></dialog>
+  <dialog id="form-dialog"><header class="dialog-header"><h2 id="form-title"></h2><button data-close="form-dialog" class="icon-button" aria-label="닫기" title="닫기">×</button></header><div id="form-content"></div></dialog>
+  <script type="module" src="/ui/app.js"></script>
+</body></html>

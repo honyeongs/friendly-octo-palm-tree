@@ -138,7 +138,7 @@ class CliTests(unittest.TestCase):
 
     def test_help_version_and_required_subcommand(self):
         self.assertIn("analyze-ssh", run_cli("--help").stdout)
-        self.assertEqual(run_cli("--version").stdout.strip(), "netsec 0.2.0")
+        self.assertEqual(run_cli("--version").stdout.strip(), "netsec 0.3.0")
         self.assertEqual(run_cli().returncode, 2)
 
     def test_custom_threshold_changes_sample_findings(self):

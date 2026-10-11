@@ -45,7 +45,7 @@ def _margin(value: str) -> int:
 
 
 def _parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="netsec", description="Offline SSH log analysis")
+    parser = argparse.ArgumentParser(prog="netsec", description="Offline SSH analysis and persistent security monitoring")
     parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
     commands = parser.add_subparsers(dest="command", required=True)
     analyze = commands.add_parser("analyze-ssh", help="Analyze timestamped OpenSSH logs")
@@ -68,6 +68,8 @@ def _parser() -> argparse.ArgumentParser:
         command.add_argument("--overwrite", action="store_true", help="Replace an existing output file")
     web = commands.add_parser("serve", help="Open the local report comparison tool")
     web.add_argument("--port", type=_port, default=8765)
+    from netsec.monitor.commands import add_commands
+    add_commands(commands, _port)
     return parser
 
 
@@ -75,6 +77,21 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser = _parser()
     args = parser.parse_args(argv)
     try:
+        if args.command == "demo-app":
+            try:
+                from netsec.demo.app import run
+                return run(args)
+            except ImportError:
+                raise ValueError('Demo app requires: python -m pip install ".[monitor]"') from None
+        if args.command == "agent":
+            from netsec.monitor.agent import run
+            return run(args)
+        if args.command in ("monitor", "monitor-admin"):
+            try:
+                from netsec.monitor.commands import run
+                return run(args)
+            except ImportError:
+                raise ValueError('Monitoring requires: python -m pip install ".[monitor]"') from None
         if args.command == "serve":
             from netsec.server import serve
             serve(args.port)

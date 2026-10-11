@@ -3,6 +3,21 @@
 
 ## SSH 인증 로그 분석 도구
 
+## NetSec Monitor 운영 앱 (0.3)
+
+인증 이벤트 수집 API, SQLite 저장·중복 방지, 조직별 로그인과 관리자/분석가/조회자 권한, 탐지 사건의 담당자·처리 상태·조사 메모, 감사 기록, 정책·기간 제한 예외, 화면 알림과 선택적 이메일/웹훅을 추가했습니다. 외부 키 없이 로컬에서 실행됩니다. 기존 분석 기능은 유지합니다.
+
+Windows에서는 `Start-NetSec.cmd`를 실행하고 http://127.0.0.1:8890 에서 첫 조직과 관리자 계정을 직접 생성합니다. [처음 사용하기와 직접 해야 할 일](docs/START_HERE.md), [앱·SSH 연결](docs/APP_INTEGRATION.md), [운영·배포·백업](docs/MONITOR_OPERATIONS.md)을 참고하세요.
+
+```console
+python -m pip install ".[monitor]"
+python run.py monitor
+```
+
+핵심 기능에는 외부 키가 필요 없습니다. 선택적 SMTP·범용 HTTPS 웹훅은 `.env.example`에 비워 두었습니다. 단일 인스턴스 시범 운영용이며 공개 인터넷 배포·SSO/MFA·상용 보안 인증은 포함되지 않습니다.
+
+## 기존 오프라인 분석
+
 OpenSSH 텍스트 및 Linux journald JSON에서 반복 인증 실패와 실패 후 성공한 인증을 분석하는 네트워크·보안 포트폴리오 프로젝트입니다. 선택적으로 PCAP/PCAPNG의 TCP 관측을 연결하고, 웹 화면에서 두 결과를 비교합니다. Python 3.11 이상을 지원합니다. 기본 로그 분석과 비교 화면은 외부 Python 패키지 없이 실행되며, 패킷 분석에는 dpkt가 필요합니다.
 
 프로젝트의 범위와 완료 기준은 [IMPLEMENTATION_PLAN.md](IMPLEMENTATION_PLAN.md)에 정리했습니다.
