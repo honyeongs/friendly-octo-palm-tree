@@ -158,3 +158,11 @@ jobs:
         run: docker build -f deploy/Dockerfile -t netsec:test .
       - name: Inspect runtime identity and package
         run: docker run --rm --entrypoint python netsec:test -c "import os,importlib.metadata; assert os.getuid()==10001; assert importlib.metadata.version('netsec-ssh-analyzer')=='0.4.0'"
+      - name: Validate compose and TLS gateway configuration
+        env:
+          POSTGRES_PASSWORD: ci-only-not-a-production-secret
+          NETSEC_DOMAIN: netsec.example.test
+        run: |
+          cp .env.example .env
+          docker compose --env-file .env -f deploy/compose.yaml config --quiet
+          docker run --rm -e NETSEC_DOMAIN -v "$PWD/deploy/Caddyfile:/etc/caddy/Caddyfile:ro" caddy:2 caddy validate --config /etc/caddy/Caddyfile --adapter caddyfile

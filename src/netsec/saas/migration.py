@@ -2,6 +2,7 @@
 
 import os
 import re
+import shutil
 import sqlite3
 import subprocess
 from pathlib import Path
@@ -63,27 +64,37 @@ def pg_environment(dsn):
 
 
 def pg_backup(db, destination):
+    dump, restore = shutil.which('pg_dump'), shutil.which('pg_restore')
+    if not dump or not restore:
+        raise ValueError('Install compatible PostgreSQL backup tools on the operator host')
     target = Path(destination)
     target.parent.mkdir(parents=True, exist_ok=True)
-    with target.open('xb') as stream:
-        result = subprocess.run(['pg_dump', '--format=custom', '--no-owner', '--no-acl'], env=pg_environment(db.dsn), stdout=stream, stderr=subprocess.PIPE, timeout=300)
-    if result.returncode:
+    stream = target.open('xb')
+    try:
+        with stream:
+            result = subprocess.run([dump, '--format=custom', '--no-owner', '--no-acl'], env=pg_environment(db.dsn), stdout=stream, stderr=subprocess.PIPE, timeout=300)
+        if result.returncode:
+            raise ValueError('pg_dump failed; check operator connectivity without publishing credentials')
+        result = subprocess.run([restore, '--list', str(target)], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=30)
+        if result.returncode:
+            raise ValueError('Backup archive validation failed')
+    except BaseException:
         target.unlink(missing_ok=True)
-        raise ValueError('pg_dump failed; check operator connectivity without publishing credentials')
-    result = subprocess.run(['pg_restore', '--list', str(target)], stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=30)
-    if result.returncode:
-        raise ValueError('Backup archive validation failed')
+        raise
     return target
 
 
 def restore_check(db, archive, scratch_dsn):
     if not scratch_dsn or scratch_dsn == db.dsn:
         raise ValueError('Use a separate empty scratch database, never the active database')
+    restore = shutil.which('pg_restore')
+    if not restore:
+        raise ValueError('Install compatible PostgreSQL restore tools on the operator host')
     import psycopg
     with psycopg.connect(scratch_dsn) as conn:
         if conn.execute("SELECT 1 FROM pg_tables WHERE schemaname='public' LIMIT 1").fetchone():
             raise ValueError('Scratch database must be empty')
-    result = subprocess.run(['pg_restore', '--no-owner', '--no-acl', '--exit-on-error', '--single-transaction', '--dbname=' + urlsplit(scratch_dsn).path.lstrip('/'), str(archive)],
+    result = subprocess.run([restore, '--no-owner', '--no-acl', '--exit-on-error', '--single-transaction', '--dbname=' + urlsplit(scratch_dsn).path.lstrip('/'), str(archive)],
                             env=pg_environment(scratch_dsn), stdout=subprocess.DEVNULL, stderr=subprocess.PIPE, timeout=300)
     if result.returncode:
         raise ValueError('Restore verification failed')
