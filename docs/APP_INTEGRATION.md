@@ -64,11 +64,13 @@ SSH 소스를 만들고 키를 환경 변수로 설정합니다.
 
 ```sh
 export NETSEC_SOURCE_KEY='source-key'
-journalctl -u ssh -u sshd -o json --no-pager > ssh.journal.jsonl
+journalctl -u ssh -u sshd --since "30 days ago" -o json --no-pager > ssh.journal.jsonl
 netsec agent ssh.journal.jsonl --format journal --endpoint http://127.0.0.1:8890
 netsec agent ssh.journal.jsonl --format journal --follow --interval 5
 ```
 
 파일의 정규화된 이벤트·동일 이벤트 출현 순서로 ID를 정하고 로컬 커서를 유지합니다. `--follow`는 **내보낸 파일을 주기적으로 다시 읽는 방식**이며 journal 자체를 구독하지 않습니다. 파일 작성·갱신은 운영자가 별도 구성해야 합니다. 파일 최대 20MB, 커서 보관 30일입니다. 소스를 변경할 때는 별도 `--outbox` 파일을 사용하세요. 전통적인 연도 없는 syslog는 기존과 같이 지원하지 않습니다.
+
+기본적으로 30일보다 오래된 이벤트와 현재보다 5분 이상 미래인 이벤트를 큐에 넣지 않고 scan 통계에 표시합니다. 서버 보관 기간을 바꿨으면 에이전트의 `--max-age-days`도 맞춥니다. 부적합한 과거 기록이 새 이벤트 배치까지 막지 않도록 하는 제한이며, 시계가 맞지 않는 서버는 시간 동기화를 먼저 점검합니다.
 
 PCAP은 기존 오프라인 분석 명령으로 처리합니다. 이번 수집 API는 패킷 파일 업로드·상시 패킷 캡처를 지원하지 않습니다.

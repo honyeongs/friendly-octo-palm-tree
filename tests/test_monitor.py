@@ -325,13 +325,26 @@ class SDKTests(unittest.TestCase):
 
     def test_agent_cursor_reuses_ids(self):
         from netsec.monitor.agent import collect
-        root = Path(__file__).resolve().parent.parent
         with tempfile.TemporaryDirectory() as folder:
             client = MonitorClient("http://127.0.0.1:1", "key", Path(folder) / "queue.sqlite3")
-            collect(client, root / "samples/ssh/correlated.log", "auto")
+            source = Path(folder) / "auth.log"
+            stamp = datetime.now(timezone.utc).isoformat()
+            source.write_text(f"{stamp} host sshd[1]: Failed password for user from 192.0.2.1 port 123 ssh2\n", encoding="utf-8")
+            collect(client, source, "auto")
             count = client.status()["pending"]
-            collect(client, root / "samples/ssh/correlated.log", "auto")
+            collect(client, source, "auto")
             self.assertEqual(client.status()["pending"], count)
+
+    def test_agent_skips_old_and_future_records_without_poisoning_batch(self):
+        from netsec.monitor.agent import collect
+        with tempfile.TemporaryDirectory() as folder:
+            client = MonitorClient("http://127.0.0.1:1", "key", Path(folder) / "queue.sqlite3")
+            path = Path(folder) / "auth.log"
+            clock = datetime.now(timezone.utc)
+            timestamps = [clock - timedelta(days=31), clock + timedelta(hours=1), clock]
+            path.write_text("".join(f"{stamp.isoformat()} host sshd[1]: Failed password for user from 192.0.2.1 port 123 ssh2\n" for stamp in timestamps), encoding="utf-8")
+            self.assertEqual(collect(client, path, "auto"), {"eligible": 1, "expired": 1, "future": 1, "malformed": 0})
+            self.assertEqual(client.status()["pending"], 1)
 
 
 if __name__ == "__main__":

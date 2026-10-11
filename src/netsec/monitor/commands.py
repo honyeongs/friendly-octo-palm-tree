@@ -32,6 +32,7 @@ def add_commands(commands, port_type):
     agent.add_argument("--endpoint", default="http://127.0.0.1:8890")
     agent.add_argument("--outbox", type=Path, default=Path("data/agent-outbox.sqlite3"))
     agent.add_argument("--follow", action="store_true")
+    agent.add_argument("--max-age-days", type=int, default=30, choices=range(1, 3651), metavar="DAYS")
     agent.add_argument("--interval", type=int, default=5, choices=range(1, 3601), metavar="SECONDS")
 
 
