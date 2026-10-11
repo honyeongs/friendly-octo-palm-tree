@@ -1,0 +1,26 @@
+{
+  "schema_version": "1.1",
+  "rule": "ssh_repeated_authentication_failures",
+  "source": "normal.log",
+  "parameters": {
+    "window_seconds": 60,
+    "threshold": 5,
+    "success_window_seconds": 300
+  },
+  "statistics": {
+    "total_lines": 6,
+    "blank_lines": 0,
+    "ignored_lines": 0,
+    "malformed_lines": 0,
+    "malformed_line_numbers": [],
+    "parsed_events": 6,
+    "failed_events": 4,
+    "accepted_events": 2,
+    "finding_count": 0,
+    "correlation_count": 0
+  },
+  "findings": [],
+  "report_type": "ssh",
+  "input_format": "openssh",
+  "success_after_failures": []
+}

@@ -1,0 +1,6 @@
+2026-10-11T10:00:00+09:00 lab sshd[201]: Accepted publickey for operator from 192.0.2.20 port 51000 ssh2 ED25519 SHA256:synthetic
+2026-10-11T10:01:00+09:00 lab sshd[202]: Failed password for alice from 192.0.2.30 port 52001 ssh2
+2026-10-11T10:01:20+09:00 lab sshd[203]: Failed password for alice from 192.0.2.30 port 52002 ssh2
+2026-10-11T10:01:40+09:00 lab sshd[204]: Failed password for alice from 192.0.2.30 port 52003 ssh2
+2026-10-11T10:02:00+09:00 lab sshd[205]: Failed password for alice from 192.0.2.30 port 52004 ssh2
+2026-10-11T10:02:10+09:00 lab sshd[206]: Accepted password for alice from 192.0.2.30 port 52005 ssh2

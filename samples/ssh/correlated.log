@@ -1,0 +1,16 @@
+2026-10-11T09:01:00+09:00 lab sshd[301]: Failed password for root from 192.0.2.10 port 50001 ssh2
+2026-10-11T09:01:10+09:00 lab sshd[302]: Failed password for root from 192.0.2.10 port 50002 ssh2
+2026-10-11T09:01:20+09:00 lab sshd[303]: Failed password for root from 192.0.2.10 port 50003 ssh2
+2026-10-11T09:01:30+09:00 lab sshd[304]: Failed password for root from 192.0.2.10 port 50004 ssh2
+2026-10-11T09:01:40+09:00 lab sshd[305]: Failed password for root from 192.0.2.10 port 50005 ssh2
+2026-10-11T09:01:50+09:00 lab sshd[306]: Accepted publickey for root from 192.0.2.10 port 50006 ssh2: ED25519 SHA256:synthetic
+2026-10-11T09:02:00+09:00 lab sshd[307]: Failed password for bob from 192.0.2.30 port 52001 ssh2
+2026-10-11T09:02:10+09:00 lab sshd[308]: Failed password for bob from 192.0.2.30 port 52002 ssh2
+2026-10-11T09:02:20+09:00 lab sshd[309]: Failed password for bob from 192.0.2.30 port 52003 ssh2
+2026-10-11T09:02:30+09:00 lab sshd[310]: Failed password for bob from 192.0.2.30 port 52004 ssh2
+2026-10-11T09:02:40+09:00 lab sshd[311]: Accepted password for bob from 192.0.2.30 port 52005 ssh2
+2026-10-11T09:03:00+09:00 lab sshd[312]: Failed publickey for robot from 2001:db8::10 port 53001 ssh2: ED25519 SHA256:synthetic
+2026-10-11T09:03:15+09:00 lab sshd[313]: Failed publickey for robot from 2001:db8::10 port 53002 ssh2: ED25519 SHA256:synthetic
+2026-10-11T09:03:30+09:00 lab sshd[314]: Failed publickey for robot from 2001:db8::10 port 53003 ssh2: ED25519 SHA256:synthetic
+2026-10-11T09:03:45+09:00 lab sshd[315]: Failed publickey for robot from 2001:db8::10 port 53004 ssh2: ED25519 SHA256:synthetic
+2026-10-11T09:04:00+09:00 lab sshd[316]: Failed publickey for robot from 2001:db8::10 port 53005 ssh2: ED25519 SHA256:synthetic

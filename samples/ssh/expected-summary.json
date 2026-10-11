@@ -1,0 +1,23 @@
+{
+  "demo.log": {
+    "total_lines": 18,
+    "parsed_events": 16,
+    "failed_events": 14,
+    "accepted_events": 2,
+    "ignored_lines": 1,
+    "malformed_line_numbers": [18],
+    "findings": [
+      {"host": "lab", "source_ip": "192.0.2.10", "failure_count": 5, "peak_window_failures": 5, "line_numbers": [2, 3, 4, 5, 6]},
+      {"host": "lab", "source_ip": "2001:db8::10", "failure_count": 5, "peak_window_failures": 5, "line_numbers": [12, 13, 14, 15, 16]}
+    ]
+  },
+  "normal.log": {
+    "total_lines": 6,
+    "parsed_events": 6,
+    "failed_events": 4,
+    "accepted_events": 2,
+    "ignored_lines": 0,
+    "malformed_line_numbers": [],
+    "findings": []
+  }
+}

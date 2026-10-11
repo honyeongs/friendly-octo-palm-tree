@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>NetSec Lab | 분석 결과</title>
+  <link rel="icon" href="assets/shield-check.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="styles.css">
+  <script type="module" src="app.js"></script>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand"><img src="assets/shield-check.svg" alt="" width="28" height="28"><div><strong>NetSec Lab</strong><span>SSH · TCP 분석</span></div></div>
+    <div class="header-actions">
+      <label class="time-control">표시 시간대 <select id="timezone" aria-label="표시 시간대"><option value="UTC">UTC</option><option value="Asia/Seoul">한국</option></select></label>
+      <button id="reset" title="예제 보고서 복원"><img src="assets/rotate-ccw.svg" alt="">예제</button>
+      <button id="export" title="선택한 보고서 내보내기"><img src="assets/download.svg" alt="">내보내기</button>
+    </div>
+  </header>
+  <main>
+    <div class="page-heading"><h1>분석 결과</h1><span id="dataset-label" class="muted">예제 데이터</span></div>
+    <div id="error" role="alert" hidden></div>
+    <section class="report-slots" aria-label="비교할 보고서">
+      <article class="report-slot" id="slot-a" aria-label="보고서 A 파일 영역">
+        <div><span class="slot-mark">A</span><strong id="name-a">불러오는 중</strong></div>
+        <div class="slot-bottom"><span id="meta-a" class="muted"></span><label class="file-button"><img src="assets/folder-open.svg" alt="">JSON 열기<input id="file-a" type="file" accept=".json,application/json" aria-label="보고서 A 열기"></label></div>
+      </article>
+      <article class="report-slot" id="slot-b" aria-label="보고서 B 파일 영역">
+        <div><span class="slot-mark current">B</span><strong id="name-b">불러오는 중</strong></div>
+        <div class="slot-bottom"><span id="meta-b" class="muted"></span><label class="file-button"><img src="assets/folder-open.svg" alt="">JSON 열기<input id="file-b" type="file" accept=".json,application/json" aria-label="보고서 B 열기"></label></div>
+      </article>
+    </section>
+    <section id="metrics" class="metrics" aria-label="보고서 요약"></section>
+    <div class="workspace-controls">
+      <div class="segmented" role="group" aria-label="선택한 보고서"><button id="active-a" aria-pressed="false">보고서 A</button><button id="active-b" aria-pressed="true">보고서 B</button></div>
+      <label class="search"><img src="assets/search.svg" alt=""><input id="search" type="search" placeholder="IP · 호스트 · 사용자" aria-label="분석 결과 검색"></label>
+    </div>
+    <nav class="tabs" aria-label="분석 보기">
+      <button data-tab="findings" aria-current="page">탐지 구간 <span id="count-findings"></span></button>
+      <button data-tab="correlations">인증 상관분석 <span id="count-correlations"></span></button>
+      <button data-tab="network">TCP 관측 <span id="count-network"></span></button>
+      <button data-tab="comparison">보고서 비교</button>
+    </nav>
+    <div id="parameter-note" class="notice" hidden></div>
+    <section class="analysis-layout" aria-label="분석 상세">
+      <div class="results-area"><div class="section-heading"><h2 id="view-title">탐지 구간</h2><span id="result-count" class="muted"></span></div><div id="results"></div></div>
+      <aside class="detail-area" aria-label="선택 항목 근거"><div class="section-heading"><h2>근거</h2><span id="detail-label" class="muted"></span></div><div id="details"></div></aside>
+    </section>
+    <footer><span id="source-info"></span><span>NetSec 0.2 · 파일 분석</span></footer>
+  </main>
+</body>
+</html>

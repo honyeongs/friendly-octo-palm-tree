@@ -1,0 +1,132 @@
+{
+  "schema_version": "1.0",
+  "rule": "ssh_repeated_authentication_failures",
+  "source": "demo.log",
+  "parameters": {
+    "window_seconds": 60,
+    "threshold": 5
+  },
+  "statistics": {
+    "total_lines": 18,
+    "blank_lines": 0,
+    "ignored_lines": 1,
+    "malformed_lines": 1,
+    "malformed_line_numbers": [
+      18
+    ],
+    "parsed_events": 16,
+    "failed_events": 14,
+    "accepted_events": 2,
+    "finding_count": 2
+  },
+  "findings": [
+    {
+      "host": "lab",
+      "source_ip": "192.0.2.10",
+      "start_time": "2026-10-11T00:01:00Z",
+      "end_time": "2026-10-11T00:01:40Z",
+      "failure_count": 5,
+      "peak_window_failures": 5,
+      "usernames": [
+        "admin",
+        "alice",
+        "root"
+      ],
+      "evidence": [
+        {
+          "line_number": 2,
+          "timestamp": "2026-10-11T00:01:00Z",
+          "username": "admin",
+          "method": "password",
+          "source_port": 50001,
+          "invalid_user": true
+        },
+        {
+          "line_number": 3,
+          "timestamp": "2026-10-11T00:01:10Z",
+          "username": "root",
+          "method": "password",
+          "source_port": 50002,
+          "invalid_user": false
+        },
+        {
+          "line_number": 4,
+          "timestamp": "2026-10-11T00:01:20Z",
+          "username": "root",
+          "method": "password",
+          "source_port": 50003,
+          "invalid_user": false
+        },
+        {
+          "line_number": 5,
+          "timestamp": "2026-10-11T00:01:30Z",
+          "username": "alice",
+          "method": "password",
+          "source_port": 50004,
+          "invalid_user": false
+        },
+        {
+          "line_number": 6,
+          "timestamp": "2026-10-11T00:01:40Z",
+          "username": "alice",
+          "method": "password",
+          "source_port": 50005,
+          "invalid_user": false
+        }
+      ]
+    },
+    {
+      "host": "lab",
+      "source_ip": "2001:db8::10",
+      "start_time": "2026-10-11T00:03:00Z",
+      "end_time": "2026-10-11T00:04:00Z",
+      "failure_count": 5,
+      "peak_window_failures": 5,
+      "usernames": [
+        "robot"
+      ],
+      "evidence": [
+        {
+          "line_number": 12,
+          "timestamp": "2026-10-11T00:03:00Z",
+          "username": "robot",
+          "method": "publickey",
+          "source_port": 53001,
+          "invalid_user": false
+        },
+        {
+          "line_number": 13,
+          "timestamp": "2026-10-11T00:03:15Z",
+          "username": "robot",
+          "method": "publickey",
+          "source_port": 53002,
+          "invalid_user": false
+        },
+        {
+          "line_number": 14,
+          "timestamp": "2026-10-11T00:03:30Z",
+          "username": "robot",
+          "method": "publickey",
+          "source_port": 53003,
+          "invalid_user": false
+        },
+        {
+          "line_number": 15,
+          "timestamp": "2026-10-11T00:03:45Z",
+          "username": "robot",
+          "method": "publickey",
+          "source_port": 53004,
+          "invalid_user": false
+        },
+        {
+          "line_number": 16,
+          "timestamp": "2026-10-11T00:04:00Z",
+          "username": "robot",
+          "method": "publickey",
+          "source_port": 53005,
+          "invalid_user": false
+        }
+      ]
+    }
+  ]
+}

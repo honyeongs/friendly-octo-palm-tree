@@ -1,0 +1,9 @@
+{
+  "name": "netsec-report-viewer",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test tests/web/*.test.mjs",
+    "test:browser": "node tests/browser/smoke.mjs"
+  }
+}

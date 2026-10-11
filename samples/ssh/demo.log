@@ -1,0 +1,18 @@
+2026-10-11T09:00:00+09:00 lab sshd[101]: Accepted publickey for operator from 192.0.2.20 port 51000 ssh2 ED25519 SHA256:synthetic
+2026-10-11T09:01:00+09:00 lab sshd[102]: Failed password for invalid user admin from 192.0.2.10 port 50001 ssh2
+2026-10-11T09:01:10+09:00 lab sshd[103]: Failed password for root from 192.0.2.10 port 50002 ssh2
+2026-10-11T09:01:20+09:00 lab sshd[104]: Failed password for root from 192.0.2.10 port 50003 ssh2
+2026-10-11T09:01:30+09:00 lab sshd[105]: Failed password for alice from 192.0.2.10 port 50004 ssh2
+2026-10-11T09:01:40+09:00 lab sshd[106]: Failed password for alice from 192.0.2.10 port 50005 ssh2
+2026-10-11T09:01:50+09:00 lab sshd[107]: Accepted password for alice from 192.0.2.10 port 50006 ssh2
+2026-10-11T09:02:00+09:00 lab sshd[108]: Failed password for bob from 192.0.2.30 port 52001 ssh2
+2026-10-11T09:02:10+09:00 lab sshd[109]: Failed password for bob from 192.0.2.30 port 52002 ssh2
+2026-10-11T09:02:20+09:00 lab sshd[110]: Failed password for bob from 192.0.2.30 port 52003 ssh2
+2026-10-11T09:02:30+09:00 lab sshd[111]: Failed password for bob from 192.0.2.30 port 52004 ssh2
+2026-10-11T09:03:00+09:00 lab sshd[112]: Failed publickey for robot from 2001:db8::10 port 53001 ssh2
+2026-10-11T09:03:15+09:00 lab sshd[113]: Failed publickey for robot from 2001:db8::10 port 53002 ssh2
+2026-10-11T09:03:30+09:00 lab sshd[114]: Failed publickey for robot from 2001:db8::10 port 53003 ssh2
+2026-10-11T09:03:45+09:00 lab sshd[115]: Failed publickey for robot from 2001:db8::10 port 53004 ssh2
+2026-10-11T09:04:00+09:00 lab sshd[116]: Failed publickey for robot from 2001:db8::10 port 53005 ssh2
+2026-10-11T09:04:01+09:00 lab sshd[116]: Connection closed by authenticating user robot 2001:db8::10 port 53005 [preauth]
+2026-10-11T09:05:00+09:00 lab sshd[117]: Failed password for alice from invalid-ip port 54001 ssh2

@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "netsec-ssh-analyzer"
+version = "0.2.0"
+description = "Explainable offline SSH authentication failure analysis"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = []
+
+[project.optional-dependencies]
+packets = ["dpkt==1.9.8"]
+
+[tool.setuptools.package-data]
+netsec = ["web/*.html", "web/*.css", "web/*.js", "web/assets/*.svg", "web/assets/*.txt", "web/data/*.json"]
+
+[project.scripts]
+netsec = "netsec.cli:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

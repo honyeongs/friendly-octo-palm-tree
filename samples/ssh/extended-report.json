@@ -1,0 +1,446 @@
+{
+  "schema_version": "1.1",
+  "rule": "ssh_repeated_authentication_failures",
+  "source": "journal.jsonl",
+  "parameters": {
+    "window_seconds": 60,
+    "threshold": 5,
+    "success_window_seconds": 300
+  },
+  "statistics": {
+    "total_lines": 16,
+    "blank_lines": 0,
+    "ignored_lines": 0,
+    "malformed_lines": 0,
+    "malformed_line_numbers": [],
+    "parsed_events": 16,
+    "failed_events": 14,
+    "accepted_events": 2,
+    "finding_count": 2,
+    "correlation_count": 1
+  },
+  "findings": [
+    {
+      "host": "lab",
+      "source_ip": "192.0.2.10",
+      "start_time": "2026-10-11T00:01:00Z",
+      "end_time": "2026-10-11T00:01:40Z",
+      "failure_count": 5,
+      "peak_window_failures": 5,
+      "usernames": [
+        "root"
+      ],
+      "evidence": [
+        {
+          "line_number": 1,
+          "timestamp": "2026-10-11T00:01:00Z",
+          "username": "root",
+          "method": "password",
+          "source_port": 50001,
+          "invalid_user": false
+        },
+        {
+          "line_number": 2,
+          "timestamp": "2026-10-11T00:01:10Z",
+          "username": "root",
+          "method": "password",
+          "source_port": 50002,
+          "invalid_user": false
+        },
+        {
+          "line_number": 3,
+          "timestamp": "2026-10-11T00:01:20Z",
+          "username": "root",
+          "method": "password",
+          "source_port": 50003,
+          "invalid_user": false
+        },
+        {
+          "line_number": 4,
+          "timestamp": "2026-10-11T00:01:30Z",
+          "username": "root",
+          "method": "password",
+          "source_port": 50004,
+          "invalid_user": false
+        },
+        {
+          "line_number": 5,
+          "timestamp": "2026-10-11T00:01:40Z",
+          "username": "root",
+          "method": "password",
+          "source_port": 50005,
+          "invalid_user": false
+        }
+      ]
+    },
+    {
+      "host": "lab",
+      "source_ip": "2001:db8::10",
+      "start_time": "2026-10-11T00:03:00Z",
+      "end_time": "2026-10-11T00:04:00Z",
+      "failure_count": 5,
+      "peak_window_failures": 5,
+      "usernames": [
+        "robot"
+      ],
+      "evidence": [
+        {
+          "line_number": 12,
+          "timestamp": "2026-10-11T00:03:00Z",
+          "username": "robot",
+          "method": "publickey",
+          "source_port": 53001,
+          "invalid_user": false
+        },
+        {
+          "line_number": 13,
+          "timestamp": "2026-10-11T00:03:15Z",
+          "username": "robot",
+          "method": "publickey",
+          "source_port": 53002,
+          "invalid_user": false
+        },
+        {
+          "line_number": 14,
+          "timestamp": "2026-10-11T00:03:30Z",
+          "username": "robot",
+          "method": "publickey",
+          "source_port": 53003,
+          "invalid_user": false
+        },
+        {
+          "line_number": 15,
+          "timestamp": "2026-10-11T00:03:45Z",
+          "username": "robot",
+          "method": "publickey",
+          "source_port": 53004,
+          "invalid_user": false
+        },
+        {
+          "line_number": 16,
+          "timestamp": "2026-10-11T00:04:00Z",
+          "username": "robot",
+          "method": "publickey",
+          "source_port": 53005,
+          "invalid_user": false
+        }
+      ]
+    }
+  ],
+  "report_type": "ssh",
+  "input_format": "journal",
+  "success_after_failures": [
+    {
+      "host": "lab",
+      "source_ip": "192.0.2.10",
+      "username": "root",
+      "start_time": "2026-10-11T00:01:00Z",
+      "end_time": "2026-10-11T00:01:40Z",
+      "failure_count": 5,
+      "failure_line_numbers": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "success_time": "2026-10-11T00:01:50Z",
+      "success_line_number": 6,
+      "success_method": "publickey",
+      "seconds_after_last_failure": 10.0,
+      "interpretation": "Authentication succeeded after repeated failures; review required."
+    }
+  ],
+  "network": {
+    "source": "demo.pcap",
+    "server_ip": "192.0.2.100",
+    "server_port": 22,
+    "statistics": {
+      "total_packets": 14,
+      "tcp_packets": 14,
+      "non_tcp_packets": 0,
+      "malformed_packets": 0,
+      "syn_packets": 7,
+      "connection_attempts": 6,
+      "syn_retransmissions": 1,
+      "syn_ack_packets": 6,
+      "reset_packets": 1
+    },
+    "clients": [
+      {
+        "source_ip": "192.0.2.10",
+        "syn_packets": 7,
+        "connection_attempts": 6,
+        "syn_retransmissions": 1,
+        "syn_ack_packets": 6,
+        "reset_packets": 1,
+        "evidence": [
+          {
+            "timestamp": "2026-10-11T00:00:59Z",
+            "packet_number": 1,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50001,
+            "sequence": 1000
+          },
+          {
+            "timestamp": "2026-10-11T00:00:59.100000Z",
+            "packet_number": 2,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50001,
+            "sequence": 1000
+          },
+          {
+            "timestamp": "2026-10-11T00:00:59.200000Z",
+            "packet_number": 3,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50001,
+            "sequence": 2000
+          },
+          {
+            "timestamp": "2026-10-11T00:01:01Z",
+            "packet_number": 4,
+            "kind": "reset",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50001,
+            "sequence": 3000
+          },
+          {
+            "timestamp": "2026-10-11T00:01:09Z",
+            "packet_number": 5,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50002,
+            "sequence": 1001
+          },
+          {
+            "timestamp": "2026-10-11T00:01:09.200000Z",
+            "packet_number": 6,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50002,
+            "sequence": 2001
+          },
+          {
+            "timestamp": "2026-10-11T00:01:19Z",
+            "packet_number": 7,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50003,
+            "sequence": 1002
+          },
+          {
+            "timestamp": "2026-10-11T00:01:19.200000Z",
+            "packet_number": 8,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50003,
+            "sequence": 2002
+          },
+          {
+            "timestamp": "2026-10-11T00:01:29Z",
+            "packet_number": 9,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50004,
+            "sequence": 1003
+          },
+          {
+            "timestamp": "2026-10-11T00:01:29.200000Z",
+            "packet_number": 10,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50004,
+            "sequence": 2003
+          },
+          {
+            "timestamp": "2026-10-11T00:01:39Z",
+            "packet_number": 11,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50005,
+            "sequence": 1004
+          },
+          {
+            "timestamp": "2026-10-11T00:01:39.200000Z",
+            "packet_number": 12,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50005,
+            "sequence": 2004
+          },
+          {
+            "timestamp": "2026-10-11T00:01:49Z",
+            "packet_number": 13,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50006,
+            "sequence": 1005
+          },
+          {
+            "timestamp": "2026-10-11T00:01:49.200000Z",
+            "packet_number": 14,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50006,
+            "sequence": 2005
+          }
+        ]
+      }
+    ],
+    "interpretation": "Transport observations only; SSH authentication is encrypted. Missing responses may reflect incomplete capture, not failed connections.",
+    "server_host": "lab",
+    "margin_seconds": 5,
+    "finding_links": [
+      {
+        "finding_index": 0,
+        "host": "lab",
+        "source_ip": "192.0.2.10",
+        "matched": true,
+        "syn_packets": 6,
+        "connection_attempts": 5,
+        "syn_retransmissions": 1,
+        "syn_ack_packets": 5,
+        "reset_packets": 1,
+        "evidence": [
+          {
+            "timestamp": "2026-10-11T00:00:59Z",
+            "packet_number": 1,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50001,
+            "sequence": 1000
+          },
+          {
+            "timestamp": "2026-10-11T00:00:59.100000Z",
+            "packet_number": 2,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50001,
+            "sequence": 1000
+          },
+          {
+            "timestamp": "2026-10-11T00:00:59.200000Z",
+            "packet_number": 3,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50001,
+            "sequence": 2000
+          },
+          {
+            "timestamp": "2026-10-11T00:01:01Z",
+            "packet_number": 4,
+            "kind": "reset",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50001,
+            "sequence": 3000
+          },
+          {
+            "timestamp": "2026-10-11T00:01:09Z",
+            "packet_number": 5,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50002,
+            "sequence": 1001
+          },
+          {
+            "timestamp": "2026-10-11T00:01:09.200000Z",
+            "packet_number": 6,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50002,
+            "sequence": 2001
+          },
+          {
+            "timestamp": "2026-10-11T00:01:19Z",
+            "packet_number": 7,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50003,
+            "sequence": 1002
+          },
+          {
+            "timestamp": "2026-10-11T00:01:19.200000Z",
+            "packet_number": 8,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50003,
+            "sequence": 2002
+          },
+          {
+            "timestamp": "2026-10-11T00:01:29Z",
+            "packet_number": 9,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50004,
+            "sequence": 1003
+          },
+          {
+            "timestamp": "2026-10-11T00:01:29.200000Z",
+            "packet_number": 10,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50004,
+            "sequence": 2003
+          },
+          {
+            "timestamp": "2026-10-11T00:01:39Z",
+            "packet_number": 11,
+            "kind": "syn",
+            "direction": "to_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50005,
+            "sequence": 1004
+          },
+          {
+            "timestamp": "2026-10-11T00:01:39.200000Z",
+            "packet_number": 12,
+            "kind": "syn_ack",
+            "direction": "from_server",
+            "client_ip": "192.0.2.10",
+            "client_port": 50005,
+            "sequence": 2004
+          }
+        ]
+      },
+      {
+        "finding_index": 1,
+        "host": "lab",
+        "source_ip": "2001:db8::10",
+        "matched": false,
+        "syn_packets": 0,
+        "connection_attempts": 0,
+        "syn_retransmissions": 0,
+        "syn_ack_packets": 0,
+        "reset_packets": 0,
+        "evidence": []
+      }
+    ]
+  }
+}

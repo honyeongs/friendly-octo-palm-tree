@@ -1,0 +1,83 @@
+import assert from 'node:assert/strict';
+import {spawn} from 'node:child_process';
+import {mkdir, readFile} from 'node:fs/promises';
+import {createServer} from 'node:net';
+import {fileURLToPath, pathToFileURL} from 'node:url';
+import {join} from 'node:path';
+
+const root = fileURLToPath(new URL('../../', import.meta.url));
+const playwright = process.env.NETSEC_PLAYWRIGHT ? await import(pathToFileURL(process.env.NETSEC_PLAYWRIGHT).href) : await import('playwright');
+const temporaryServer = createServer();
+await new Promise(resolve => temporaryServer.listen(0, '127.0.0.1', resolve));
+const port = temporaryServer.address().port;
+await new Promise(resolve => temporaryServer.close(resolve));
+const server = spawn(process.env.NETSEC_PYTHON || 'python', ['run.py', 'serve', '--port', String(port)], {cwd: root, stdio: ['ignore', 'pipe', 'pipe']});
+let browser;
+let serverLog = '';
+server.stderr.on('data', data => { serverLog += data; });
+const errors = [];
+try {
+  await new Promise((resolve, reject) => {
+    const timer = setTimeout(() => reject(new Error(`Preview did not start: ${serverLog}`)), 15000);
+    server.once('error', error => { clearTimeout(timer); reject(error); });
+    server.once('exit', code => { clearTimeout(timer); reject(new Error(`Preview exited ${code}: ${serverLog}`)); });
+    server.stdout.on('data', data => { if (String(data).includes('Local:')) { clearTimeout(timer); resolve(); } });
+  });
+  browser = await playwright.chromium.launch({headless: true});
+  const page = await browser.newPage({viewport: {width: 1440, height: 960}});
+  page.on('pageerror', error => errors.push(error.message));
+  page.on('console', message => { if (message.type() === 'error') errors.push(message.text()); });
+  await page.goto(`http://127.0.0.1:${port}`, {waitUntil: 'networkidle'});
+  await page.waitForFunction(() => document.querySelector('#name-b').textContent === 'journal.jsonl');
+  assert.equal(await page.locator('#results tbody tr').count(), 2);
+  assert.equal(await page.locator('#count-correlations').textContent(), '1');
+  assert.ok((await page.locator('#details').textContent()).includes('root'));
+  await page.locator('#timezone').selectOption('Asia/Seoul');
+  assert.ok((await page.locator('#results').textContent()).includes('09:01:00'));
+  await page.locator('#search').fill('2001:db8');
+  assert.equal(await page.locator('#results tbody tr').count(), 1);
+  await page.locator('#search').fill('does-not-exist');
+  assert.ok((await page.locator('#results').textContent()).includes('검색 결과'));
+  await page.locator('#search').fill('');
+  await page.locator('[data-tab=correlations]').click();
+  assert.ok((await page.locator('#details').textContent()).includes('인증 성공'));
+  await page.locator('[data-tab=network]').click();
+  assert.ok((await page.locator('#details').textContent()).includes('192.0.2.100:22'));
+  await page.locator('[data-tab=comparison]').click();
+  assert.equal(await page.locator('#results tbody tr').count(), 2);
+  await page.locator('[data-tab=findings]').click();
+  const output = join(root, 'playwright-results');
+  await mkdir(output, {recursive: true});
+  await page.screenshot({path: join(output, 'desktop.png'), fullPage: true});
+  for (const width of [390, 360]) {
+    await page.setViewportSize({width, height: 844});
+    assert.ok(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), `Horizontal page overflow at ${width}px`);
+    assert.ok(await page.evaluate(() => [...document.querySelectorAll('button')].filter(item => item.offsetWidth).every(item => item.scrollWidth <= item.clientWidth + 2)), `Button text overflow at ${width}px`);
+  }
+  await page.screenshot({path: join(output, 'mobile.png'), fullPage: true});
+  await page.setViewportSize({width: 1440, height: 960});
+  await page.locator('#file-b').setInputFiles(join(root, 'samples/ssh/demo-report.json'));
+  await page.waitForFunction(() => document.querySelector('#name-b').textContent === 'demo.log');
+  assert.equal(await page.locator('#count-correlations').textContent(), '0');
+  const previous = await page.locator('#name-b').textContent();
+  await page.locator('#file-b').setInputFiles({name: 'invalid.json', mimeType: 'application/json', buffer: Buffer.from('{')});
+  await page.waitForSelector('#error:not([hidden])');
+  assert.equal(await page.locator('#name-b').textContent(), previous);
+  const injected = JSON.parse(await readFile(join(root, 'samples/ssh/demo-report.json'), 'utf8'));
+  injected.source = '<img src=x onerror=alert(1)>';
+  await page.locator('#file-b').setInputFiles({name: 'escaped.json', mimeType: 'application/json', buffer: Buffer.from(JSON.stringify(injected))});
+  await page.waitForFunction(() => document.querySelector('#name-b').textContent.startsWith('<img'));
+  assert.equal(await page.locator('#name-b img').count(), 0);
+  const downloadEvent = page.waitForEvent('download');
+  await page.locator('#export').click();
+  const download = await downloadEvent;
+  const downloaded = JSON.parse(await readFile(await download.path(), 'utf8'));
+  assert.equal(downloaded.source, injected.source);
+  await page.locator('#reset').click();
+  await page.waitForFunction(() => document.querySelector('#name-b').textContent === 'journal.jsonl');
+  assert.deepEqual(errors, []);
+  console.log('Browser flow passed: examples, search, selection, timezone, 4 views, old report import, invalid JSON, escaped content, export, reset, desktop/mobile layout.');
+} finally {
+  if (browser) await browser.close();
+  server.kill();
+}
