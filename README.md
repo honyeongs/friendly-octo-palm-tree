@@ -11,6 +11,8 @@ Windows 로컬 테스트는 `Start-NetSec-SaaS.cmd`입니다. 기본 주소는 h
 
 [SaaS 실행·판매 전 직접 할 일](docs/SAAS_START_HERE.md), [구조·운영](docs/SAAS_OPERATIONS.md), [보안 검토](docs/SECURITY_REVIEW.md), [저작권·법적 검토](docs/LEGAL_REVIEW.md)를 확인하세요. 이 구현은 상용 인증이나 법적 적합성 보증이 아닙니다. 외부 키는 비워 두었으며, 실제 SMTP·SSO·PG·도메인 연결 검증과 판매자 등록/약관 검토가 필요합니다. Stripe 사업자 가입은 국가별 자격을 확인해야 하며 국내 PG 연동을 제공한다고 주장하지 않습니다.
 
+[0.4 검증 기록](docs/SAAS_VERIFICATION.md)에 로컬 결과와 9개 작업이 통과한 CI 실행 링크를 보존했습니다.
+
 ## NetSec Monitor 운영 앱 (0.3)
 
 인증 이벤트 수집 API, SQLite 저장·중복 방지, 조직별 로그인과 관리자/분석가/조회자 권한, 탐지 사건의 담당자·처리 상태·조사 메모, 감사 기록, 정책·기간 제한 예외, 화면 알림과 선택적 이메일/웹훅을 추가했습니다. 외부 키 없이 로컬에서 실행됩니다. 기존 분석 기능은 유지합니다.
