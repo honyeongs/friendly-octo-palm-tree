@@ -20,6 +20,14 @@ def add_commands(commands, port_type):
     restore = actions.add_parser("backup")
     restore.add_argument("destination", type=Path)
     actions.add_parser("prune")
+    actions.add_parser('worker')
+    actions.add_parser('enable-saas')
+    migrate = actions.add_parser('migrate-postgres')
+    migrate.add_argument('snapshot', type=Path)
+    check = actions.add_parser('restore-check')
+    check.add_argument('archive', type=Path)
+    delete = actions.add_parser('fulfill-delete')
+    delete.add_argument('request_id')
     reset = actions.add_parser("reset-password")
     reset.add_argument("--org-id", required=True)
     reset.add_argument("--email", required=True)
@@ -53,7 +61,38 @@ def run(args):
     else:
         from netsec.monitor.database import Database
         db = Database(settings.database)
-        if args.action == "create-org":
+        if args.action == 'worker':
+            import time
+            from netsec.monitor.notifications import Worker
+            from netsec.saas.secrets import Vault
+            worker = Worker(db, settings, Vault(settings, db) if settings.saas.enabled else None)
+            worker.start()
+            try:
+                while worker.thread.is_alive():
+                    time.sleep(1)
+            except KeyboardInterrupt:
+                pass
+            finally:
+                worker.stop()
+        elif args.action == 'enable-saas':
+            from netsec.saas.plans import provision
+            with db.connect(write=True) as conn:
+                for row in conn.execute('SELECT id FROM organizations').fetchall():
+                    provision(conn, row['id'])
+            print('Existing organizations received trial plans; verify email before SSO.')
+        elif args.action == 'migrate-postgres':
+            from netsec.saas.migration import migrate
+            print(json.dumps(migrate(args.snapshot, db)))
+        elif args.action == 'restore-check':
+            import os
+            from netsec.saas.migration import restore_check
+            print(json.dumps(restore_check(db, args.archive, os.getenv('NETSEC_RESTORE_DATABASE_URL', ''))))
+        elif args.action == 'fulfill-delete':
+            from netsec.saas.operations import fulfill_delete
+            if input('Type the request ID to confirm permanent tenant deletion: ') != args.request_id:
+                raise ValueError('Deletion confirmation mismatch')
+            print(json.dumps(fulfill_delete(db, args.request_id)))
+        elif args.action == "create-org":
             from netsec.monitor.accounts import create_organization
             from netsec.monitor.schemas import Setup
             first = getpass.getpass("Admin password (12+ characters): ")
@@ -75,6 +114,7 @@ def run(args):
                     raise ValueError("User not found")
                 conn.execute("UPDATE users SET password_hash=? WHERE id=?", (hash_password(first), user["id"]))
                 conn.execute("DELETE FROM sessions WHERE user_id=?", (user["id"],))
+                conn.execute("DELETE FROM action_tokens WHERE user_id=?", (user["id"],))
                 audit(conn, args.org_id, "operator", "password.reset", user["id"])
             print("Password reset; existing sessions revoked")
         elif args.action == "backup":
@@ -82,5 +122,5 @@ def run(args):
             print(backup(db, args.destination))
         else:
             from netsec.monitor.maintenance import prune
-            print(json.dumps(prune(db, settings.retention_days)))
+            print(json.dumps(prune(db, settings.retention_days, saas=settings.saas.enabled)))
     return 0

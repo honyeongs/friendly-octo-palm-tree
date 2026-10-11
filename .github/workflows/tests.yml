@@ -23,7 +23,7 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - name: Install project
-        run: python -m pip install '.[packets,monitor,test]'
+        run: python -m pip install '.[packets,monitor,saas,test]' -c requirements-runtime.lock
       - name: Test parsers, detection and CLI
         run: python -m unittest discover -s tests -t . -v
       - name: Analyze the demo through the installed command
@@ -74,13 +74,15 @@ jobs:
         run: node --test tests/web/*.test.mjs
       - name: Install browser test runtime
         run: |
-          python -m pip install '.[monitor,test]'
+          python -m pip install '.[monitor,saas,test]' -c requirements-runtime.lock
           npm install --no-save --package-lock=false playwright@1.64.0
           npx playwright install --with-deps chromium
       - name: Verify desktop and mobile report workflow
         run: node tests/browser/smoke.mjs
       - name: Verify monitoring and connected sample application
         run: node tests/browser/monitor.mjs
+      - name: Verify SaaS signup, billing and customer operations
+        run: node tests/browser/saas.mjs
       - name: Save browser screenshots
         if: always()
         uses: actions/upload-artifact@v4
@@ -89,3 +91,66 @@ jobs:
           path: |
             playwright-results/*.png
             monitor-results/*.png
+            saas-results/*.png
+
+  postgres:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: netsec_ci
+          POSTGRES_PASSWORD: ci-only-ephemeral
+          POSTGRES_DB: postgres
+        ports: ['5432:5432']
+        options: --health-cmd "pg_isready -U netsec_ci" --health-interval 5s --health-timeout 5s --health-retries 20
+    env:
+      NETSEC_TEST_POSTGRES: postgresql://netsec_ci:ci-only-ephemeral@127.0.0.1:5432/postgres
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install runtime and matching PostgreSQL tools
+        run: |
+          python -m pip install '.[monitor,saas,test]' -c requirements-runtime.lock
+          sudo apt-get update -qq
+          sudo apt-get install -y postgresql-client-17
+          echo '/usr/lib/postgresql/17/bin' >> "$GITHUB_PATH"
+      - name: Real tenant, quota, migration, backup and restore contracts
+        run: python -m unittest tests.test_saas.PostgresSaasTests tests.test_postgres_migration -v
+
+  security:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install audit tools
+        run: python -m pip install pip-audit==2.10.1 bandit==1.9.4
+      - name: Audit exact runtime versions
+        run: pip-audit -r requirements-runtime.lock --no-deps --disable-pip --progress-spinner off --format json --output dependency-audit.json
+      - name: Reject high-confidence high-severity static findings
+        run: bandit -r src -lll -iii
+      - name: Preserve all static warnings for manual review
+        run: bandit -r src -f json -o bandit.json || test $? -eq 1
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: security-audit
+          path: |
+            dependency-audit.json
+            bandit.json
+
+  container:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build non-root runtime image
+        run: docker build -f deploy/Dockerfile -t netsec:test .
+      - name: Inspect runtime identity and package
+        run: docker run --rm --entrypoint python netsec:test -c "import os,importlib.metadata; assert os.getuid()==10001; assert importlib.metadata.version('netsec-ssh-analyzer')=='0.4.0'"

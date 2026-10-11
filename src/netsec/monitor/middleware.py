@@ -1,16 +1,26 @@
 """Bound request buffering and apply response security headers to errors too."""
 
 from starlette.responses import JSONResponse
+import ipaddress
 
 
 class GuardMiddleware:
-    def __init__(self, app):
+    def __init__(self, app, trusted_proxies=()):
         self.app = app
+        self.trusted_proxies = [ipaddress.ip_network(value) for value in trusted_proxies]
 
     async def __call__(self, scope, receive, send):
         if scope["type"] != "http":
             return await self.app(scope, receive, send)
         headers = dict(scope["headers"])
+        if self.trusted_proxies and scope.get('client'):
+            try:
+                peer = ipaddress.ip_address(scope['client'][0])
+                if any(peer in network for network in self.trusted_proxies) and b'x-real-ip' in headers:
+                    address = str(ipaddress.ip_address(headers[b'x-real-ip'].decode('ascii')))
+                    scope = {**scope, 'client': (address, scope['client'][1])}
+            except (ValueError, UnicodeError):
+                return await JSONResponse({'detail': 'Invalid trusted proxy address'}, status_code=400)(scope, receive, send)
         maximum = 1024 * 1024
         if headers.get(b"content-encoding", b"identity") != b"identity":
             return await JSONResponse({"detail": "압축 요청은 지원하지 않습니다."}, status_code=415)(scope, receive, send)

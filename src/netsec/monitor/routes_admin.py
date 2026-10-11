@@ -10,6 +10,12 @@ from netsec.monitor.dependencies import authorize, current_user, scoped
 from netsec.monitor.schemas import ExclusionCreate, NewUser, PolicyUpdate, SourceCreate, UserUpdate
 from netsec.monitor.security import digest, hash_password, token
 
+
+def capacity(request, conn, org_id, resource):
+    if request.app.state.settings.saas.enabled:
+        from netsec.saas.plans import check_capacity
+        check_capacity(conn, org_id, resource)
+
 router = APIRouter(prefix="/api")
 
 
@@ -24,6 +30,8 @@ def users(request: Request, user=Depends(current_user)):
 @router.post("/users", status_code=201)
 def create_user(payload: NewUser, request: Request, user=Depends(current_user)):
     authorize(user, "admin")
+    if request.app.state.settings.saas.enabled:
+        raise HTTPException(409, 'SaaS 사용자 추가는 이메일 초대를 사용하세요.')
     with request.app.state.db.connect(write=True) as conn:
         count = conn.execute("SELECT count(*) FROM users WHERE org_id=?", (user["org_id"],)).fetchone()[0]
         if count >= 100:
@@ -43,10 +51,17 @@ def update_user(item_id: str, payload: UserUpdate, request: Request, user=Depend
     authorize(user, "admin")
     with request.app.state.db.connect(write=True) as conn:
         scoped(conn, "users", user["org_id"], item_id)
+        if payload.active:
+            old = scoped(conn, 'users', user['org_id'], item_id)
+            if not old['active']:
+                capacity(request, conn, user['org_id'], 'users')
+                if request.app.state.settings.saas.enabled and not conn.execute('SELECT 1 FROM verified_users WHERE user_id=?', (item_id,)).fetchone():
+                    raise HTTPException(409, '이메일 확인 전에는 활성화할 수 없습니다.')
         if item_id == user["id"]:
             raise HTTPException(409, "본인의 역할이나 활성 상태는 변경할 수 없습니다.")
         conn.execute("UPDATE users SET role=?,active=? WHERE id=? AND org_id=?", (payload.role, payload.active, item_id, user["org_id"]))
         conn.execute("DELETE FROM sessions WHERE user_id=?", (item_id,))
+        conn.execute('DELETE FROM action_tokens WHERE user_id=?', (item_id,))
         audit(conn, user["org_id"], user["id"], "user.update", item_id, {"role": payload.role, "active": payload.active})
     return {"ok": True}
 
@@ -63,6 +78,7 @@ def create_source(payload: SourceCreate, request: Request, user=Depends(current_
     authorize(user, "admin")
     raw, item_id = "nsk_" + token(), identifier()
     with request.app.state.db.connect(write=True) as conn:
+        capacity(request, conn, user['org_id'], 'sources')
         if conn.execute("SELECT count(*) FROM sources WHERE org_id=? AND active=1", (user["org_id"],)).fetchone()[0] >= 100:
             raise HTTPException(409, "활성 수집 소스는 최대 100개입니다.")
         conn.execute("INSERT INTO sources(id,org_id,name,kind,token_hash,created_at) VALUES(?,?,?,?,?,?)",
@@ -88,14 +104,24 @@ def policy(request: Request, user=Depends(current_user)):
     with request.app.state.db.connect() as conn:
         row = conn.execute("SELECT threshold,window_seconds,success_seconds,notification_email,webhook_enabled FROM organizations WHERE id=?", (user["org_id"],)).fetchone()
         exclusions = conn.execute("SELECT * FROM exclusions WHERE org_id=? ORDER BY created_at DESC", (user["org_id"],)).fetchall()
-    return {**dict(row), "webhook_available": bool(settings.webhook_url), "email_available": bool(settings.smtp_host and settings.smtp_from),
-            "retention_days": settings.retention_days, "exclusions": [dict(row) for row in exclusions]}
+        retention, webhook_available = settings.retention_days, bool(settings.webhook_url)
+        if settings.saas.enabled:
+            from netsec.saas.plans import entitlement
+            from netsec.saas.secrets import integration
+            _, plan, _ = entitlement(conn, user['org_id'])
+            retention = plan['retention_days']
+            webhook_available = bool(integration(conn, request.app.state.vault, user['org_id']).get('webhook_url'))
+    return {**dict(row), "webhook_available": webhook_available, "email_available": bool(settings.smtp_host and settings.smtp_from),
+            "retention_days": retention, "exclusions": [dict(row) for row in exclusions]}
 
 
 @router.put("/policy")
 def policy_update(payload: PolicyUpdate, request: Request, user=Depends(current_user)):
     authorize(user, "admin")
     with request.app.state.db.connect(write=True) as conn:
+        if request.app.state.settings.saas.enabled and payload.notification_email:
+            if not conn.execute('SELECT 1 FROM users u JOIN verified_users v ON v.user_id=u.id WHERE u.org_id=? AND u.email=? AND u.active=1', (user['org_id'], payload.notification_email)).fetchone():
+                raise HTTPException(422, '조직 내 이메일 확인을 마친 활성 사용자만 알림을 받을 수 있습니다.')
         conn.execute("UPDATE organizations SET threshold=?,window_seconds=?,success_seconds=?,notification_email=?,webhook_enabled=? WHERE id=?",
                      (payload.threshold, payload.window_seconds, payload.success_seconds, payload.notification_email, payload.webhook_enabled, user["org_id"]))
         audit(conn, user["org_id"], user["id"], "policy.update", detail={"threshold": payload.threshold, "window_seconds": payload.window_seconds,

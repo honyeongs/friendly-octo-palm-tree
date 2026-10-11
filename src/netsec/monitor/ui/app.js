@@ -3,8 +3,11 @@ import { $, node, submitForm, toast } from './dom.js';
 import { sourceForm, userForm, passwordForm } from './forms.js';
 import { titles, renderView } from './views.js';
 import { openIncident } from './incidents.js';
+import { initializeSaasAuth } from './saas-auth.js';
+import { inviteForm } from './saas.js';
 
-const state = { user: null, sources: [], view: 'incidents', page: 1, setup: false, total: 0, busy: false, generation: 0 };
+const catalog = await api('/saas/catalog');
+const state = { user: null, sources: [], view: location.hash === '#billing' ? 'saas/billing' : 'incidents', page: 1, setup: false, total: 0, busy: false, generation: 0, catalog };
 
 function showGate() { state.generation++; state.user = null; setCsrf(''); $('#workspace').classList.add('hidden'); $('#gate').classList.remove('hidden'); }
 async function gate() {
@@ -31,6 +34,7 @@ async function enter(user) {
   state.user = user; setCsrf(user.csrf); $('#gate').classList.add('hidden'); $('#workspace').classList.remove('hidden');
   $('#user-name').textContent = user.display_name; $('#user-role').textContent = { admin: '관리자', analyst: '분석가', viewer: '조회자' }[user.role];
   document.querySelectorAll('.admin-only').forEach(element => element.classList.toggle('hidden', user.role !== 'admin'));
+  document.querySelectorAll('.saas-only.admin-only').forEach(element => element.classList.toggle('hidden', !catalog.enabled || user.role !== 'admin'));
   document.querySelectorAll('.writer-only').forEach(element => element.classList.toggle('hidden', user.role === 'viewer'));
   await refresh();
   const match = location.hash.match(/^#incidents\/([a-f0-9]{32})$/); if (match) await openIncident(match[1], state, refresh);
@@ -46,6 +50,7 @@ async function refresh() {
     if (['incidents', 'events'].includes(view)) { params.set('q', $('#search').value); params.set('source_id', $('#source-filter').value); }
     if (view === 'incidents') params.set('status', $('#status-filter').value);
     const data = await api(`/${view}?${params}`);
+    if (view === 'users' && catalog.enabled) data.invites = (await api('/saas/invites')).items;
     if (generation !== state.generation || !state.user) return;
     state.sources = sources.items; state.total = data.total || 0;
     $('#org-name').textContent = summary.organization.name;
@@ -54,7 +59,7 @@ async function refresh() {
     $('#nav-count').textContent = summary.incidents.active; $('#view-title').textContent = titles[view];
     const filter = $('#source-filter'); const selected = filter.value; filter.replaceChildren(node('option', '모든 소스', { value: '' }));
     state.sources.forEach(source => filter.append(node('option', source.name, { value: source.id }))); filter.value = selected;
-    $('#view-caption').textContent = view === 'policy' ? '조직별 탐지 기준과 예외' : `${data.total ?? data.items?.length ?? 0}개 항목 · 한국 시간`;
+    $('#view-caption').textContent = ({ policy: '조직별 탐지 기준과 예외', 'saas/billing': `${data.usage?.month || ''} · UTC 월 기준`, 'saas/health': '수집·작업 처리 현황', 'saas/integrations': '조직별 연결 설정', 'saas/privacy': '조직 데이터 요청' })[view] || `${data.total ?? data.items?.length ?? 0}개 항목 · 한국 시간`;
     $('#filters').classList.toggle('hidden', !['incidents', 'events'].includes(view));
     $('#status-filter').classList.toggle('hidden', view !== 'incidents');
     $('#create-source').classList.toggle('hidden', view !== 'sources' || role !== 'admin'); $('#create-user').classList.toggle('hidden', view !== 'users' || role !== 'admin');
@@ -78,11 +83,12 @@ $('#refresh').addEventListener('click', refresh);
 $('#prev-page').addEventListener('click', async () => { if (state.page > 1) state.page--; await refresh(); });
 $('#next-page').addEventListener('click', async () => { state.page++; await refresh(); });
 $('#create-source').addEventListener('click', () => sourceForm(refresh));
-$('#create-user').addEventListener('click', () => userForm(refresh));
+$('#create-user').addEventListener('click', () => catalog.enabled ? inviteForm(refresh) : userForm(refresh));
 $('#password-open').addEventListener('click', () => passwordForm(gate));
 $('#logout').addEventListener('click', async () => { try { await api('/logout', { method: 'POST', body: {} }); state.view = 'incidents'; state.page = 1; await gate(); } catch (error) { toast(error.message, true); } });
 $('#export').addEventListener('click', async () => { try { download(await api('/export'), 'netsec-incidents.json'); } catch (error) { toast(error.message, true); } });
 document.querySelectorAll('[data-close]').forEach(button => button.addEventListener('click', () => document.getElementById(button.dataset.close).close()));
 $('#form-dialog').addEventListener('close', () => { if (!$('#form-dialog').open) $('#form-content').replaceChildren(); });
-setInterval(() => { if (state.user && !state.busy && !document.hidden && !document.querySelector('dialog[open]') && state.view !== 'policy') refresh(); }, 15000);
+setInterval(() => { if (state.user && !state.busy && !document.hidden && !document.querySelector('dialog[open]') && !['policy', 'saas/integrations'].includes(state.view)) refresh(); }, 15000);
 try { const user = await api('/me'); await enter(user); } catch { await gate(); }
+initializeSaasAuth(catalog);

@@ -39,7 +39,7 @@ def rate_limit(db, key, *, limit, seconds=60):
     with db.connect(write=True) as conn:
         row = conn.execute("SELECT * FROM rate_limits WHERE key=?", (key,)).fetchone()
         if row is None or stamp - row["started"] >= seconds:
-            conn.execute("INSERT OR REPLACE INTO rate_limits VALUES(?,?,1)", (key, stamp))
+            conn.execute("INSERT INTO rate_limits VALUES(?,?,1) ON CONFLICT(key) DO UPDATE SET started=excluded.started,count=1", (key, stamp))
         else:
             exceeded = row["count"] >= limit
             conn.execute("UPDATE rate_limits SET count=count+1 WHERE key=?", (key,))

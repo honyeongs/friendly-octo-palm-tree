@@ -17,12 +17,14 @@ router = APIRouter(prefix="/api")
 def setup_state(request: Request):
     with request.app.state.db.connect() as conn:
         required = conn.execute("SELECT count(*) FROM organizations").fetchone()[0] == 0
-    return {"required": required}
+    return {"required": required and not request.app.state.settings.saas.enabled}
 
 
 @router.post("/setup", dependencies=[Depends(same_origin)])
 def setup(payload: Setup, request: Request):
     settings = request.app.state.settings
+    if settings.saas.enabled:
+        raise HTTPException(403, 'SaaS 모드에서는 이메일 확인 가입을 사용하세요.')
     # Remote deployments must provision through the operator CLI before exposure.
     if settings.secure:
         raise HTTPException(403, "외부 배포의 첫 조직은 운영자 CLI에서 생성하세요.")
@@ -43,9 +45,13 @@ def login(payload: Credentials, request: Request, response: Response):
     with db.connect(write=True) as conn:
         user = conn.execute("SELECT * FROM users WHERE org_id=? AND email=? AND active=1",
                             (payload.org_id, payload.email.lower())).fetchone()
+        sso_required = False
+        if user and settings.saas.enabled:
+            from netsec.saas.secrets import integration
+            sso_required = integration(conn, request.app.state.vault, user['org_id']).get('sso_required', False)
         encoded = user["password_hash"] if user else request.app.state.dummy_password
         valid = verify_password(payload.password, encoded)
-        if not user or not valid:
+        if not user or not valid or sso_required:
             # Audit real organizations only; unknown emails are not retained.
             if conn.execute("SELECT 1 FROM organizations WHERE id=?", (payload.org_id,)).fetchone():
                 audit(conn, payload.org_id, "anonymous", "login.failure")
@@ -88,6 +94,7 @@ def change_password(payload: PasswordChange, request: Request, response: Respons
             raise HTTPException(400, "현재 비밀번호가 일치하지 않습니다.")
         conn.execute("UPDATE users SET password_hash=? WHERE id=?", (hash_password(payload.new_password), user["id"]))
         conn.execute("DELETE FROM sessions WHERE user_id=?", (user["id"],))
+        conn.execute("DELETE FROM action_tokens WHERE user_id=?", (user["id"],))
         audit(conn, user["org_id"], user["id"], "password.change")
     response.delete_cookie(COOKIE, path="/")
     return {"ok": True}

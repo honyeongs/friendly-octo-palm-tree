@@ -16,7 +16,7 @@ def _evidence(event):
             "outcome": event.outcome, "method": event.method}
 
 
-def analyze(conn, org, source_id, rows):
+def analyze(conn, org, source_id, rows, *, extended=False):
     excluded = conn.execute("SELECT cidr FROM exclusions WHERE org_id=? AND source_id=? AND expires_at>?",
                             (org["id"], source_id, now())).fetchall()
     networks = [ipaddress.ip_network(row["cidr"]) for row in excluded]
@@ -25,6 +25,9 @@ def analyze(conn, org, source_id, rows):
                         row["method"], 0, row["id"]) for row in rows
               if row["event_type"] == "auth.login" and not any(ipaddress.ip_address(row["source_ip"]) in net for net in networks)]
     candidates = []
+    if extended:
+        from netsec.saas.detection import candidates as extended_candidates
+        candidates.extend(extended_candidates(org, [row for row in rows if not any(ipaddress.ip_address(row['source_ip']) in net for net in networks)]))
     for finding in detect_repeated_failures(events, threshold=org["threshold"], window_seconds=org["window_seconds"]):
         candidates.append(("repeated_failures", "medium", finding.host, finding.source_ip, "",
                            "반복 인증 실패", [_evidence(event) for event in finding.evidence]))
@@ -41,7 +44,7 @@ def analyze(conn, org, source_id, rows):
             (org["id"], source_id, rule, address, username, last, first),
         ).fetchall()
         existing = next((row for row in matches if json.loads(row["evidence_json"])[0]["host"] == host and
-                         (rule != "success_after_failures" or json.loads(row["evidence_json"])[-1]["id"] == evidence[-1]["id"])), None)
+                         (rule not in ("success_after_failures", 'privilege_change_after_login') or json.loads(row["evidence_json"])[-1]["id"] == evidence[-1]["id"])), None)
         stamp = now()
         if existing:
             combined = {item["id"]: item for item in json.loads(existing["evidence_json"])}

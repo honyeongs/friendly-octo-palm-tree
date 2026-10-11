@@ -1,9 +1,11 @@
 """Environment settings. No third-party service is required."""
 
 import os
-from dataclasses import dataclass
+import ipaddress
+from dataclasses import dataclass, field
 from pathlib import Path
 from urllib.parse import urlsplit
+from netsec.saas.config import ServiceSettings
 
 
 @dataclass(frozen=True)
@@ -20,6 +22,8 @@ class Settings:
     smtp_password: str = ""
     smtp_from: str = ""
     smtp_tls: str = "starttls"
+    saas: ServiceSettings = field(default_factory=ServiceSettings)
+    trusted_proxies: tuple = ()
 
     @property
     def secure(self):
@@ -41,12 +45,18 @@ class Settings:
             raise ValueError("SMTP requires starttls or ssl")
         if not 1 <= self.smtp_port <= 65535:
             raise ValueError("Invalid SMTP port")
+        backend = 'postgres' if str(self.database).startswith(('postgresql://', 'postgres://')) else 'sqlite'
+        self.saas.validate(self.secure, backend)
+        for cidr in self.trusted_proxies:
+            ipaddress.ip_network(cidr)
+        if self.saas.enabled and self.secure and not (self.smtp_host and self.smtp_from):
+            raise ValueError('Public signup requires configured SMTP')
         return self
 
     @classmethod
     def from_env(cls):
         return cls(
-            database=Path(os.getenv("NETSEC_DB", "data/netsec.sqlite3")),
+            database=os.getenv("NETSEC_DATABASE_URL") or Path(os.getenv("NETSEC_DB", "data/netsec.sqlite3")),
             origin=os.getenv("NETSEC_ORIGIN", "http://127.0.0.1:8890").rstrip("/"),
             session_hours=int(os.getenv("NETSEC_SESSION_HOURS", "8")),
             retention_days=int(os.getenv("NETSEC_RETENTION_DAYS", "30")),
@@ -58,4 +68,6 @@ class Settings:
             smtp_password=os.getenv("NETSEC_SMTP_PASSWORD", ""),
             smtp_from=os.getenv("NETSEC_SMTP_FROM", ""),
             smtp_tls=os.getenv("NETSEC_SMTP_TLS", "starttls"),
+            saas=ServiceSettings.from_env(),
+            trusted_proxies=tuple(filter(None, os.getenv('NETSEC_TRUSTED_PROXIES', '').split(','))),
         ).validate()

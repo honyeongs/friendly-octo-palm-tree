@@ -10,7 +10,7 @@ import urllib.request
 from datetime import datetime, timedelta, timezone
 from email.message import EmailMessage
 
-from netsec.monitor.database import now
+from netsec.monitor.database import identifier, now
 
 
 class NoRedirect(urllib.request.HTTPRedirectHandler):
@@ -56,7 +56,7 @@ def deliver(settings, channel, org, incident, delivery_id):
     return "sent"
 
 
-def dispatch_one(db, settings, sender=deliver):
+def dispatch_one(db, settings, sender=deliver, vault=None):
     stamp = now()
     with db.connect(write=True) as conn:
         row = conn.execute("SELECT * FROM outbox WHERE (status='pending' AND next_at<=?) "
@@ -68,7 +68,11 @@ def dispatch_one(db, settings, sender=deliver):
         org = conn.execute("SELECT * FROM organizations WHERE id=?", (row["org_id"],)).fetchone()
         incident = conn.execute("SELECT * FROM incidents WHERE id=?", (row["incident_id"],)).fetchone()
     try:
-        status = sender(settings, row["channel"], org, incident, row["id"])
+        if settings.saas.enabled and sender is deliver:
+            from netsec.saas.jobs import tenant_deliver
+            status = tenant_deliver(db, settings, vault, row['channel'], org, incident, row['id'])
+        else:
+            status = sender(settings, row["channel"], org, incident, row["id"])
         error = ""
     except Exception:
         # Exception text can contain passwords, URLs or SMTP responses; never persist it.
@@ -83,8 +87,10 @@ def dispatch_one(db, settings, sender=deliver):
 
 
 class Worker:
-    def __init__(self, db, settings):
+    def __init__(self, db, settings, vault=None):
         self.db, self.settings = db, settings
+        self.vault = vault
+        self.worker_id = identifier()
         self.stop_event = threading.Event()
         self.thread = threading.Thread(target=self.run, name="netsec-notifications", daemon=True)
 
@@ -93,14 +99,26 @@ class Worker:
 
     def run(self):
         last_cleanup = -86400
+        last_housekeeping = -60
         while not self.stop_event.is_set():
             try:
                 if time.monotonic() - last_cleanup >= 86400:
                     from netsec.monitor.maintenance import prune
-                    prune(self.db, self.settings.retention_days)
+                    prune(self.db, self.settings.retention_days, saas=self.settings.saas.enabled)
                     last_cleanup = time.monotonic()
-                has_work = dispatch_one(self.db, self.settings)
+                if self.settings.saas.enabled:
+                    from netsec.saas.jobs import dispatch_mail
+                    from netsec.saas.operations import housekeeping
+                    if time.monotonic() - last_housekeeping >= 60:
+                        housekeeping(self.db, self.settings)
+                        last_housekeeping = time.monotonic()
+                    dispatch_mail(self.db, self.settings, self.vault)
+                    with self.db.connect(write=True) as conn:
+                        conn.execute('INSERT INTO worker_heartbeats VALUES(?,?) ON CONFLICT(id) DO UPDATE SET updated_at=excluded.updated_at', (self.worker_id, now()))
+                has_work = dispatch_one(self.db, self.settings, vault=self.vault)
             except Exception:
+                import logging
+                logging.getLogger('netsec.worker').error('Worker cycle failed; inspect database/configuration (details redacted)')
                 has_work = False
             if not has_work:
                 self.stop_event.wait(2)

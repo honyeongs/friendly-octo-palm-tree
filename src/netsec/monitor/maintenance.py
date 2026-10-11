@@ -8,6 +8,9 @@ from netsec.monitor.database import audit, now
 
 
 def backup(db, destination):
+    if db.backend == 'postgres':
+        from netsec.saas.migration import pg_backup
+        return pg_backup(db, destination)
     target = Path(destination)
     if target.exists() or target.resolve() == db.path.resolve():
         raise ValueError("Backup destination must be a new file, not the active database")
@@ -30,13 +33,21 @@ def backup(db, destination):
     return target
 
 
-def prune(db, retention_days):
+def prune(db, retention_days, *, saas=False):
     cutoff = (datetime.now(timezone.utc) - timedelta(days=retention_days)).isoformat(timespec="microseconds")
     with db.connect(write=True) as conn:
         organizations = conn.execute("SELECT id FROM organizations").fetchall()
-        events = conn.execute("DELETE FROM events WHERE timestamp<?", (cutoff,)).rowcount
-        incidents = conn.execute("DELETE FROM incidents WHERE last_seen<?", (cutoff,)).rowcount
-        audits = conn.execute("DELETE FROM audit WHERE created_at<?", (cutoff,)).rowcount
+        events, incidents, audits = 0, 0, 0
+        for org in organizations:
+            org_cutoff = cutoff
+            if saas:
+                from netsec.saas.plans import entitlement
+                _, plan, _ = entitlement(conn, org['id'])
+                org_cutoff = (datetime.now(timezone.utc) - timedelta(days=plan['retention_days'])).isoformat(timespec='microseconds')
+            events += conn.execute('DELETE FROM events WHERE org_id=? AND timestamp<?', (org['id'], org_cutoff)).rowcount
+            incidents += conn.execute('DELETE FROM incidents WHERE org_id=? AND last_seen<?', (org['id'], org_cutoff)).rowcount
+            audits += conn.execute('DELETE FROM audit WHERE org_id=? AND created_at<?', (org['id'], org_cutoff)).rowcount
+        conn.execute('DELETE FROM mail_jobs WHERE created_at<?', ((datetime.now(timezone.utc) - timedelta(days=7)).isoformat(timespec='microseconds'),))
         conn.execute("DELETE FROM sessions WHERE expires_at<=?", (now(),))
         conn.execute("DELETE FROM exclusions WHERE expires_at<=?", (now(),))
         for org in organizations:

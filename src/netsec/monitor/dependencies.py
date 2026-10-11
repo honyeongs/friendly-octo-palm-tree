@@ -30,6 +30,7 @@ def current_user(request: Request):
         same_origin(request)
         if not hmac.compare_digest(request.headers.get("x-csrf-token", ""), user["csrf"]):
             raise HTTPException(403, "보안 토큰이 유효하지 않습니다. 다시 로그인하세요.")
+    request.state.authenticated_user = user
     return user
 
 

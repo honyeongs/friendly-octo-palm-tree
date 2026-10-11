@@ -26,17 +26,18 @@ def events_ingest(payload: Batch, request: Request):
     if source is None:
         raise HTTPException(401, "유효하지 않은 수집 키입니다.")
     rate_limit(db, "ingest-source:" + source["id"], limit=120)
-    return ingest(db, source, payload, request.app.state.settings.retention_days)
+    settings = request.app.state.settings
+    return ingest(db, source, payload, 365 if settings.saas.enabled else settings.retention_days, saas=settings.saas.enabled)
 
 
 @router.get("/summary")
 def summary(request: Request, user=Depends(current_user)):
     with request.app.state.db.connect() as conn:
         org = conn.execute("SELECT id,name,threshold,window_seconds,success_seconds FROM organizations WHERE id=?", (user["org_id"],)).fetchone()
-        counts = conn.execute("SELECT count(*) total,coalesce(sum(outcome='failure' AND event_type='auth.login'),0) failures "
+        counts = conn.execute("SELECT count(*) total,coalesce(sum(CASE WHEN outcome='failure' AND event_type='auth.login' THEN 1 ELSE 0 END),0) failures "
                               "FROM events WHERE org_id=?", (user["org_id"],)).fetchone()
-        incidents = conn.execute("SELECT count(*) total,coalesce(sum(status IN ('open','investigating')),0) active,"
-                                 "coalesce(sum(severity='high' AND status IN ('open','investigating')),0) high FROM incidents WHERE org_id=?",
+        incidents = conn.execute("SELECT count(*) total,coalesce(sum(CASE WHEN status IN ('open','investigating') THEN 1 ELSE 0 END),0) active,"
+                                 "coalesce(sum(CASE WHEN severity='high' AND status IN ('open','investigating') THEN 1 ELSE 0 END),0) high FROM incidents WHERE org_id=?",
                                  (user["org_id"],)).fetchone()
         sources = conn.execute("SELECT count(*) FROM sources WHERE org_id=? AND active=1", (user["org_id"],)).fetchone()[0]
     return {"organization": dict(org), "events": dict(counts), "incidents": dict(incidents), "active_sources": sources,

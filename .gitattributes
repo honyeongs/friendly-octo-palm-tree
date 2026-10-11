@@ -1,0 +1,2 @@
+# Preserve upstream notice bytes so the inventory hashes survive checkout.
+third_party/** -text -whitespace

@@ -1,6 +1,7 @@
 import { api } from './api.js';
 import { $, node, badge, paired, formatTime, table, cells, select, labels, submitForm, toast } from './dom.js';
 import { finishForm } from './forms.js';
+import { taskForm } from './saas.js';
 
 let requestVersion = 0;
 function busy(value) {
@@ -28,6 +29,7 @@ export async function openIncident(id, state, refresh) {
     }
     content.append(details, node('p', '인증 패턴에 대한 검토 항목입니다. 침해 여부를 확정한 결과는 아닙니다.', { class: 'notice' }));
     if (state.user.role !== 'viewer') {
+      if (state.catalog?.enabled) { const deadline = node('button', '처리 기한·티켓 지정'); deadline.addEventListener('click', () => taskForm(item, async () => { await openIncident(id, state, refresh); await refresh(); })); content.append(deadline); }
       const form = node('form', null, { class: 'form-row' });
       form.append(select('처리 상태', 'status', ['open', 'investigating', 'resolved', 'false_positive'].map(key => [key, labels[key]]), item.status),
         select('담당자', 'assignee_id', [['', '미지정'], ...users.filter(user => user.active && user.role !== 'viewer').map(user => [user.id, user.display_name])], item.assignee_id || ''), node('button', '변경 저장', { type: 'submit', class: 'primary' }));

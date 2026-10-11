@@ -1,0 +1,85 @@
+name: netsec
+services:
+  database:
+    image: postgres:17
+    environment:
+      POSTGRES_DB: netsec
+      POSTGRES_USER: netsec
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?Set a strong database password}
+    volumes:
+      - database:/var/lib/postgresql/data
+    healthcheck:
+      test: [CMD-SHELL, 'pg_isready -U netsec -d netsec']
+      interval: 10s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+    networks: [private]
+  api:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    env_file: ../.env
+    environment:
+      NETSEC_SAAS_ENABLED: '1'
+      NETSEC_EMBEDDED_WORKER: '0'
+      NETSEC_TRUSTED_PROXIES: '172.30.19.4/32'
+    depends_on:
+      database:
+        condition: service_healthy
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    networks:
+      private:
+        ipv4_address: 172.30.19.2
+      outbound:
+    healthcheck:
+      test: [CMD, python, -c, "import os,urllib.request; r=urllib.request.Request('http://127.0.0.1:8890/healthz',headers={'Host':os.environ['NETSEC_ORIGIN'].split('//')[1]}); urllib.request.urlopen(r,timeout=5)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+  worker:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    command: [netsec, monitor-admin, worker]
+    env_file: ../.env
+    environment:
+      NETSEC_SAAS_ENABLED: '1'
+    depends_on:
+      database:
+        condition: service_healthy
+    read_only: true
+    tmpfs: [/tmp]
+    cap_drop: [ALL]
+    security_opt: [no-new-privileges:true]
+    restart: unless-stopped
+    networks: [private, outbound]
+  gateway:
+    image: caddy:2
+    ports: ['80:80', '443:443']
+    environment:
+      NETSEC_DOMAIN: ${NETSEC_DOMAIN:?Set the actual domain}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - tls:/data
+      - caddy_config:/config
+    restart: unless-stopped
+    networks:
+      private:
+        ipv4_address: 172.30.19.4
+      outbound:
+volumes:
+  database:
+  tls:
+  caddy_config:
+networks:
+  private:
+    internal: true
+    ipam:
+      config:
+        - subnet: 172.30.19.0/24
+  outbound:

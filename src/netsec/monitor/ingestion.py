@@ -10,7 +10,7 @@ from netsec.monitor.detection import analyze
 from netsec.monitor.security import digest
 
 
-def ingest(db, source, batch, retention_days=30):
+def ingest(db, source, batch, retention_days=30, *, saas=False):
     clock = datetime.now(timezone.utc)
     for event in batch.events:
         if not clock - timedelta(days=retention_days) <= event.timestamp <= clock + timedelta(minutes=5):
@@ -22,6 +22,11 @@ def ingest(db, source, batch, retention_days=30):
         if live is None:
             raise HTTPException(401, "수집 키가 폐기되었습니다.")
         org = conn.execute("SELECT * FROM organizations WHERE id=?", (source["org_id"],)).fetchone()
+        if saas:
+            from netsec.saas.plans import entitlement
+            _, plan, _ = entitlement(conn, org['id'])
+            if any(event.timestamp < clock - timedelta(days=plan['retention_days']) for event in batch.events):
+                raise HTTPException(422, '이벤트 시각이 요금제 보관 기간 밖입니다.')
         for event in batch.events:
             payload = event.model_dump(mode="json")
             timestamp = event.timestamp.isoformat(timespec="microseconds")
@@ -38,19 +43,22 @@ def ingest(db, source, batch, retention_days=30):
                          (org["id"], source["id"], event.event_id, timestamp, now(), event.event_type, event.outcome,
                           event.source_ip, event.username, event.method, event.host, fingerprint))
             accepted += 1
-            if event.event_type == "auth.login":
+            if event.event_type == "auth.login" or saas:
                 times.append(event.timestamp)
+        if saas:
+            from netsec.saas.plans import reserve_events
+            reserve_events(conn, org['id'], accepted)
         created = []
         if times:
             horizon = timedelta(seconds=org["window_seconds"] + org["success_seconds"])
             lower = (min(times) - horizon).isoformat(timespec="microseconds")
             upper = (max(times) + horizon).isoformat(timespec="microseconds")
-            rows = conn.execute("SELECT * FROM events WHERE org_id=? AND source_id=? AND event_type='auth.login' "
+            rows = conn.execute("SELECT * FROM events WHERE org_id=? AND source_id=? "
                                 "AND timestamp BETWEEN ? AND ? ORDER BY timestamp,id LIMIT 10001",
                                 (org["id"], source["id"], lower, upper)).fetchall()
             if len(rows) > 10000:
                 raise HTTPException(413, "상관분석 구간의 이벤트가 10,000개를 초과했습니다. 별도 소스로 분리하세요.")
-            created = analyze(conn, org, source["id"], rows)
+            created = analyze(conn, org, source["id"], rows, extended=saas)
         conn.execute("UPDATE sources SET last_seen=? WHERE id=?", (now(), source["id"]))
         audit(conn, org["id"], "source:" + source["id"], "events.ingest", source["id"],
               {"accepted": accepted, "duplicates": duplicates, "incidents": len(created)})

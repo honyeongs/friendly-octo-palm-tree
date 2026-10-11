@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>NetSec | 보안 운영</title><link rel="stylesheet" href="/ui/styles.css">
+  <title>NetSec | 보안 운영</title><link rel="stylesheet" href="/ui/styles.css"><link rel="stylesheet" href="/ui/saas.css">
 </head>
 <body>
   <div id="toast" role="status" class="toast hidden"></div>
@@ -17,6 +17,7 @@
         <label>비밀번호<input name="password" type="password" autocomplete="current-password" required maxlength="256"></label>
         <p id="gate-error" class="error" role="alert"></p><button type="submit" class="primary" id="gate-submit">로그인</button>
       </form>
+      <div class="gate-actions saas-only hidden"><button id="signup-open">회사 계정 만들기</button><button id="reset-open">계정 복구</button><button id="sso-open">회사 SSO 로그인</button><button id="dev-mail" class="hidden">로컬 테스트 메일</button></div>
     </section>
   </main>
   <div id="workspace" class="workspace hidden">
@@ -30,6 +31,10 @@
         <button data-view="users" class="nav-item admin-only"><img src="/assets/folder-open.svg" alt="">사용자</button>
         <button data-view="policy" class="nav-item admin-only"><img src="/assets/rotate-ccw.svg" alt="">정책·예외</button>
         <button data-view="audit" class="nav-item admin-only"><img src="/assets/search.svg" alt="">감사 기록</button>
+        <button data-view="saas/health" class="nav-item saas-only hidden"><img src="/assets/search.svg" alt="">수집·처리 상태</button>
+        <button data-view="saas/billing" class="nav-item saas-only admin-only hidden"><img src="/assets/folder-open.svg" alt="">구독·사용량</button>
+        <button data-view="saas/integrations" class="nav-item saas-only admin-only hidden"><img src="/assets/rotate-ccw.svg" alt="">외부 연결</button>
+        <button data-view="saas/privacy" class="nav-item saas-only admin-only hidden"><img src="/assets/download.svg" alt="">데이터 관리</button>
       </nav>
       <a href="/compare/" target="_blank" rel="noopener" class="comparison-link">기존 보고서 비교 ↗</a>
       <div class="account"><strong id="user-name"></strong><span id="user-role"></span><button id="password-open" class="subtle">비밀번호 변경</button><button id="logout" class="subtle">로그아웃</button></div>

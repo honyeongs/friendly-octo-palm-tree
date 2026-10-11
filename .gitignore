@@ -26,3 +26,10 @@ backups/
 *.db-*
 monitor-results/
 .cache/
+saas-results/
+data-saas/
+*.dump
+*.pem
+*.key
+.netsec-key
+debug.log
