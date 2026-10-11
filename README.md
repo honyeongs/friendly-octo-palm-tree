@@ -38,6 +38,8 @@ python run.py analyze-ssh samples/ssh/correlated.log --success-window-seconds 30
 
 실제 SSH 서버와 네이티브 journal, tcpdump를 함께 검증하는 [Linux 실습 실행기](labs/ssh/README.md)를 제공합니다.
 
+[실제 검증 사례](docs/CASE_STUDY.md)에서 인증 실패 5회·성공 1회, 실패 후 성공 상관분석과 패킷 연결 결과를 확인할 수 있습니다.
+
 ## 패킷 분석과 로그 연결
 
 패킷 기능을 사용할 환경에 선택 의존성을 설치합니다.
