@@ -26,6 +26,13 @@ jobs:
         run: python -m pip install '.[packets,monitor,saas,test]' -c requirements-runtime.lock
       - name: Test parsers, detection and CLI
         run: python -m unittest discover -s tests -t . -v
+      - name: Ten portfolio scenarios with privacy-safe evidence
+        run: python tools/run_portfolio_validation.py --suite portfolio --output reports/ci-portfolio.json
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        if: always()
+        with:
+          name: public-portfolio-${{ matrix.os }}-${{ matrix.python-version }}
+          path: reports/ci-portfolio.*
       - name: Analyze the demo through the installed command
         run: netsec analyze-ssh samples/ssh/demo.log --output report.json
       - name: Save the example report

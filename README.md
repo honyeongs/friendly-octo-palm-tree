@@ -1,4 +1,6 @@
 # friendly-octo-palm-tree
+
+최근 검사: [대표 10개·전체 회귀·웹 테스트 공개 기록](docs/testing/README.md). 원본 개인정보와 비밀값은 포함하지 않습니다.
 친근한 문어야자나무?
 
 ## SSH 인증 로그 분석 도구
