@@ -1,5 +1,7 @@
 # Third-Party Notices
 
+Hosted browser PWA: Pyodide 0.29.5 / CPython 3.13.2 and included runtime components are distributed separately from the CLI. Original notices and source links are in [website/THIRD_PARTY.md](website/THIRD_PARTY.md) and the deployed license page. PNG/ICO app icons are color/background adaptations of the existing Lucide shield, with original notices retained. Generated runtime binaries are excluded from this GitHub checkout.
+
 Runtime dependency versions, reported licenses, and original notice checksums are recorded in `docs/DEPENDENCIES.json`. Original package license/notice files are preserved in `third_party/`. The CycloneDX package inventory is `docs/SBOM.cdx.json`.
 
 Lucide ISC and Feather MIT icon notices are in `src/netsec/web/assets/LUCIDE-LICENSE.txt`. System fonts are referenced but not bundled.

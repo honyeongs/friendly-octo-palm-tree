@@ -33,3 +33,5 @@ data-saas/
 *.key
 .netsec-key
 debug.log
+website/dist/
+test-results/

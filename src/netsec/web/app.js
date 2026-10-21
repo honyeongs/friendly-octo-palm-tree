@@ -14,6 +14,18 @@ function render() {
   renderWorkspace(state, index => { state.selected = index; render(); });
   document.querySelector('#export').disabled = false;
 }
+document.addEventListener('netsec:report', event => {
+  try {
+    const report = validateReport(event.detail);
+    loadGeneration++;
+    fileGeneration.b++;
+    state.reports.b = report;
+    state.active = 'b'; state.selected = 0; state.query = ''; state.tab = 'findings';
+    document.querySelector('#search').value = '';
+    document.querySelector('#dataset-label').textContent = '사용자 로그 · 브라우저 분석';
+    clearError(); render();
+  } catch (problem) { showError(problem.message); }
+});
 
 async function examples() {
   const generation = ++loadGeneration;

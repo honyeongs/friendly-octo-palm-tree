@@ -1,0 +1,22 @@
+id = "netsec"
+title = "NetSec Lab"
+short_name = "NetSec Lab"
+package = "netsec"
+url = "https://netsec-lab-web.yao0422q.chatgpt.site"
+repository = "https://github.com/honyeongs/friendly-octo-palm-tree"
+color = "#176b56"
+
+[[tools]]
+id = "netsec"
+title = "NetSec Lab"
+url = "https://netsec-lab-web.yao0422q.chatgpt.site"
+
+[[tools]]
+id = "inspector"
+title = "Download File Inspector"
+url = "https://download-inspector-web.yao0422q.chatgpt.site"
+
+[[tools]]
+id = "endpoint"
+title = "Endpoint Detection Lab"
+url = "https://endpoint-lab-web.yao0422q.chatgpt.site"
