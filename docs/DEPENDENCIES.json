@@ -59,7 +59,7 @@
     },
     {
       "name": "certifi",
-      "version": "2026.7.22",
+      "version": "2026.10.19",
       "license_expression": null,
       "license_metadata": "MPL-2.0",
       "classifiers": [
