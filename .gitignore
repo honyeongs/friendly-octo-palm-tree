@@ -34,4 +34,5 @@ data-saas/
 .netsec-key
 debug.log
 website/dist/
+website/hosting-dist/
 test-results/

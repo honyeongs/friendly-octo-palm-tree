@@ -12,7 +12,7 @@ from netsec.monitor.dependencies import COOKIE
 from netsec.monitor.security import digest, rate_limit, token
 from netsec.saas.identity import available
 from netsec.saas.network import destination
-from netsec.saas.secrets import integration
+from netsec.saas.secrets import integration_snapshot
 
 router = APIRouter(prefix='/api/saas/sso', dependencies=[Depends(available)])
 
@@ -37,7 +37,7 @@ async def start(request: Request, org_id: str):
         raise HTTPException(422, '유효하지 않은 조직입니다.')
     rate_limit(db, 'sso-start:' + digest(request.client.host), limit=20, seconds=300)
     with db.connect() as conn:
-        value = integration(conn, request.app.state.vault, org_id)
+        value, revision = integration_snapshot(conn, request.app.state.vault, org_id)
     if not value.get('oidc_issuer'):
         raise HTTPException(404, 'SSO가 설정되지 않았습니다.')
     client = remote(settings, value)
@@ -47,9 +47,12 @@ async def start(request: Request, org_id: str):
         raise HTTPException(502, '인증 제공자의 주소가 안전하지 않습니다.')
     expiry = (datetime.now(timezone.utc) + timedelta(minutes=10)).isoformat(timespec='microseconds')
     with db.connect(write=True) as conn:
+        if integration_snapshot(conn, request.app.state.vault, org_id)[1] != revision:
+            raise HTTPException(400, 'SSO 설정이 변경되었습니다. 다시 시작하세요.')
         conn.execute('DELETE FROM oidc_transactions WHERE expires_at<=?', (now(),))
         conn.execute('INSERT INTO oidc_transactions VALUES(?,?,?,?,?)', (digest(params['state']), org_id, digest(browser),
-                     request.app.state.vault.seal(org_id, {'nonce': nonce, 'code_verifier': verifier, 'issuer': value['oidc_issuer']}), expiry))
+                     request.app.state.vault.seal(org_id, {'nonce': nonce, 'code_verifier': verifier,
+                         'issuer': value['oidc_issuer'], 'config_revision': revision}), expiry))
     response = RedirectResponse(params['url'], status_code=303)
     response.set_cookie('netsec_oidc', browser, max_age=600, httponly=True, secure=settings.secure, samesite='lax', path='/api/saas/sso')
     return response
@@ -67,8 +70,8 @@ async def callback(request: Request, state: str = '', code: str = ''):
         conn.execute('DELETE FROM oidc_transactions WHERE state_hash=?', (digest(state),))
         org_id = row['org_id']
         params = request.app.state.vault.open(org_id, row['encrypted_params'])
-        value = integration(conn, request.app.state.vault, org_id)
-    if params['issuer'] != value.get('oidc_issuer'):
+        value, revision = integration_snapshot(conn, request.app.state.vault, org_id)
+    if not revision or params.get('config_revision') != revision or params['issuer'] != value.get('oidc_issuer'):
         raise HTTPException(400, 'SSO 설정이 변경되었습니다.')
     try:
         client = remote(settings, value)
@@ -83,6 +86,9 @@ async def callback(request: Request, state: str = '', code: str = ''):
     except Exception:
         raise HTTPException(403, 'SSO 검증에 실패했습니다. 발급자·대상·MFA 정책을 확인하세요.') from None
     with db.connect(write=True) as conn:
+        # Serialize the final settings check with session creation and administrative changes.
+        if integration_snapshot(conn, request.app.state.vault, org_id)[1] != revision:
+            raise HTTPException(400, 'SSO 설정이 변경되었습니다. 다시 시작하세요.')
         binding = conn.execute('SELECT user_id FROM oidc_bindings WHERE org_id=? AND issuer=? AND subject=?', (org_id, value['oidc_issuer'], claims['sub'])).fetchone()
         if binding:
             user = conn.execute('SELECT * FROM users WHERE org_id=? AND id=? AND active=1', (org_id, binding[0])).fetchone()

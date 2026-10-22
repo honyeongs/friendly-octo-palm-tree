@@ -47,7 +47,9 @@ class ProviderTests(fixtures.SaasTests):
         value = {'oidc_issuer': issuer, 'oidc_client_id': 'client', 'oidc_require_mfa': True}
         with self.app.state.db.connect(write=True) as conn:
             conn.execute('INSERT INTO tenant_integrations VALUES(?,?,?) ON CONFLICT(org_id) DO UPDATE SET encrypted_config=excluded.encrypted_config', (self.org, self.app.state.vault.seal(self.org, value), now()))
-            conn.execute('INSERT INTO oidc_transactions VALUES(?,?,?,?,?)', (digest(state), self.org, digest(browser), self.app.state.vault.seal(self.org, {'issuer': issuer, 'nonce': nonce, 'code_verifier': token()}), (datetime.now(timezone.utc) + timedelta(minutes=5)).isoformat(timespec='microseconds')))
+            from netsec.saas.secrets import integration_snapshot
+            revision = integration_snapshot(conn, self.app.state.vault, self.org)[1]
+            conn.execute('INSERT INTO oidc_transactions VALUES(?,?,?,?,?)', (digest(state), self.org, digest(browser), self.app.state.vault.seal(self.org, {'issuer': issuer, 'nonce': nonce, 'code_verifier': token(), 'config_revision': revision}), (datetime.now(timezone.utc) + timedelta(minutes=5)).isoformat(timespec='microseconds')))
         if cookie:
             self.client.cookies.set('netsec_oidc', browser)
         result = {'iss': issuer, 'sub': 'subject-alpha', 'email': 'admin@alpha.test', 'email_verified': True, 'nonce': nonce, 'amr': ['pwd', 'otp'], **claims}

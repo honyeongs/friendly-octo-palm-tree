@@ -1,6 +1,7 @@
 """Authenticated tenant-bound encryption; secret values never appear in read APIs."""
 
 import json
+import hashlib
 import os
 from pathlib import Path
 
@@ -33,5 +34,13 @@ class Vault:
 
 
 def integration(conn, vault, org_id):
+    return integration_snapshot(conn, vault, org_id)[0]
+
+
+def integration_snapshot(conn, vault, org_id):
     row = conn.execute('SELECT encrypted_config FROM tenant_integrations WHERE org_id=?', (org_id,)).fetchone()
-    return vault.open(org_id, row[0]) if row else {}
+    if not row:
+        return {}, None
+    # Every saved Fernet envelope has a fresh nonce, including change-and-restore updates.
+    revision = hashlib.sha256(row[0].encode()).hexdigest()
+    return vault.open(org_id, row[0]), revision

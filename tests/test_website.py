@@ -73,7 +73,7 @@ class WebsiteTests(unittest.TestCase):
             self.assertEqual(struct.unpack(">II", data[16:24]), (size, size))
         self.assertEqual((ROOT / "website/icons/app.ico").read_bytes()[:6], bytes.fromhex("000001000100"))
         hosting = json.loads((ROOT / "website/.openai/hosting.json").read_text(encoding="utf-8"))
-        self.assertEqual(hosting["static"]["directory"], "dist")
+        self.assertNotIn("static", hosting)
         self.assertRegex(hosting["project_id"], r"^appgprj_[a-zA-Z0-9]+$")
         self.assertEqual(len(self.config["tools"]), 3)
         self.assertTrue(self.config["url"].startswith("https://"))

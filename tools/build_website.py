@@ -149,7 +149,7 @@ def build(runtime_archive, output):
                '<h1>개인정보와 처리 범위</h1><p>선택한 파일·로그·보고서는 이 브라우저의 Worker와 메모리 파일시스템에서 분석합니다. 분석 요청을 서버로 보내거나 원본을 서버에 저장하지 않습니다. 분석 중 새로고침·취소·세션 지우기는 작업을 종료합니다.</p><p>오프라인 캐시는 공개 앱 코드·런타임·합성 예제만 포함합니다. 선택한 파일·보고서·계정·토큰은 캐시하지 않습니다. 브라우저나 운영체제 자체의 메모리·캐시 정책까지 삭제를 보증하지는 않습니다.</p><p>웹사이트 접속과 공개 자산 다운로드 과정에서 호스팅 제공자는 IP·접속 시각 같은 일반 접속 정보를 처리할 수 있습니다. 별도 분석·광고·외부 CDN 스크립트는 넣지 않았습니다.</p><p>내보내기는 사용자가 누를 때만 로컬 파일로 저장합니다. 내보낸 원본 보고서에는 개인정보가 포함될 수 있으므로 그대로 공개하지 마세요.</p><p>백신·상용 EDR·안전 인증이 아닙니다. NetSec 웹은 오프라인 SSH·PCAP 분석 도구이며 기존 로컬 SaaS의 회원·청구·서버 운영을 인터넷으로 노출하지 않습니다.</p><a href="/">분석 화면으로</a></main></body></html>')
     write_text(output / "_headers", "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: no-referrer\n  X-Frame-Options: DENY\n  Content-Security-Policy: default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; worker-src 'self'; style-src 'self'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'\n")
     inventory = {p.relative_to(output).as_posix(): digest(p.read_bytes()) for p in sorted(output.rglob("*")) if p.is_file() and p.name not in {"sw.js", "build-inventory.json"}}
-    version = digest(json.dumps(inventory, sort_keys=True).encode())[:16]
+    version = digest(("response-headers-v1:" + json.dumps(inventory, sort_keys=True)).encode())[:16]
     assets = ["/"] + ["/" + name for name in inventory if name != "_headers"]
     sw = "const CACHE = " + json.dumps(config["id"] + "-app-" + version) + ";\nconst ASSETS = " + json.dumps(assets) + ";\n"
     sw += """self.addEventListener("install", event => event.waitUntil(caches.open(CACHE).then(cache => cache.addAll(ASSETS)).then(() => self.skipWaiting())));

@@ -3,7 +3,7 @@ import {createServer} from "node:http";
 import {readFile,mkdir,writeFile} from "node:fs/promises";
 import {spawnSync} from "node:child_process";
 import {fileURLToPath,pathToFileURL} from "node:url";
-import {join,resolve,extname,sep} from "node:path";
+import {join} from "node:path";
 const root=fileURLToPath(new URL("../../",import.meta.url));
 const dist=join(root,"website/dist");
 const config=JSON.parse(await readFile(join(dist,"site-config.json"),"utf8"));
@@ -12,14 +12,12 @@ const python=process.env.PYTHON || "python";
 let server;
 let base=process.env.SITE_URL;
 if(!base){
+ const hostedWorker=(await import(pathToFileURL(join(root,"website/hosting-dist/server/index.js")).href)).default;
  server=createServer(async(req,res)=>{
   try{
-   const pathname=decodeURIComponent(new URL(req.url,"http://local").pathname);
-   const file=resolve(dist,"."+ (pathname==="/" ? "/index.html" : pathname));
-   if(!file.startsWith(resolve(dist)+sep)){res.writeHead(403);res.end();return;}
-   const data=await readFile(file);
-   res.setHeader("Content-Type",({".js":"text/javascript",".wasm":"application/wasm",".html":"text/html",".css":"text/css",".json":"application/json",".webmanifest":"application/manifest+json",".svg":"image/svg+xml",".png":"image/png"})[extname(file)] || "application/octet-stream");
-   res.end(data);
+   const response=await hostedWorker.fetch(new Request("http://127.0.0.1"+req.url,{method:req.method}));
+   res.writeHead(response.status,Object.fromEntries(response.headers));
+   res.end(Buffer.from(await response.arrayBuffer()));
   }catch{res.writeHead(404);res.end();}
  });
  await new Promise(done=>server.listen(0,"127.0.0.1",done));
@@ -65,7 +63,20 @@ async function runExample(){
  }else await text("status","분석 완료");
 }
 try{
- await page.goto(base+"/",{waitUntil:"networkidle"});
+ const initial=await page.goto(base+"/",{waitUntil:"networkidle"});
+ const initialHeaders=await initial.allHeaders();
+ assert.equal(initialHeaders["x-frame-options"],"DENY");
+ assert.equal(initialHeaders["x-content-type-options"],"nosniff");
+ assert.ok(initialHeaders["content-security-policy"].includes("frame-ancestors 'none'"));
+ const workerResponse=await context.request.get(base+"/engine-worker.js");
+ assert.ok(workerResponse.headers()["content-security-policy"].includes("connect-src 'self'"));
+ const missing=await context.request.get(base+"/not-a-public-asset");
+ assert.equal(missing.status(),404);assert.equal(missing.headers()["x-frame-options"],"DENY");
+ mark("document-worker-and-error-security-headers");
+ const embedded=await context.newPage();
+ await embedded.setContent('<iframe title="embedding-probe" src="'+base+'/"></iframe>',{waitUntil:"load"});
+ assert.equal(embedded.frames().some(frame=>frame!==embedded.mainFrame()&&frame.url().startsWith(base+"/")),false);
+ await embedded.close();mark("cross-origin-framing-blocked");
  await page.locator("#install-app").waitFor();
  if(config.id==="netsec")await page.evaluate(()=>{
   const original=window.fetch.bind(window);

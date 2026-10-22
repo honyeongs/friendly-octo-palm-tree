@@ -37,7 +37,7 @@ PWA 설치는 사용자 동의가 필요하며 이 프로젝트가 자동으로 
 - 취소는 Worker를 종료합니다. 세션 지우기는 새로고침하여 이전 분석 상태를 버립니다. 브라우저/OS 자체의 물리 메모리 삭제를 보장하지는 않습니다.
 - 브라우저 메모리·저장 공간 부족으로 제한 크기 이하 입력도 실패할 수 있습니다. 최초 오프라인 준비 완료 전에 연결을 끊으면 실행할 수 없습니다.
 - 선택한 파일·로그 문자열은 실행하지 않습니다. Python으로 실행하는 것은 빌드에 포함된 고정 분석 모듈과 bridge뿐입니다.
-- 이 정적 호스팅의 실제 HTTP 응답에는 `_headers`의 보안 헤더가 반영되지 않습니다. 주 문서 meta CSP와 Worker 응답/프레임 보호를 혼동하지 않으며, 관련 한계는 검증 기록에 공개합니다.
+- 공개 배포는 읽기 전용 자산 Worker가 CSP·프레임 차단·nosniff·no-referrer 헤더를 실제 응답에 적용합니다. 문서, 분석 Worker 스크립트와 404 응답에서 확인했습니다. 예전 정적 배포의 `_headers` 미적용 문제와 수정 결과는 [보안 수정 기록](SECURITY_FIXES_2026-10-22.md)에서 구분합니다.
 - 원본 보고서 내보내기는 민감정보를 포함할 수 있습니다. 공개 전 별도 비식별화가 필요합니다.
 - 백신·상용 EDR·안전 인증·무결점 보증이 아닙니다.
 
@@ -51,7 +51,9 @@ PWA 설치는 사용자 동의가 필요하며 이 프로젝트가 자동으로 
 - `website/pwa.js`: 설치·바로가기·다른 도구 링크·세션 지우기·오프라인 상태입니다.
 - `website/site.toml`: 앱 정보와 공개 주소입니다. 비밀키가 아닙니다.
 - `tools/build_website.py`: 검토한 런타임 SHA-256을 확인하고 원본 분석 소스를 묶습니다.
-- `website/dist`: 생성된 배포 결과이며 GitHub 소스 커밋에서 제외합니다.
+- `website/hosting-worker.mjs`: 고정 공개 자산만 GET/HEAD로 제공하고 모든 응답에 보안 헤더를 적용합니다. 분석 업로드 API는 없습니다.
+- `tools/build_hosting.py`: 원본 자산 체크섬을 확인하고 압축된 공개 자산과 서버 코드를 배포용 Worker로 묶습니다.
+- `website/dist`, `website/hosting-dist`: 생성된 앱 자산과 Worker 배포 결과이며 GitHub 소스 커밋에서 제외합니다.
 - `tests/test_website.py`, `tests/browser/website.mjs`: 보안 경계·아이콘·설치 정보·브라우저/네이티브 결과·오프라인 검증입니다.
 
 ## 재현
@@ -61,7 +63,10 @@ README의 Python 및 선택 의존성 설치 방법을 먼저 적용합니다. N
 
 ```console
 python tools/build_website.py --runtime-archive <pyodide-core-0.29.5.tar.bz2>
+python tools/build_hosting.py
 python -m unittest tests.test_website -v
+python -m unittest tests.test_hosting -v
+node --test tests/web/hosting.test.mjs
 npm install --no-save --package-lock=false playwright@1.64.0
 npx playwright install chromium
 node tests/browser/website.mjs
@@ -69,7 +74,9 @@ node tests/browser/website.mjs
 
 아이콘 재생성: `node tools/generate_app_icons.mjs netsec "#176b56"`.
 현재 앱은 동일한 Lucide 방패 원본에 자체 앱 색상·배경을 적용했습니다.
-웹 배포는 별도 Sites 소스 체크아웃에서 검증한 정적 결과와 manifest를 동기화한 뒤 저장·배포합니다.
+웹 배포는 별도 Sites 소스 체크아웃에서 `website/hosting-dist`의 내용을 `dist`에 동기화하고 manifest를 적용한 뒤 저장·배포합니다. manifest에 예전 `static` 항목을 남기지 마세요. 이 Worker는 앱 자산만 제공하며 파일 분석은 방문자 브라우저에서 실행합니다.
+`Content-Encoding: gzip` 자산에는 Cloudflare의 `encodeBody: manual`을 명시해 이중 압축을 막습니다. 로컬 Node 테스트만으로 호스팅의 압축 동작까지 확인한 것으로 간주하지 말고 실제 주소의 브라우저 검사도 수행하세요.
+기존 설치 앱은 인터넷이 연결된 상태에서 새로 열거나 새로고침하여 새 Service Worker·캐시를 받아야 합니다. 원본 파일이나 API 키를 다시 등록할 필요는 없습니다.
 `website/.openai/hosting.json`의 기존 project_id를 재사용해야 하며 새 Site를 중복 생성하지 않습니다.
 
 ## 라이선스
